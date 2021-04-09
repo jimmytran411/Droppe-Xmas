@@ -1,10 +1,10 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 
 export interface IWishList {
   id: number;
   userId: number;
   date: string;
-  productList: IWishListProduct[];
+  products: IWishListProduct[];
 }
 
 export interface IWishListProduct {
@@ -23,11 +23,9 @@ export interface IProduct {
 }
 
 export const getAllWishLists = async () => {
-  const allWishList: AxiosResponse<IWishList[]> = await axios.get('https://fakestoreapi.com/carts?limit=5');
-  return allWishList;
+  return axios.get<IWishList[]>('https://fakestoreapi.com/carts?limit=5');
 };
 
 export const getProduct = async (id: number) => {
-  const product: AxiosResponse<IProduct> = await axios.get(`https://fakestoreapi.com/products/${id}`);
-  return { ...product, currentState: 'pending' };
+  return await axios.get<IProduct>(`https://fakestoreapi.com/products/${id}`);
 };

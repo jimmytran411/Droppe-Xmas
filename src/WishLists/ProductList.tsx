@@ -43,7 +43,7 @@ export const ProductList = ({ productList, productCurrentState }: IProductList) 
                       productCurrentState === 'discarded' ? handleApprove(product) : handleDiscard(product);
                     }}
                   >
-                    {productCurrentState === 'pending' ? 'Approve' : 'Discard'}
+                    {productCurrentState === 'discarded' ? 'Approve' : 'Discard'}
                   </button>
                 </div>
               )}

@@ -2,26 +2,26 @@ import { IProduct } from 'api/wishList';
 import React from 'react';
 import { IProductList, ProductList } from './ProductList';
 
-export interface ICurrentWishList {
+export interface IWishlistWithProductDetail {
   id: number;
   userid: number;
-  currentProductList: IProduct[];
+  products: IProduct[][];
 }
 
-export const CurrentWishList = ({ currentProductList }: ICurrentWishList) => {
+export const CurrentWishList = ({ products }: IWishlistWithProductDetail) => {
   return (
     <div>
-      {currentProductList &&
-        currentProductList.map((product: IProduct, index: number) => {
-          switch (product.currentState) {
+      {products &&
+        products.map((product: IProduct[], index: number) => {
+          switch (product[0].currentState) {
             case 'pending':
-              const pendingProduct: IProductList = { productList: [product], productCurrentState: 'pending' };
+              const pendingProduct: IProductList = { productList: [product[0]], productCurrentState: 'pending' };
               return <ProductList key={index} {...pendingProduct} />;
             case 'approved':
-              const approvedProduct: IProductList = { productList: [product], productCurrentState: 'approved' };
+              const approvedProduct: IProductList = { productList: [product[0]], productCurrentState: 'approved' };
               return <ProductList key={index} {...approvedProduct} />;
             case 'discarded':
-              const discardedProduct: IProductList = { productList: [product], productCurrentState: 'discarded' };
+              const discardedProduct: IProductList = { productList: [product[0]], productCurrentState: 'discarded' };
               return <ProductList key={index} {...discardedProduct} />;
             default:
               return 'Product Not Found';
