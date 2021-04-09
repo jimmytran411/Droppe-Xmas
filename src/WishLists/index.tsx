@@ -1,44 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { WishList } from './WishList';
-import { getAllWishLists, IWishList } from '../api/wishList';
+import { IProduct } from 'api/wishList';
+import React from 'react';
+import { IProductList, ProductList } from './ProductList';
 
-export const AllWishLists = () => {
-  const [loading, setLoading] = useState<true | false>();
-  const [wishLists, setWishLists] = useState<[IWishList]>();
-  const [activeWishList, setActiveWishList] = useState<IWishList>();
+export interface ICurrentWishList {
+  id: number;
+  userid: number;
+  currentProductList: IProduct[];
+}
 
-  useEffect(() => {
-    const fetchWishLists = async () => {
-      try {
-        setLoading(true);
-        const { data } = await getAllWishLists();
-        setWishLists(data);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchWishLists();
-  }, []);
-
+export const CurrentWishList = ({ currentProductList }: ICurrentWishList) => {
   return (
     <div>
-      {loading && <p>Loading ...</p>}
-      {wishLists &&
-        wishLists.map((wishList: IWishList, index: number) => {
-          return (
-            <button
-              key={index}
-              type="button"
-              onClick={() => {
-                setActiveWishList(wishList);
-              }}
-            >
-              {wishList.id}
-            </button>
-          );
+      {currentProductList &&
+        currentProductList.map((product: IProduct, index: number) => {
+          switch (product.currentState) {
+            case 'pending':
+              const pendingProduct: IProductList = { productList: [product], productCurrentState: 'pending' };
+              return <ProductList key={index} {...pendingProduct} />;
+            case 'approved':
+              const approvedProduct: IProductList = { productList: [product], productCurrentState: 'approved' };
+              return <ProductList key={index} {...approvedProduct} />;
+            case 'discarded':
+              const discardedProduct: IProductList = { productList: [product], productCurrentState: 'discarded' };
+              return <ProductList key={index} {...discardedProduct} />;
+            default:
+              return 'Product Not Found';
+          }
         })}
-      {activeWishList && <WishList {...activeWishList} />}
     </div>
   );
 };
