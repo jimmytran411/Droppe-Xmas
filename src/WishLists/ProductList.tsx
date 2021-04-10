@@ -5,10 +5,10 @@ import { Product } from './Product';
 
 export interface IProductList {
   productList: IProduct[];
-  productCurrentState: 'pending' | 'approved' | 'discarded';
+  givenState: 'pending' | 'approved' | 'discarded';
 }
 
-export const ProductList = ({ productList, productCurrentState }: IProductList) => {
+export const ProductList = ({ productList, givenState }: IProductList) => {
   const { handleProduct } = useCart();
   return (
     <div className="product-list">
@@ -16,32 +16,32 @@ export const ProductList = ({ productList, productCurrentState }: IProductList) 
         productList.map((product: IProduct, index: number) => {
           return (
             <div key={index} className="product-card">
-              {product.currentState === productCurrentState && (
+              {product.currentState === givenState && (
                 <div>
                   <Product {...product} />
                   <button
                     aria-label={
-                      productCurrentState === 'pending' ? `approve-btn-${product.id}` : `return-btn-${product.id}`
+                      product.currentState === 'pending' ? `approve-btn-${product.id}` : `return-btn-${product.id}`
                     }
                     onClick={() => {
-                      productCurrentState === 'pending'
+                      product.currentState === 'pending'
                         ? handleProduct(product, 'approved')
                         : handleProduct(product, 'pending');
                     }}
                   >
-                    {productCurrentState === 'pending' ? 'Approve' : 'Return to Wishlist'}
+                    {product.currentState === 'pending' ? 'Approve' : 'Return to Wishlist'}
                   </button>
                   <button
                     aria-label={
-                      productCurrentState === 'discarded' ? `approve-btn-${product.id}` : `discard-btn-${product.id}`
+                      product.currentState === 'discarded' ? `approve-btn-${product.id}` : `discard-btn-${product.id}`
                     }
                     onClick={() => {
-                      productCurrentState === 'discarded'
+                      product.currentState === 'discarded'
                         ? handleProduct(product, 'approved')
                         : handleProduct(product, 'discarded');
                     }}
                   >
-                    {productCurrentState === 'discarded' ? 'Approve' : 'Discard'}
+                    {product.currentState === 'discarded' ? 'Approve' : 'Discard'}
                   </button>
                 </div>
               )}

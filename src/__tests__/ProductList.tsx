@@ -24,7 +24,7 @@ test('Render pending wishlist with test input', () => {
       currentState: 'pending',
     },
   ];
-  const testPendingListProp: IProductList = { productList: testPendingList, productCurrentState: 'pending' };
+  const testPendingListProp: IProductList = { productList: testPendingList, givenState: 'pending' };
 
   const { getByText, getByRole } = render(<ProductList {...testPendingListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
@@ -61,7 +61,7 @@ test('Render approve list with test input', () => {
       currentState: 'approved',
     },
   ];
-  const testApproveListProp: IProductList = { productList: testApproveList, productCurrentState: 'approved' };
+  const testApproveListProp: IProductList = { productList: testApproveList, givenState: 'approved' };
 
   const { getByText, getByRole } = render(<ProductList {...testApproveListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
@@ -98,7 +98,7 @@ test('Render discard list with test input', () => {
       currentState: 'discarded',
     },
   ];
-  const testDiscardListProp: IProductList = { productList: testDiscardList, productCurrentState: 'discarded' };
+  const testDiscardListProp: IProductList = { productList: testDiscardList, givenState: 'discarded' };
 
   const { getByText, getByRole } = render(<ProductList {...testDiscardListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();

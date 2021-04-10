@@ -1,15 +1,15 @@
-.wishlist {
+.product-list {
   display: flex;
   flex-wrap: wrap;
 }
 
 .product-card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2);
   max-width: 400px;
   max-height: fit-content;
-  margin: auto;
   text-align: center;
   font-family: arial;
+  margin: 20px;
 }
 
 .price {
