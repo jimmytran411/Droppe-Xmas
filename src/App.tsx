@@ -5,7 +5,7 @@ import { CurrentWishList } from 'WishLists';
 import './App.css';
 
 function App() {
-  const { allwishlist, setCurrentWL, currentWishList } = useCart();
+  const { allwishlist, handleOpenWishList, currentWishList } = useCart();
   return (
     <div className="App">
       <header className="App-header">Droppe Assignment</header>
@@ -16,7 +16,7 @@ function App() {
               key={index}
               aria-label={`child-${wishlist.id}`}
               onClick={() => {
-                setCurrentWL(wishlist);
+                handleOpenWishList(wishlist);
               }}
             >{`Child ${wishlist.id}`}</button>
           );

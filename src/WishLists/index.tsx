@@ -5,23 +5,23 @@ import { IProductList, ProductList } from './ProductList';
 export interface IWishlistWithProductDetail {
   id: number;
   userid: number;
-  products: IProduct[][];
+  products: IProduct[];
 }
 
 export const CurrentWishList = ({ products }: IWishlistWithProductDetail) => {
   return (
     <div>
       {products &&
-        products.map((product: IProduct[], index: number) => {
-          switch (product[0].currentState) {
+        products.map((product: IProduct, index: number) => {
+          switch (product.currentState) {
             case 'pending':
-              const pendingProduct: IProductList = { productList: [product[0]], productCurrentState: 'pending' };
+              const pendingProduct: IProductList = { productList: [product], productCurrentState: 'pending' };
               return <ProductList key={index} {...pendingProduct} />;
             case 'approved':
-              const approvedProduct: IProductList = { productList: [product[0]], productCurrentState: 'approved' };
+              const approvedProduct: IProductList = { productList: [product], productCurrentState: 'approved' };
               return <ProductList key={index} {...approvedProduct} />;
             case 'discarded':
-              const discardedProduct: IProductList = { productList: [product[0]], productCurrentState: 'discarded' };
+              const discardedProduct: IProductList = { productList: [product], productCurrentState: 'discarded' };
               return <ProductList key={index} {...discardedProduct} />;
             default:
               return 'Product Not Found';

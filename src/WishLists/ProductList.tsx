@@ -1,4 +1,5 @@
 import { IProduct } from 'api/wishList';
+import { useCart } from 'context/CartContext';
 import React from 'react';
 import { Product } from './Product';
 
@@ -8,8 +9,9 @@ export interface IProductList {
 }
 
 export const ProductList = ({ productList, productCurrentState }: IProductList) => {
+  const { approve, pending, discard } = useCart();
   const handleApprove = (product: IProduct) => {
-    console.log(product);
+    approve(product);
   };
   const handleDiscard = (product: IProduct) => {
     console.log(product);

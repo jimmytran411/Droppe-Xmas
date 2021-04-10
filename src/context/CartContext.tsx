@@ -5,18 +5,18 @@ import { IWishlistWithProductDetail } from 'WishLists';
 export interface ICart {
   allwishlist: IWishList[];
   currentWishList: IWishlistWithProductDetail | undefined;
-  setCurrentWL: (wishlist: IWishList) => void;
+  handleOpenWishList: (wishlist: IWishList) => void;
   overview: IProduct[];
   currentCartPrice: number;
   totalPrice: number;
-  approve: () => void;
-  discard: () => void;
-  pending: () => void;
+  approve: (product: IProduct) => void;
+  discard: (product: IProduct) => void;
+  pending: (product: IProduct) => void;
 }
 const initialCartValue: ICart = {
   allwishlist: [],
   currentWishList: undefined,
-  setCurrentWL: () => {},
+  handleOpenWishList: () => {},
   overview: [],
   currentCartPrice: 0,
   totalPrice: 0,
@@ -26,7 +26,7 @@ const initialCartValue: ICart = {
 };
 const CartContext = React.createContext<ICart>(initialCartValue);
 function CartProvider(props: any) {
-  const [allWishList, setAllWishList] = React.useState<any>([]);
+  const [allWishList, setAllWishList] = React.useState<IWishlistWithProductDetail[]>([]);
   const [currentWishList, setCurrentWishList] = React.useState<IWishlistWithProductDetail>();
   const [productDetailList, setProductDetailList] = React.useState<IProduct[]>([]);
 
@@ -34,35 +34,48 @@ function CartProvider(props: any) {
     const fetchAllWishList = async () => {
       try {
         const { data } = await getAllWishLists();
-        setAllWishList(data);
-        data.forEach((wishlist: IWishList) => {
+        const allWLWithDetailedProduct = data.map((wishlist: IWishList) => {
+          const detailedProducts: IProduct[] = [];
           wishlist.products.forEach(async ({ productId }: IWishListProduct) => {
             const { data } = await getProduct(productId);
-            const initialProduct: IProduct = { ...data, currentState: 'pending' };
-            setProductDetailList((prev: IProduct[]) => [...prev, initialProduct]);
+            const productWithPendingState: IProduct = { ...data, currentState: 'pending' };
+            detailedProducts.push(productWithPendingState);
           });
+          const wl: IWishlistWithProductDetail = {
+            id: wishlist.id,
+            userid: wishlist.userId,
+            products: detailedProducts,
+          };
+          return wl;
         });
+        setAllWishList(allWLWithDetailedProduct);
       } catch (error) {
         console.log(error);
       }
     };
     fetchAllWishList();
   }, []);
-  const setCurrentWL = (wishlist: IWishList) => {
-    const wishListWithProductDetail = wishlist.products.map(({ productId }: IWishListProduct) => {
-      return productDetailList.filter((product: IProduct) => {
-        return product.id === productId;
-      });
-    });
-    const currWL: IWishlistWithProductDetail = {
-      id: wishlist.id,
-      userid: wishlist.userId,
-      products: wishListWithProductDetail,
-    };
-    setCurrentWishList(currWL);
+
+  const handleOpenWishList = (wishlist: IWishlistWithProductDetail) => {
+    setCurrentWishList(wishlist);
   };
 
-  return <CartContext.Provider value={{ allwishlist: allWishList, currentWishList, setCurrentWL }} {...props} />;
+  const approve = (product: IProduct) => {
+    // const approveProduct =
+    //   currentWishList &&
+    //   currentWishList.products.map((prevProduct: IProduct[]) => {
+    //     return prevProduct[0].id === product.id ? { ...prevProduct[0], currentState: 'approved' } : { ...prevProduct };
+    //   });
+    // console.log(approveProduct);
+    // setCurrentWishList(approveProduct);
+  };
+
+  return (
+    <CartContext.Provider
+      value={{ allwishlist: allWishList, currentWishList, handleOpenWishList, approve }}
+      {...props}
+    />
+  );
 }
 const useCart = () => React.useContext(CartContext);
 
