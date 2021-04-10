@@ -9,17 +9,9 @@ export interface IProductList {
 }
 
 export const ProductList = ({ productList, productCurrentState }: IProductList) => {
-  const { approve, pending, discard } = useCart();
-  const handleApprove = (product: IProduct) => {
-    approve(product);
-  };
-  const handleDiscard = (product: IProduct) => {
-    console.log(product);
-  };
-
-  const handleReturn = (product: IProduct) => {};
+  const { handleProduct } = useCart();
   return (
-    <div className="wishlist">
+    <div className="product-list">
       {productList &&
         productList.map((product: IProduct, index: number) => {
           return (
@@ -32,7 +24,9 @@ export const ProductList = ({ productList, productCurrentState }: IProductList) 
                       productCurrentState === 'pending' ? `approve-btn-${product.id}` : `return-btn-${product.id}`
                     }
                     onClick={() => {
-                      productCurrentState === 'pending' ? handleApprove(product) : handleReturn(product);
+                      productCurrentState === 'pending'
+                        ? handleProduct(product, 'approved')
+                        : handleProduct(product, 'pending');
                     }}
                   >
                     {productCurrentState === 'pending' ? 'Approve' : 'Return to Wishlist'}
@@ -42,7 +36,9 @@ export const ProductList = ({ productList, productCurrentState }: IProductList) 
                       productCurrentState === 'discarded' ? `approve-btn-${product.id}` : `discard-btn-${product.id}`
                     }
                     onClick={() => {
-                      productCurrentState === 'discarded' ? handleApprove(product) : handleDiscard(product);
+                      productCurrentState === 'discarded'
+                        ? handleProduct(product, 'approved')
+                        : handleProduct(product, 'discarded');
                     }}
                   >
                     {productCurrentState === 'discarded' ? 'Approve' : 'Discard'}
