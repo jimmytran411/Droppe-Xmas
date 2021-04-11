@@ -1,7 +1,6 @@
-import { IWishList } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import React from 'react';
-import { CurrentWishList } from 'WishLists';
+import { CurrentWishList, IWishlistWithProductDetail } from 'WishLists';
 import './App.css';
 
 function App() {
@@ -10,7 +9,7 @@ function App() {
     <div className="App">
       <header className="App-header">Droppe Assignment</header>
       {allwishlist &&
-        allwishlist.map((wishlist: IWishList, index: number) => {
+        allwishlist.map((wishlist: IWishlistWithProductDetail, index: number) => {
           return (
             <button
               key={index}

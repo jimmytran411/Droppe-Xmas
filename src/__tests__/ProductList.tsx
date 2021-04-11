@@ -8,7 +8,7 @@ test('Render pending wishlist with test input', () => {
     {
       id: 1,
       title: 'test title 1',
-      price: 'test price 1',
+      price: 111,
       description: 'test description 1',
       image: 'test img link 1',
       category: 'test category 1',
@@ -17,7 +17,7 @@ test('Render pending wishlist with test input', () => {
     {
       id: 2,
       title: 'test title 2',
-      price: 'test price 2',
+      price: 222,
       description: 'test description 2',
       image: 'test img link 2',
       category: 'test category 2',
@@ -28,13 +28,13 @@ test('Render pending wishlist with test input', () => {
 
   const { getByText, getByRole } = render(<ProductList {...testPendingListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
-  expect(getByText(/test price 1/i)).toBeInTheDocument();
+  expect(getByText(/111/i)).toBeInTheDocument();
   expect(getByText(/test description 1/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /discard-btn-1/i })).toBeInTheDocument();
 
   expect(getByText(/test title 2/i)).toBeInTheDocument();
-  expect(getByText(/test price 2/i)).toBeInTheDocument();
+  expect(getByText(/222/i)).toBeInTheDocument();
   expect(getByText(/test description 2/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /discard-btn-1/i })).toBeInTheDocument();
@@ -45,7 +45,7 @@ test('Render approve list with test input', () => {
     {
       id: 1,
       title: 'test title 1',
-      price: 'test price 1',
+      price: 111,
       description: 'test description 1',
       image: 'test img link 1',
       category: 'test category 1',
@@ -54,7 +54,7 @@ test('Render approve list with test input', () => {
     {
       id: 2,
       title: 'test title 2',
-      price: 'test price 2',
+      price: 222,
       description: 'test description 2',
       image: 'test img link 2',
       category: 'test category 2',
@@ -65,13 +65,13 @@ test('Render approve list with test input', () => {
 
   const { getByText, getByRole } = render(<ProductList {...testApproveListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
-  expect(getByText(/test price 1/i)).toBeInTheDocument();
+  expect(getByText(/111/i)).toBeInTheDocument();
   expect(getByText(/test description 1/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /return-btn-1/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /discard-btn-1/i })).toBeInTheDocument();
 
   expect(getByText(/test title 2/i)).toBeInTheDocument();
-  expect(getByText(/test price 2/i)).toBeInTheDocument();
+  expect(getByText(/222/i)).toBeInTheDocument();
   expect(getByText(/test description 2/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /return-btn-1/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /discard-btn-1/i })).toBeInTheDocument();
@@ -82,7 +82,7 @@ test('Render discard list with test input', () => {
     {
       id: 1,
       title: 'test title 1',
-      price: 'test price 1',
+      price: 111,
       description: 'test description 1',
       image: 'test img link 1',
       category: 'test category 1',
@@ -91,7 +91,7 @@ test('Render discard list with test input', () => {
     {
       id: 2,
       title: 'test title 2',
-      price: 'test price 2',
+      price: 222,
       description: 'test description 2',
       image: 'test img link 2',
       category: 'test category 2',
@@ -102,13 +102,13 @@ test('Render discard list with test input', () => {
 
   const { getByText, getByRole } = render(<ProductList {...testDiscardListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
-  expect(getByText(/test price 1/i)).toBeInTheDocument();
+  expect(getByText(/111/i)).toBeInTheDocument();
   expect(getByText(/test description 1/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /return-btn-1/i })).toBeInTheDocument();
 
   expect(getByText(/test title 2/i)).toBeInTheDocument();
-  expect(getByText(/test price 2/i)).toBeInTheDocument();
+  expect(getByText(/222/i)).toBeInTheDocument();
   expect(getByText(/test description 2/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /return-btn-1/i })).toBeInTheDocument();

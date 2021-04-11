@@ -5,16 +5,16 @@
 
 .product-card {
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2);
-  max-width: 400px;
+  max-width: 200px;
   max-height: fit-content;
   text-align: center;
   font-family: arial;
-  margin: 20px;
+  margin: 10px;
 }
 
 .price {
   color: grey;
-  font-size: 22px;
+  font-size: 18px;
 }
 
 .product-card img {
