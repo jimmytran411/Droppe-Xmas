@@ -15,7 +15,8 @@ export const CurrentWishList = (currentWishList: IWishlistWithProductDetail) => 
     <div className="wishlist-container">
       <span className="current-price">
         <p>
-          Current Cart: €{currentCartPrice.toFixed(2)} {currentSaving > 0 && `You save: €${currentSaving.toFixed(2)}`}
+          {currentCartPrice >= 0 && `Current Cart: €${currentCartPrice.toFixed(2)}`}{' '}
+          {currentSaving > 0 && `You save: €${currentSaving.toFixed(2)}`}
         </p>
       </span>
       <div className="pending-list">
