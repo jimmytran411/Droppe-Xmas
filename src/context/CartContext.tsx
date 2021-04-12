@@ -1,4 +1,4 @@
-import { getAllWishLists, getProduct, IProduct, IWishList, IWishListProduct } from 'api/wishList';
+import { getAllWishLists, getProduct, IProduct, IWishList, IWishListProduct, patchWishlist } from 'api/wishList';
 import * as React from 'react';
 import { IWishlistWithProductDetail } from 'WishLists';
 
@@ -11,6 +11,7 @@ export interface ICart {
   totalPrice: number;
   overview: IProduct[];
   handleProduct: (product: IProduct, newState: 'pending' | 'approved' | 'discarded') => void;
+  updateWishList: (wishlist: IWishlistWithProductDetail) => void;
 }
 
 const initialCartValue: ICart = {
@@ -22,6 +23,7 @@ const initialCartValue: ICart = {
   totalPrice: 0,
   overview: [],
   handleProduct: () => {},
+  updateWishList: () => {},
 };
 const CartContext = React.createContext<ICart>(initialCartValue);
 function CartProvider(props: any) {
@@ -119,6 +121,16 @@ function CartProvider(props: any) {
     }
   };
 
+  const updateWishList = async (wishlist: IWishlistWithProductDetail) => {
+    try {
+      setCurrentWishList(undefined);
+      const { data } = await patchWishlist(wishlist);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -128,6 +140,7 @@ function CartProvider(props: any) {
         handleProduct,
         currentCartPrice,
         currentSaving,
+        updateWishList,
       }}
       {...props}
     />

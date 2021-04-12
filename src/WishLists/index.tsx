@@ -9,8 +9,8 @@ export interface IWishlistWithProductDetail {
   products: IProduct[];
 }
 
-export const CurrentWishList = ({ products }: IWishlistWithProductDetail) => {
-  const { currentCartPrice, currentSaving } = useCart();
+export const CurrentWishList = (currentWishList: IWishlistWithProductDetail) => {
+  const { currentCartPrice, currentSaving, updateWishList } = useCart();
   return (
     <div className="wishlist-container">
       <span className="current-price">
@@ -20,16 +20,23 @@ export const CurrentWishList = ({ products }: IWishlistWithProductDetail) => {
       </span>
       <div className="pending-list">
         <h4>Wishlist</h4>
-        <ProductList {...{ productList: products, givenState: 'pending' }} />
+        <ProductList {...{ productList: currentWishList.products, givenState: 'pending' }} />
       </div>
       <div className="approved-list">
         <h4>Approve List</h4>
-        <ProductList {...{ productList: products, givenState: 'approved' }} />
+        <ProductList {...{ productList: currentWishList.products, givenState: 'approved' }} />
       </div>
       <div className="discarded-list">
         <h4>Discarded List</h4>
-        <ProductList {...{ productList: products, givenState: 'discarded' }} />
+        <ProductList {...{ productList: currentWishList.products, givenState: 'discarded' }} />
       </div>
+      <button
+        onClick={() => {
+          updateWishList(currentWishList);
+        }}
+      >
+        Save
+      </button>
     </div>
   );
 };

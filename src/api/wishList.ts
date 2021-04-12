@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { IWishlistWithProductDetail } from 'WishLists';
 
 export interface IWishList {
   id: number;
@@ -30,4 +31,9 @@ export const getProduct = async (id: number) => {
   const { data } = await axios.get<IProduct>(`https://fakestoreapi.com/products/${id}`);
   const productWithPendingState: IProduct = { ...data, currentState: 'pending' };
   return productWithPendingState;
+};
+
+export const patchWishlist = async (wishlist: IWishlistWithProductDetail) => {
+  const updateData = { ...wishlist, date: new Date() };
+  return await axios.patch(`https://fakestoreapi.com/carts/${wishlist.id}`, updateData);
 };
