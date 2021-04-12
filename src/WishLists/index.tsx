@@ -10,11 +10,13 @@ export interface IWishlistWithProductDetail {
 }
 
 export const CurrentWishList = ({ products }: IWishlistWithProductDetail) => {
-  const { currentCartPrice } = useCart();
+  const { currentCartPrice, currentSaving } = useCart();
   return (
     <div className="wishlist-container">
       <span className="current-price">
-        <p>Total: {currentCartPrice}</p>
+        <p>
+          Current Cart: €{currentCartPrice.toFixed(2)} {currentSaving > 0 && `You save: €${currentSaving.toFixed(2)}`}
+        </p>
       </span>
       <div className="pending-list">
         <h4>Wishlist</h4>

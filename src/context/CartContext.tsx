@@ -6,9 +6,10 @@ export interface ICart {
   allwishlist: IWishlistWithProductDetail[];
   currentWishList: IWishlistWithProductDetail | undefined;
   handleOpenWishList: (wishlist: IWishlistWithProductDetail) => void;
-  overview: IProduct[];
   currentCartPrice: number;
+  currentSaving: number;
   totalPrice: number;
+  overview: IProduct[];
   handleProduct: (product: IProduct, newState: 'pending' | 'approved' | 'discarded') => void;
 }
 
@@ -16,16 +17,18 @@ const initialCartValue: ICart = {
   allwishlist: [],
   currentWishList: undefined,
   handleOpenWishList: () => {},
-  overview: [],
   currentCartPrice: 0,
+  currentSaving: 0,
   totalPrice: 0,
+  overview: [],
   handleProduct: () => {},
 };
 const CartContext = React.createContext<ICart>(initialCartValue);
 function CartProvider(props: any) {
   const [allWishList, setAllWishList] = React.useState<IWishlistWithProductDetail[]>([]);
   const [currentWishList, setCurrentWishList] = React.useState<IWishlistWithProductDetail>();
-  const [currentCartPrice, setCurrtentCartPrice] = React.useState<number>(0);
+  const [currentCartPrice, setCurrentCartPrice] = React.useState<number>(0);
+  const [currentSaving, setCurrentSaving] = React.useState<number>(0);
 
   React.useEffect(() => {
     const fetchAllWishList = async () => {
@@ -49,7 +52,18 @@ function CartProvider(props: any) {
 
   const handleOpenWishList = (wishlist: IWishlistWithProductDetail) => {
     setCurrentWishList(wishlist);
-    setCurrtentCartPrice(0);
+    let currentPrice = 0;
+    let totalCartPrice = 0;
+    wishlist.products.forEach((product: IProduct) => {
+      let discount = 0;
+      if (product.currentState === 'approved') {
+        totalCartPrice += product.price;
+        discount = discountPrice(product, wishlist.id);
+      }
+      currentPrice += discount;
+    });
+    setCurrentSaving(totalCartPrice - currentPrice);
+    setCurrentCartPrice(currentPrice);
   };
 
   const handleCurrentPrice = (
@@ -58,28 +72,63 @@ function CartProvider(props: any) {
     productPrice: number
   ) => {
     if (productNewState === 'approved') {
-      setCurrtentCartPrice((prev: number) => prev + productPrice);
+      setCurrentCartPrice((prev: number) => prev + productPrice);
     }
     if (productCurrentState === 'approved' && productNewState !== 'approved') {
-      setCurrtentCartPrice((prev: number) => prev - productPrice);
+      setCurrentCartPrice((prev: number) => prev - productPrice);
     }
   };
 
+  const discountPrice = (currentProduct: IProduct, currentWLId: number) => {
+    let duplicateCount: number = 0;
+    allWishList.forEach((wishlist: IWishlistWithProductDetail) => {
+      wishlist.products.forEach((product: IProduct) => {
+        if (product.currentState === 'approved' && product.id === currentProduct.id && wishlist.id !== currentWLId) {
+          duplicateCount += 1;
+        }
+      });
+    });
+    return (currentProduct.price * (10 - duplicateCount)) / 10;
+  };
+
   const handleProduct = (handledProduct: IProduct, productNewState: 'pending' | 'approved' | 'discarded') => {
-    handleCurrentPrice(handledProduct.currentState, productNewState, handledProduct.price);
     if (currentWishList) {
-      const updateProductList = currentWishList.products.map((prevProduct: IProduct) => {
+      // Display Total Price wih possible discount
+      const discountedProduct = discountPrice(handledProduct, currentWishList.id);
+      handleCurrentPrice(handledProduct.currentState, productNewState, discountedProduct);
+      // Calculate possible saving
+      const possibleSaving = handledProduct.price - discountedProduct;
+      if (productNewState === 'approved') {
+        setCurrentSaving((prev: number) => (prev += possibleSaving));
+      } else {
+        setCurrentSaving((prev: number) => (prev -= possibleSaving));
+      }
+
+      // Update AllWishlist and CurrentWishList
+      const updateProductList: IProduct[] = currentWishList.products.map((prevProduct: IProduct) => {
         const updatedProduct: IProduct = { ...prevProduct, currentState: productNewState };
         return prevProduct.id === handledProduct.id ? updatedProduct : prevProduct;
       });
       const updateCurrentWL: IWishlistWithProductDetail = { ...currentWishList, products: updateProductList };
+      setAllWishList((prev: IWishlistWithProductDetail[]) => {
+        return prev.map((wishlist: IWishlistWithProductDetail) => {
+          return wishlist.id === updateCurrentWL.id ? updateCurrentWL : wishlist;
+        });
+      });
       setCurrentWishList(updateCurrentWL);
     }
   };
 
   return (
     <CartContext.Provider
-      value={{ allwishlist: allWishList, currentWishList, handleOpenWishList, handleProduct, currentCartPrice }}
+      value={{
+        allwishlist: allWishList,
+        currentWishList,
+        handleOpenWishList,
+        handleProduct,
+        currentCartPrice,
+        currentSaving,
+      }}
       {...props}
     />
   );

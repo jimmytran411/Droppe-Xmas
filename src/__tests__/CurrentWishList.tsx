@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { IProduct } from 'api/wishList';
 import { CurrentWishList, IWishlistWithProductDetail } from 'WishLists';
-import userEvent from '@testing-library/user-event';
 
 test('Render discard list with test input', () => {
   const testCurrentWL: IProduct[] = [
@@ -37,14 +36,12 @@ test('Render discard list with test input', () => {
   const testCurrentWLProp: IWishlistWithProductDetail = { id: 1, userid: 1, products: testCurrentWL };
 
   const { getByText, getByRole } = render(<CurrentWishList {...testCurrentWLProp} />);
-  expect(getByText(/price: 0/i)).toBeInTheDocument();
+  expect(getByText(/Current Cart: €0.00/i)).toBeInTheDocument();
   expect(getByText(/test title 1/i)).toBeInTheDocument();
   expect(getByText(/111/i)).toBeInTheDocument();
   expect(getByText(/test description 1/i)).toBeInTheDocument();
-  userEvent.click(getByRole('button', { name: /approve-btn-1/i }));
-  expect(getByText(/price: 111/i)).toBeInTheDocument;
-  userEvent.click(getByRole('button', { name: /discard-btn-1/i }));
-  expect(getByText(/price: 0/i)).toBeInTheDocument;
+  expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
+  expect(getByRole('button', { name: /discard-btn-2/i })).toBeInTheDocument();
 
   expect(getByText(/test title 2/i)).toBeInTheDocument();
   expect(getByText(/222/i)).toBeInTheDocument();
