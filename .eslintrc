@@ -1,5 +1,5 @@
 {
-  "plugins": ["testing-library", "jest-dom", "immutable"],
+  "plugins": ["testing-library", "jest-dom"],
   "rules": {
     "testing-library/await-async-query": "error",
     "testing-library/no-await-sync-query": "error",
@@ -7,10 +7,7 @@
     "jest-dom/prefer-checked": "error",
     "jest-dom/prefer-enabled-disabled": "error",
     "jest-dom/prefer-required": "error",
-    "jest-dom/prefer-to-have-attribute": "error",
-    "immutable/no-let": 2,
-    "immutable/no-this": 2,
-    "immutable/no-mutation": 2
+    "jest-dom/prefer-to-have-attribute": "error"
   },
   "extends": ["plugin:testing-library/recommended", "plugin:testing-library/react", "plugin:jest-dom/recommended"]
 }
