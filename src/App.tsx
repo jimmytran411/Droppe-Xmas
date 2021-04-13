@@ -3,7 +3,6 @@ import { Header } from 'Header';
 import { Overview } from 'Overview';
 import React, { useState } from 'react';
 import { CurrentWishList } from 'WishLists';
-// import './App.css';
 
 function App() {
   const [overview, setOverview] = useState(false);
