@@ -37,6 +37,7 @@ export const Header = ({ handleCheckout }: IHeader) => {
                 onClick={() => {
                   handleOpenWishList(wishlist);
                   handleCheckout(false);
+                  setTotalTextGroup(true);
                 }}
               >{`Child ${wishlist.id}`}</button>
             );
