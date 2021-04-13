@@ -14,6 +14,7 @@ export interface ICart {
   updateWishList: (wishlist: IWishlistWithProductDetail) => void;
   productListEmptyCheck: (product: IProduct[], givenState: 'pending' | 'approved' | 'discarded') => boolean;
   allWishlistDuplicateCount: (product: IProduct) => number;
+  isLoading: boolean;
 }
 
 interface IDiscountCheck {
@@ -33,6 +34,7 @@ const initialCartValue: ICart = {
   updateWishList: () => {},
   productListEmptyCheck: () => false,
   allWishlistDuplicateCount: () => 0,
+  isLoading: true,
 };
 const CartContext = React.createContext<ICart>(initialCartValue);
 function CartProvider(props: any) {
@@ -42,10 +44,12 @@ function CartProvider(props: any) {
   const [currentSaving, setCurrentSaving] = React.useState<number>(0);
   const [totalPrice, setTotalPrice] = React.useState<number>(0);
   const [totalPriceWithoutDiscount, setTotalPriceWithoutDiscount] = React.useState<number>(0);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     const fetchAllWishList = async () => {
       try {
+        setIsLoading(true);
         const { data } = await getAllWishLists();
         const allWLWithDetailedProduct = data.map((wishlist: IWishList) => {
           const detailedProducts: IProduct[] = [];
@@ -56,6 +60,9 @@ function CartProvider(props: any) {
           return { id: wishlist.id, userid: wishlist.userId, products: detailedProducts };
         });
         setAllWishList(allWLWithDetailedProduct);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1500);
       } catch (error) {
         console.log(error);
       }
@@ -203,6 +210,7 @@ function CartProvider(props: any) {
         totalPriceWithoutDiscount,
         productListEmptyCheck,
         allWishlistDuplicateCount,
+        isLoading,
       }}
       {...props}
     />

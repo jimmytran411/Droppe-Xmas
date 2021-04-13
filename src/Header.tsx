@@ -8,7 +8,7 @@ export interface IHeader {
 
 export const Header = ({ handleCheckout }: IHeader) => {
   const [totalTextGroup, setTotalTextGroup] = useState(true);
-  const { allwishlist, handleOpenWishList, totalPrice, totalPriceWithoutDiscount } = useCart();
+  const { allwishlist, handleOpenWishList, totalPrice, totalPriceWithoutDiscount, isLoading } = useCart();
   return (
     <header className="App-header">
       Droppe Assignment
@@ -28,7 +28,8 @@ export const Header = ({ handleCheckout }: IHeader) => {
         </div>
       )}
       <div className="wishlist-nav">
-        {allwishlist &&
+        {isLoading && <div className="loading-animation">Loading ...</div>}
+        {!isLoading &&
           allwishlist.map((wishlist: IWishlistWithProductDetail, index: number) => {
             return (
               <button
