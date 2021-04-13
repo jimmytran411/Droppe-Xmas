@@ -13,6 +13,7 @@ export interface ICart {
   overview: IProduct[];
   handleProduct: (product: IProduct, newState: 'pending' | 'approved' | 'discarded') => void;
   updateWishList: (wishlist: IWishlistWithProductDetail) => void;
+  productListEmptyCheck: (product: IProduct[], givenState: 'pending' | 'approved' | 'discarded') => boolean;
 }
 
 interface IDiscountCheck {
@@ -31,6 +32,7 @@ const initialCartValue: ICart = {
   overview: [],
   handleProduct: () => {},
   updateWishList: () => {},
+  productListEmptyCheck: () => false,
 };
 const CartContext = React.createContext<ICart>(initialCartValue);
 function CartProvider(props: any) {
@@ -94,8 +96,8 @@ function CartProvider(props: any) {
         } else {
           return (
             prev -
-            (duplicate * originalPrice * (10 - duplicate + 1)) / 10 +
-            ((duplicate + 1) * originalPrice * (10 - duplicate)) / 10
+            (duplicate * originalPrice * (10 - duplicate + 1)) / 10 + //minus the previous discount
+            ((duplicate + 1) * originalPrice * (10 - duplicate)) / 10 // add new discount
           );
         }
       });
@@ -112,8 +114,8 @@ function CartProvider(props: any) {
         } else {
           return (
             prev +
-            (duplicate * originalPrice * (10 - duplicate + 1)) / 10 -
-            ((duplicate + 1) * originalPrice * (10 - duplicate)) / 10
+            (duplicate * originalPrice * (10 - duplicate + 1)) / 10 - // add the previous discount
+            ((duplicate + 1) * originalPrice * (10 - duplicate)) / 10 // minus the previous discount
           );
         }
       });
@@ -170,6 +172,11 @@ function CartProvider(props: any) {
     }
   };
 
+  const productListEmptyCheck = (productList: IProduct[], givenState: 'pending' | 'approved' | 'discarded') => {
+    const productListcheck = productList.filter((product: IProduct) => product.currentState === givenState);
+    return productListcheck.length ? false : true;
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -182,6 +189,7 @@ function CartProvider(props: any) {
         updateWishList,
         totalPrice,
         totalPriceWithoutDiscount,
+        productListEmptyCheck,
       }}
       {...props}
     />

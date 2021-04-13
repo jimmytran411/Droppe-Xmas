@@ -10,7 +10,7 @@ export interface IWishlistWithProductDetail {
 }
 
 export const CurrentWishList = (currentWishList: IWishlistWithProductDetail) => {
-  const { currentCartPrice, currentSaving, updateWishList } = useCart();
+  const { currentCartPrice, currentSaving, updateWishList, productListEmptyCheck } = useCart();
   return (
     <div className="wishlist-container">
       <span className="current-price">
@@ -21,15 +21,27 @@ export const CurrentWishList = (currentWishList: IWishlistWithProductDetail) => 
       </span>
       <div className="pending-list">
         <h4>Wishlist</h4>
-        <ProductList {...{ productList: currentWishList.products, givenState: 'pending' }} />
+        {!productListEmptyCheck(currentWishList.products, 'pending') ? (
+          <ProductList {...{ productList: currentWishList.products, givenState: 'pending' }} />
+        ) : (
+          'No more gift to show'
+        )}
       </div>
       <div className="approved-list">
         <h4>Approve List</h4>
-        <ProductList {...{ productList: currentWishList.products, givenState: 'approved' }} />
+        {!productListEmptyCheck(currentWishList.products, 'approved') ? (
+          <ProductList {...{ productList: currentWishList.products, givenState: 'approved' }} />
+        ) : (
+          `You haven't approved anything yet`
+        )}
       </div>
       <div className="discarded-list">
         <h4>Discarded List</h4>
-        <ProductList {...{ productList: currentWishList.products, givenState: 'discarded' }} />
+        {!productListEmptyCheck(currentWishList.products, 'discarded') ? (
+          <ProductList {...{ productList: currentWishList.products, givenState: 'discarded' }} />
+        ) : (
+          `You haven't discarded anything yet`
+        )}
       </div>
       <button
         onClick={() => {
