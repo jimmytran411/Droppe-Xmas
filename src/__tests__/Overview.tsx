@@ -46,11 +46,12 @@ const mockValue = {
   productListEmptyCheck: jest.fn(),
   currentCartPrice: 20,
   currentSaving: 20,
+  allWishlistDuplicateCount: jest.fn(),
 };
 
 test('Test Overview show value from provider', () => {
   const wrapper = ({ children }: any) => <CartContext.Provider value={mockValue}>{children}</CartContext.Provider>;
-  const { getByText, getByRole } = render(<Overview />, {
+  const { getByText } = render(<Overview />, {
     wrapper,
   });
 

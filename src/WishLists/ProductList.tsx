@@ -9,16 +9,24 @@ export interface IProductList {
 }
 
 export const ProductList = ({ productList, givenState }: IProductList) => {
-  const { handleProduct } = useCart();
+  const { handleProduct, allWishlistDuplicateCount } = useCart();
   return (
     <div className="product-list">
       {productList &&
         productList.map((product: IProduct, index: number) => {
+          const duplicateCount = allWishlistDuplicateCount(product);
+          const discountPercent = duplicateCount > 0 && duplicateCount * 10;
           return (
             <div key={index} className="product-card">
               {product.currentState === givenState && (
                 <div>
                   <Product {...product} />
+                  <p className="discount-message">
+                    <b>
+                      {duplicateCount > 0 &&
+                        `Other children want this too. Save up to ${discountPercent}% by choosing this product`}
+                    </b>
+                  </p>
                   <button
                     aria-label={
                       product.currentState === 'pending' ? `approve-btn-${product.id}` : `return-btn-${product.id}`

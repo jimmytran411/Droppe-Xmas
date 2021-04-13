@@ -13,6 +13,7 @@ export interface ICart {
   handleProduct: (product: IProduct, newState: 'pending' | 'approved' | 'discarded') => void;
   updateWishList: (wishlist: IWishlistWithProductDetail) => void;
   productListEmptyCheck: (product: IProduct[], givenState: 'pending' | 'approved' | 'discarded') => boolean;
+  allWishlistDuplicateCount: (product: IProduct) => number;
 }
 
 interface IDiscountCheck {
@@ -31,6 +32,7 @@ const initialCartValue: ICart = {
   handleProduct: () => {},
   updateWishList: () => {},
   productListEmptyCheck: () => false,
+  allWishlistDuplicateCount: () => 0,
 };
 const CartContext = React.createContext<ICart>(initialCartValue);
 function CartProvider(props: any) {
@@ -175,6 +177,18 @@ function CartProvider(props: any) {
     return productListcheck.length ? false : true;
   };
 
+  const allWishlistDuplicateCount = (productToCheck: IProduct) => {
+    let count = 0;
+    allWishList &&
+      currentWishList &&
+      allWishList.forEach(({ products, id }: IWishlistWithProductDetail) => {
+        products.forEach((product: IProduct) => {
+          product.id === productToCheck.id && currentWishList.id !== id && count++;
+        });
+      });
+    return count === 0 ? 0 : count + 1;
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -188,6 +202,7 @@ function CartProvider(props: any) {
         totalPrice,
         totalPriceWithoutDiscount,
         productListEmptyCheck,
+        allWishlistDuplicateCount,
       }}
       {...props}
     />

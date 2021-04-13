@@ -51,6 +51,7 @@ const mockValue = {
   productListEmptyCheck: jest.fn(),
   currentCartPrice: 20,
   currentSaving: 20,
+  allWishlistDuplicateCount: jest.fn(),
 };
 const handleCheckout = jest.fn();
 test('Test Overview show value from provider', () => {
