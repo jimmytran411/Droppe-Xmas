@@ -10,7 +10,6 @@ export interface ICart {
   currentSaving: number;
   totalPrice: number;
   totalPriceWithoutDiscount: number;
-  overview: IProduct[];
   handleProduct: (product: IProduct, newState: 'pending' | 'approved' | 'discarded') => void;
   updateWishList: (wishlist: IWishlistWithProductDetail) => void;
   productListEmptyCheck: (product: IProduct[], givenState: 'pending' | 'approved' | 'discarded') => boolean;
@@ -29,7 +28,6 @@ const initialCartValue: ICart = {
   currentSaving: 0,
   totalPrice: 0,
   totalPriceWithoutDiscount: 0,
-  overview: [],
   handleProduct: () => {},
   updateWishList: () => {},
   productListEmptyCheck: () => false,
@@ -104,7 +102,7 @@ function CartProvider(props: any) {
       setCurrentSaving((prev: number) => prev + possibleSaving);
       setTotalPriceWithoutDiscount((prev: number) => prev + originalPrice);
     }
-    if (productCurrentState === 'approved' && productNewState !== 'approved') {
+    if (productCurrentState === 'approved') {
       setCurrentCartPrice((prev: number) => prev - discountCheckedPrice);
       setTotalPrice((prev: number) => {
         if (duplicate === 0) {
