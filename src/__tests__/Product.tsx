@@ -17,5 +17,4 @@ test('Render Product component with given product', () => {
   const { getByText } = render(<Product {...testProduct} />);
   expect(getByText(/test title/i)).toBeInTheDocument();
   expect(getByText(/111/i)).toBeInTheDocument();
-  expect(getByText(/test description/i)).toBeInTheDocument();
 });

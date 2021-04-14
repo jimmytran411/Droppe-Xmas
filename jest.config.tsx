@@ -3,4 +3,7 @@ const config = require('kcd-scripts/jest');
 module.exports = {
   ...config,
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
+  moduleNameMapper: {
+    '\\.(css|less|scss)$': 'identity-obj-proxy',
+  },
 };

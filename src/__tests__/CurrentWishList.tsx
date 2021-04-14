@@ -39,19 +39,16 @@ test('Render discard list with test input', () => {
   expect(getByText(/Current Cart: €0.00/i)).toBeInTheDocument();
   expect(getByText(/test title 1/i)).toBeInTheDocument();
   expect(getByText(/111/i)).toBeInTheDocument();
-  expect(getByText(/test description 1/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /discard-btn-2/i })).toBeInTheDocument();
 
   expect(getByText(/test title 2/i)).toBeInTheDocument();
   expect(getByText(/222/i)).toBeInTheDocument();
-  expect(getByText(/test description 2/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /return-btn-2/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /discard-btn-2/i })).toBeInTheDocument();
 
   expect(getByText(/test title 3/i)).toBeInTheDocument();
   expect(getByText(/333/i)).toBeInTheDocument();
-  expect(getByText(/test description 3/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /return-btn-3/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /approve-btn-3/i })).toBeInTheDocument();
 });

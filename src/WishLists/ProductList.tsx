@@ -19,7 +19,7 @@ export const ProductList = ({ productList, givenState }: IProductList) => {
           return (
             <div key={index} className="product-card">
               {product.currentState === givenState && (
-                <div>
+                <>
                   <Product {...product} />
                   <p className="discount-message">
                     <b>
@@ -51,7 +51,7 @@ export const ProductList = ({ productList, givenState }: IProductList) => {
                   >
                     {product.currentState === 'discarded' ? 'Approve' : 'Discard'}
                   </button>
-                </div>
+                </>
               )}
             </div>
           );

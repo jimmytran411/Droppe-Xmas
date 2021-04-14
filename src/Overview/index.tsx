@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { IWishlistWithProductDetail } from 'WishLists';
 import { Product } from 'WishLists/Product';
 import Modal from '../Modal';
+import './Overview.css';
 
 interface IProductWithQuantity extends IProduct {
   quantity: number;
@@ -60,16 +61,24 @@ export const Overview = () => {
         {totalPrice > 0 && overview.length
           ? overview.map((wishlist: IWishlistWithProductDetail) => {
               return (
-                <div key={wishlist.id}>
+                <div className="child-approve-list" key={wishlist.id}>
                   <h5>{`Child ${wishlist.id}:`}</h5>
                   {productListEmptyCheck(wishlist.products, 'approved') ? (
                     `You haven't approved any gift for Child ${wishlist.id} yet`
                   ) : (
                     <React.Fragment>
                       {wishlist.products.map((product: IProduct) => {
-                        return product.currentState === 'approved' && <Product key={product.id} {...product} />;
+                        return (
+                          product.currentState === 'approved' && (
+                            <div className="overview-product-card" key={product.id}>
+                              <img src={product.image} alt={product.title} />
+                              <h5>{product.title}</h5>
+                              <p className="price">€{product.price}</p>
+                              <button>⏎</button>
+                            </div>
+                          )
+                        );
                       })}
-                      )
                     </React.Fragment>
                   )}
                 </div>
@@ -93,7 +102,7 @@ export const Overview = () => {
           <h5>These items are still in your wishlists:</h5>
           {overview.map((wishlist: IWishlistWithProductDetail, index: number) => {
             return (
-              <div key={index}>
+              <div className="child-pending-list" key={index}>
                 <p>Child {wishlist.id}</p>
                 {wishlist.products.map((product: IProduct) => {
                   return product.currentState === 'pending' && <Product key={product.id} {...product} />;
@@ -116,7 +125,7 @@ export const Overview = () => {
       {confirm && (
         <Modal>
           {pay && (
-            <div>
+            <div className="success-payment">
               <p>Payment successfully</p>
               <button
                 onClick={() => {
@@ -129,12 +138,12 @@ export const Overview = () => {
             </div>
           )}
           {!pay && (
-            <div>
-              <p>
+            <div className="payment-overview">
+              <h6>
                 {approvedProductList.length
                   ? 'You have these gifts in your cart:'
                   : `You haven't approved any gifts yet`}
-              </p>
+              </h6>
               {approvedProductList &&
                 approvedProductList.map(({ id, image, title, quantity, price }: IProductWithQuantity) => {
                   return (
@@ -143,7 +152,7 @@ export const Overview = () => {
                       <h5>{title}</h5>
                       <p>Quantity: {quantity}</p>
                       <p>Total: {quantity > 1 ? (price * quantity * (10 - quantity)) / 10 : price.toFixed(2)}</p>
-                      {quantity > 1 && <p>You save: {(price * quantity * quantity) / 10}</p>}
+                      {quantity > 1 && <p>You save: {((price * quantity * quantity) / 10).toFixed(2)}</p>}
                     </div>
                   );
                 })}

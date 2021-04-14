@@ -29,13 +29,11 @@ test('Render pending wishlist with test input', () => {
   const { getByText, getByRole } = render(<ProductList {...testPendingListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
   expect(getByText(/111/i)).toBeInTheDocument();
-  expect(getByText(/test description 1/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /discard-btn-1/i })).toBeInTheDocument();
 
   expect(getByText(/test title 2/i)).toBeInTheDocument();
   expect(getByText(/222/i)).toBeInTheDocument();
-  expect(getByText(/test description 2/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /discard-btn-1/i })).toBeInTheDocument();
 });
@@ -66,13 +64,11 @@ test('Render approve list with test input', () => {
   const { getByText, getByRole } = render(<ProductList {...testApproveListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
   expect(getByText(/111/i)).toBeInTheDocument();
-  expect(getByText(/test description 1/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /return-btn-1/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /discard-btn-1/i })).toBeInTheDocument();
 
   expect(getByText(/test title 2/i)).toBeInTheDocument();
   expect(getByText(/222/i)).toBeInTheDocument();
-  expect(getByText(/test description 2/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /return-btn-1/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /discard-btn-1/i })).toBeInTheDocument();
 });
@@ -103,13 +99,11 @@ test('Render discard list with test input', () => {
   const { getByText, getByRole } = render(<ProductList {...testDiscardListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
   expect(getByText(/111/i)).toBeInTheDocument();
-  expect(getByText(/test description 1/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /return-btn-1/i })).toBeInTheDocument();
 
   expect(getByText(/test title 2/i)).toBeInTheDocument();
   expect(getByText(/222/i)).toBeInTheDocument();
-  expect(getByText(/test description 2/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /return-btn-1/i })).toBeInTheDocument();
 });
