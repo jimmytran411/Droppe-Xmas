@@ -17,6 +17,7 @@ export interface ICart {
   isLoading: boolean;
   totalApprovedProduct: number;
   handlePayment: () => void;
+  overview: IWishlistWithProductDetail[];
 }
 
 interface IDiscountCheck {
@@ -39,6 +40,7 @@ const initialCartValue: ICart = {
   isLoading: true,
   totalApprovedProduct: 0,
   handlePayment: () => {},
+  overview: [],
 };
 const CartContext = React.createContext<ICart>(initialCartValue);
 function CartProvider(props: any) {
@@ -50,6 +52,7 @@ function CartProvider(props: any) {
   const [totalPriceWithoutDiscount, setTotalPriceWithoutDiscount] = React.useState<number>(0);
   const [isLoading, setIsLoading] = React.useState(true);
   const [totalApprovedProduct, setTotalApprovedProduct] = React.useState<number>(0);
+  const [overview, setOverview] = React.useState<IWishlistWithProductDetail[]>([]);
 
   React.useEffect(() => {
     const fetchAllWishList = async () => {
@@ -115,7 +118,6 @@ function CartProvider(props: any) {
       });
       setCurrentSaving((prev: number) => prev + possibleSaving);
       setTotalPriceWithoutDiscount((prev: number) => prev + originalPrice);
-      setTotalApprovedProduct((prev) => prev + 1);
     }
     if (productCurrentState === 'approved') {
       setCurrentCartPrice((prev: number) => prev - discountCheckedPrice);
@@ -134,7 +136,6 @@ function CartProvider(props: any) {
       });
       setCurrentSaving((prev: number) => prev - possibleSaving);
       setTotalPriceWithoutDiscount((prev: number) => prev - originalPrice);
-      setTotalApprovedProduct((prev) => prev - 1);
     }
   };
 
@@ -180,6 +181,9 @@ function CartProvider(props: any) {
       setCurrentWishList(undefined);
       const { data } = await patchWishlist(wishlist);
       console.log(data);
+      const count = totalApprovedProductCount();
+      setTotalApprovedProduct(count);
+      setOverview(allWishList);
     } catch (error) {
       console.log(error);
     }
@@ -218,6 +222,16 @@ function CartProvider(props: any) {
     setTotalPriceWithoutDiscount(0);
   };
 
+  const totalApprovedProductCount = () => {
+    let count = 0;
+    allWishList.forEach(({ products }: IWishlistWithProductDetail) => {
+      products.forEach((product: IProduct) => {
+        product.currentState === 'approved' && count++;
+      });
+    });
+    return count;
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -235,6 +249,7 @@ function CartProvider(props: any) {
         isLoading,
         totalApprovedProduct,
         handlePayment,
+        overview,
       }}
       {...props}
     />

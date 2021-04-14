@@ -46,12 +46,16 @@ const mockValue = {
   productListEmptyCheck: jest.fn(),
   currentCartPrice: 20,
   currentSaving: 20,
-  allWishlistDuplicateCount: jest.fn(),
+  totalQuantity: jest.fn(),
+  overview: [{ ...testCurrentWLProp }],
+  isLoading: false,
+  totalApprovedProduct: 1,
+  handlePayment: jest.fn(),
 };
 
 test('Test Overview show value from provider', () => {
   const wrapper = ({ children }: any) => <CartContext.Provider value={mockValue}>{children}</CartContext.Provider>;
-  const { getByText } = render(<Overview />, {
+  const { getByText, getByRole } = render(<Overview />, {
     wrapper,
   });
 
@@ -59,4 +63,5 @@ test('Test Overview show value from provider', () => {
   expect(getByText(/you save:/i).textContent).toBe('You save: €20.00');
   expect(getByText(/These items are still in your wishlists:/i)).toBeInTheDocument();
   expect(getByText(/You discard these:/i)).toBeInTheDocument();
+  expect(getByRole('button', { name: /checkout/i })).toBeInTheDocument;
 });

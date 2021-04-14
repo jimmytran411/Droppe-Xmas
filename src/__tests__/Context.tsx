@@ -47,7 +47,10 @@ const mockValue = {
   productListEmptyCheck: jest.fn(),
   currentCartPrice: 20,
   currentSaving: 20,
-  allWishlistDuplicateCount: jest.fn(),
+  totalQuantity: jest.fn(),
+  isLoading: false,
+  handlePayment: jest.fn(),
+  totalApprovedProduct: 0,
 };
 
 test('Test App show value from provider', () => {
@@ -62,7 +65,7 @@ test('Test App show value from provider', () => {
 
   userEvent.click(getByRole('button', { name: /child-1/i }));
   expect(mockValue.handleOpenWishList).toHaveBeenCalledTimes(1);
-  expect(mockValue.allWishlistDuplicateCount).toHaveBeenCalledTimes(9);
+  expect(mockValue.totalQuantity).toHaveBeenCalledTimes(9);
 
   userEvent.click(getByRole('button', { name: /approve-btn-1/i }));
   expect(mockValue.handleProduct).toHaveBeenCalledTimes(1);

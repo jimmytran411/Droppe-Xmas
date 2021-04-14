@@ -48,7 +48,7 @@ export const CurrentWishList = (currentWishList: IWishlistWithProductDetail) => 
           updateWishList(currentWishList);
         }}
       >
-        Save
+        Save to Cart
       </button>
     </div>
   );

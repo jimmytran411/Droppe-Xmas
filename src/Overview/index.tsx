@@ -10,16 +10,16 @@ interface IProductWithQuantity extends IProduct {
 }
 
 export const Overview = () => {
-  const { totalPrice, totalPriceWithoutDiscount, allwishlist, productListEmptyCheck, handlePayment } = useCart();
+  const { totalPrice, totalPriceWithoutDiscount, overview, productListEmptyCheck, handlePayment } = useCart();
   const [approvedProductList, setApprovedProductList] = useState<IProductWithQuantity[]>([]);
   const [confirm, setConfirm] = useState(false);
   const [pay, setPay] = useState(false);
 
   const allWLEmptyCheck = (
-    allWishList: IWishlistWithProductDetail[],
+    overview: IWishlistWithProductDetail[],
     givenState: 'pending' | 'approved' | 'discarded'
   ) => {
-    const allWLCheck = allWishList.map(({ products }: IWishlistWithProductDetail) => {
+    const allWLCheck = overview.map(({ products }: IWishlistWithProductDetail) => {
       return products.filter((product: IProduct) => product.currentState === givenState);
     });
     return allWLCheck.some((a) => {
@@ -37,7 +37,7 @@ export const Overview = () => {
 
   useEffect(() => {
     const allApprovedProducts: IProduct[] = [];
-    allwishlist.forEach((wishlist: IWishlistWithProductDetail) => {
+    overview.forEach((wishlist: IWishlistWithProductDetail) => {
       return wishlist.products.forEach(
         (product: IProduct) => product.currentState === 'approved' && allApprovedProducts.push(product)
       );
@@ -52,13 +52,13 @@ export const Overview = () => {
       .values();
     const approvedProductWithQuantity: IProductWithQuantity[] = [...mapOfApprovedProducts];
     setApprovedProductList(approvedProductWithQuantity);
-  }, [allwishlist]);
+  }, [overview]);
 
   return (
     <div className="overview-container">
       <div className="overview-approve-list">
-        {totalPrice > 0
-          ? allwishlist.map((wishlist: IWishlistWithProductDetail) => {
+        {totalPrice > 0 && overview.length
+          ? overview.map((wishlist: IWishlistWithProductDetail) => {
               return (
                 <div key={wishlist.id}>
                   <h5>{`Child ${wishlist.id}:`}</h5>
@@ -77,10 +77,10 @@ export const Overview = () => {
             })
           : `You haven't approved any gift yet`}
       </div>
-      <div className="total-cost">
-        Total: <b>€{totalPrice.toFixed(2)}</b>
+      <div className="total-cost">Total: €{overview.length ? <b>{totalPrice.toFixed(2)}</b> : '0.00'}</div>
+      <div className="total-saving">
+        You save: €{overview.length ? (totalPriceWithoutDiscount - totalPrice).toFixed(2) : '0.00'}
       </div>
-      <div className="total-saving">You save: €{(totalPriceWithoutDiscount - totalPrice).toFixed(2)}</div>
       <button
         onClick={() => {
           toggleModal();
@@ -88,10 +88,10 @@ export const Overview = () => {
       >
         Proceed to Checkout
       </button>
-      {!allWLEmptyCheck(allwishlist, 'pending') && (
+      {!allWLEmptyCheck(overview, 'pending') && (
         <div className="overview-pending-list">
           <h5>These items are still in your wishlists:</h5>
-          {allwishlist.map((wishlist: IWishlistWithProductDetail, index: number) => {
+          {overview.map((wishlist: IWishlistWithProductDetail, index: number) => {
             return (
               <div key={index}>
                 <p>Child {wishlist.id}</p>
@@ -103,10 +103,10 @@ export const Overview = () => {
           })}
         </div>
       )}
-      {!allWLEmptyCheck(allwishlist, 'discarded') && (
+      {!allWLEmptyCheck(overview, 'discarded') && (
         <div className="overview-discard-list">
           <h5>You discard these:</h5>
-          {allwishlist.map((wishlist: IWishlistWithProductDetail) => {
+          {overview.map((wishlist: IWishlistWithProductDetail) => {
             return wishlist.products.map((product: IProduct) => {
               return product.currentState === 'discarded' && <Product key={product.id} {...product} />;
             });
