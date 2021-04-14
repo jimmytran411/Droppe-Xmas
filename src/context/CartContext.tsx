@@ -19,7 +19,10 @@ export interface ICart {
 
 interface IDiscountCheck {
   discountCheckedPrice: number;
-  duplicate: number;
+  quantity: number;
+}
+interface IProductWithQuantity extends IProduct {
+  quantity: number;
 }
 
 const initialCartValue: ICart = {
@@ -89,22 +92,22 @@ function CartProvider(props: any) {
   const handleCurrentPrice = (
     productCurrentState: 'pending' | 'approved' | 'discarded',
     productNewState: 'pending' | 'approved' | 'discarded',
-    { discountCheckedPrice, duplicate }: IDiscountCheck,
+    { discountCheckedPrice, quantity }: IDiscountCheck,
     originalPrice: number
   ) => {
     const possibleSaving = originalPrice - discountCheckedPrice;
     if (productNewState === 'approved') {
       setCurrentCartPrice((prev: number) => prev + discountCheckedPrice);
       setTotalPrice((prev: number) => {
-        if (duplicate === 0) {
+        if (quantity === 1) {
           return prev + originalPrice;
-        } else if (duplicate === 1) {
-          return prev - originalPrice + (2 * originalPrice * 9) / 10;
+        } else if (quantity === 2) {
+          return prev - originalPrice + (2 * originalPrice * 8) / 10;
         } else {
           return (
             prev -
-            (duplicate * originalPrice * (10 - duplicate + 1)) / 10 + //minus the previous discount
-            ((duplicate + 1) * originalPrice * (10 - duplicate)) / 10 // add new discount
+            ((quantity - 1) * originalPrice * (10 - quantity + 1)) / 10 + //minus the previous discount
+            quantity * discountCheckedPrice // add new discount
           );
         }
       });
@@ -114,15 +117,15 @@ function CartProvider(props: any) {
     if (productCurrentState === 'approved') {
       setCurrentCartPrice((prev: number) => prev - discountCheckedPrice);
       setTotalPrice((prev: number) => {
-        if (duplicate === 0) {
+        if (quantity === 1) {
           return prev - originalPrice;
-        } else if (duplicate === 1) {
-          return prev + originalPrice - (2 * originalPrice * 9) / 10;
+        } else if (quantity === 2) {
+          return prev + originalPrice - (2 * originalPrice * 8) / 10;
         } else {
           return (
             prev +
-            (duplicate * originalPrice * (10 - duplicate + 1)) / 10 - // add the previous discount
-            ((duplicate + 1) * originalPrice * (10 - duplicate)) / 10 // minus the previous discount
+            ((quantity - 1) * originalPrice * (10 - quantity + 1)) / 10 - // add the new discount
+            quantity * discountCheckedPrice // minus the previous discount
           );
         }
       });
@@ -132,19 +135,18 @@ function CartProvider(props: any) {
   };
 
   const discountPrice = (currentProduct: IProduct, currentWLId: number) => {
-    let duplicateCount: number = 0;
+    let quantity: number = 1;
     allWishList.forEach((wishlist: IWishlistWithProductDetail) => {
       wishlist.products.forEach((product: IProduct) => {
         if (product.currentState === 'approved' && product.id === currentProduct.id && wishlist.id !== currentWLId) {
-          duplicateCount += 1;
+          quantity += 1;
         }
       });
     });
-    const discountedPrice =
-      duplicateCount > 0 ? (currentProduct.price * (10 - duplicateCount)) / 10 : currentProduct.price;
+    const discountedPrice = quantity > 1 ? (currentProduct.price * (10 - quantity)) / 10 : currentProduct.price;
     const discountCheck: IDiscountCheck = {
       discountCheckedPrice: discountedPrice,
-      duplicate: duplicateCount,
+      quantity,
     };
     return discountCheck;
   };

@@ -14,8 +14,11 @@ export const Header = ({ handleCheckout }: IHeader) => {
       Droppe Assignment
       {totalTextGroup && (
         <div className="total-text-group">
-          <span className="total-price">Total: €{totalPrice.toFixed(2)}</span>
-          <span className="total-saving">Total Saving: €{(totalPriceWithoutDiscount - totalPrice).toFixed(2)}</span>
+          <span className="total-price">Total: €{totalPrice >= 0 && totalPrice.toFixed(2)}</span>
+          <span className="total-saving">
+            Total Saving: €
+            {totalPriceWithoutDiscount - totalPrice > 0 ? (totalPriceWithoutDiscount - totalPrice).toFixed(2) : '0.00'}
+          </span>
           <button
             className="checkout"
             onClick={() => {
