@@ -10,9 +10,10 @@ interface IProductWithQuantity extends IProduct {
 }
 
 export const Overview = () => {
-  const { totalPrice, totalPriceWithoutDiscount, allwishlist, productListEmptyCheck } = useCart();
-  const [approvedProductList, setApprovedProductList] = useState<IProductWithQuantity[]>();
+  const { totalPrice, totalPriceWithoutDiscount, allwishlist, productListEmptyCheck, handlePayment } = useCart();
+  const [approvedProductList, setApprovedProductList] = useState<IProductWithQuantity[]>([]);
   const [confirm, setConfirm] = useState(false);
+  const [pay, setPay] = useState(false);
 
   const allWLEmptyCheck = (
     allWishList: IWishlistWithProductDetail[],
@@ -29,6 +30,10 @@ export const Overview = () => {
   };
 
   const toggleModal = () => setConfirm(!confirm);
+  const handlePay = () => {
+    setPay(true);
+    handlePayment();
+  };
 
   useEffect(() => {
     const allApprovedProducts: IProduct[] = [];
@@ -110,23 +115,42 @@ export const Overview = () => {
       )}
       {confirm && (
         <Modal>
-          <div>
-            <p>You have these items in your cart:</p>
-            {approvedProductList &&
-              approvedProductList.map(({ id, image, title, quantity, price }: IProductWithQuantity) => {
-                return (
-                  <div key={id} className="confirmation-product-card">
-                    <img style={{ width: '50px', height: '50px', borderRadius: '20px' }} src={image} alt={title} />
-                    <h5>{title}</h5>
-                    <p>Quantity: {quantity}</p>
-                    <p>Total: {quantity > 1 ? (price * quantity * (10 - quantity)) / 10 : price.toFixed(2)}</p>
-                    {quantity > 1 && <p>You save: {(price * quantity * quantity) / 10}</p>}
-                  </div>
-                );
-              })}
-            <button>Pay</button>
-            <button onClick={toggleModal}>Cancel</button>
-          </div>
+          {pay && (
+            <div>
+              <p>Payment successfully</p>
+              <button
+                onClick={() => {
+                  setPay(false);
+                  setConfirm(!confirm);
+                }}
+              >
+                OK
+              </button>
+            </div>
+          )}
+          {!pay && (
+            <div>
+              <p>
+                {approvedProductList.length
+                  ? 'You have these gifts in your cart:'
+                  : `You haven't approved any gifts yet`}
+              </p>
+              {approvedProductList &&
+                approvedProductList.map(({ id, image, title, quantity, price }: IProductWithQuantity) => {
+                  return (
+                    <div key={id} className="confirmation-product-card">
+                      <img style={{ width: '50px', height: '50px', borderRadius: '20px' }} src={image} alt={title} />
+                      <h5>{title}</h5>
+                      <p>Quantity: {quantity}</p>
+                      <p>Total: {quantity > 1 ? (price * quantity * (10 - quantity)) / 10 : price.toFixed(2)}</p>
+                      {quantity > 1 && <p>You save: {(price * quantity * quantity) / 10}</p>}
+                    </div>
+                  );
+                })}
+              {approvedProductList.length && <button onClick={handlePay}>Pay</button>}
+              <button onClick={toggleModal}>Cancel</button>
+            </div>
+          )}
         </Modal>
       )}
     </div>

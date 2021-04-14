@@ -13,15 +13,14 @@ export interface ICart {
   handleProduct: (product: IProduct, newState: 'pending' | 'approved' | 'discarded') => void;
   updateWishList: (wishlist: IWishlistWithProductDetail) => void;
   productListEmptyCheck: (product: IProduct[], givenState: 'pending' | 'approved' | 'discarded') => boolean;
-  allWishlistDuplicateCount: (product: IProduct) => number;
+  totalQuantity: (product: IProduct) => number;
   isLoading: boolean;
+  totalApprovedProduct: number;
+  handlePayment: () => void;
 }
 
 interface IDiscountCheck {
   discountCheckedPrice: number;
-  quantity: number;
-}
-interface IProductWithQuantity extends IProduct {
   quantity: number;
 }
 
@@ -36,8 +35,10 @@ const initialCartValue: ICart = {
   handleProduct: () => {},
   updateWishList: () => {},
   productListEmptyCheck: () => false,
-  allWishlistDuplicateCount: () => 0,
+  totalQuantity: () => 0,
   isLoading: true,
+  totalApprovedProduct: 0,
+  handlePayment: () => {},
 };
 const CartContext = React.createContext<ICart>(initialCartValue);
 function CartProvider(props: any) {
@@ -48,6 +49,7 @@ function CartProvider(props: any) {
   const [totalPrice, setTotalPrice] = React.useState<number>(0);
   const [totalPriceWithoutDiscount, setTotalPriceWithoutDiscount] = React.useState<number>(0);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [totalApprovedProduct, setTotalApprovedProduct] = React.useState<number>(0);
 
   React.useEffect(() => {
     const fetchAllWishList = async () => {
@@ -65,7 +67,7 @@ function CartProvider(props: any) {
         setAllWishList(allWLWithDetailedProduct);
         setTimeout(() => {
           setIsLoading(false);
-        }, 1500);
+        }, 2000);
       } catch (error) {
         console.log(error);
       }
@@ -113,6 +115,7 @@ function CartProvider(props: any) {
       });
       setCurrentSaving((prev: number) => prev + possibleSaving);
       setTotalPriceWithoutDiscount((prev: number) => prev + originalPrice);
+      setTotalApprovedProduct((prev) => prev + 1);
     }
     if (productCurrentState === 'approved') {
       setCurrentCartPrice((prev: number) => prev - discountCheckedPrice);
@@ -131,6 +134,7 @@ function CartProvider(props: any) {
       });
       setCurrentSaving((prev: number) => prev - possibleSaving);
       setTotalPriceWithoutDiscount((prev: number) => prev - originalPrice);
+      setTotalApprovedProduct((prev) => prev - 1);
     }
   };
 
@@ -186,16 +190,32 @@ function CartProvider(props: any) {
     return productListcheck.length ? false : true;
   };
 
-  const allWishlistDuplicateCount = (productToCheck: IProduct) => {
-    let count = 0;
+  const totalQuantity = (productToCheck: IProduct) => {
+    let quantity = 1;
     allWishList &&
       currentWishList &&
       allWishList.forEach(({ products, id }: IWishlistWithProductDetail) => {
         products.forEach((product: IProduct) => {
-          product.id === productToCheck.id && currentWishList.id !== id && count++;
+          product.id === productToCheck.id && currentWishList.id !== id && quantity++;
         });
       });
-    return count === 0 ? 0 : count + 1;
+    return quantity === 1 ? 1 : quantity + 1;
+  };
+
+  const handlePayment = () => {
+    setAllWishList((prev: IWishlistWithProductDetail[]) => {
+      const resetAllWishList: IWishlistWithProductDetail[] = prev.map((wishlist: IWishlistWithProductDetail) => {
+        const productList = wishlist.products.map((product: IProduct) => {
+          const resetStateProduct: IProduct = { ...product, currentState: 'pending' };
+          return resetStateProduct;
+        });
+        return { ...wishlist, products: productList };
+      });
+      return resetAllWishList;
+    });
+    setTotalPrice(0);
+    setTotalApprovedProduct(0);
+    setTotalPriceWithoutDiscount(0);
   };
 
   return (
@@ -211,8 +231,10 @@ function CartProvider(props: any) {
         totalPrice,
         totalPriceWithoutDiscount,
         productListEmptyCheck,
-        allWishlistDuplicateCount,
+        totalQuantity,
         isLoading,
+        totalApprovedProduct,
+        handlePayment,
       }}
       {...props}
     />
