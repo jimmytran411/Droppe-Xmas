@@ -47,7 +47,7 @@ const mockValue = {
   handleProduct: jest.fn(),
   updateWishList: jest.fn(),
   totalPrice: 20,
-  totalPriceWithoutDiscount: 40,
+  totalDiscount: 20,
   productListEmptyCheck: jest.fn(),
   currentCartPrice: 20,
   currentSaving: 20,

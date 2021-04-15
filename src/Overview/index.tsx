@@ -14,14 +14,7 @@ export interface IOverviewProductReturn {
 }
 
 export const Overview = () => {
-  const {
-    totalPrice,
-    totalPriceWithoutDiscount,
-    allwishlist,
-    productListEmptyCheck,
-    handlePayment,
-    handleProduct,
-  } = useCart();
+  const { totalPrice, totalDiscount, allwishlist, productListEmptyCheck, handlePayment, handleProduct } = useCart();
   const [approvedProductList, setApprovedProductList] = useState<IProductWithQuantity[]>([]);
   const [confirm, setConfirm] = useState(false);
   const [pay, setPay] = useState(false);
@@ -110,7 +103,7 @@ export const Overview = () => {
       <div className="total-cost">
         Total: €<b>{totalPrice >= 0 ? totalPrice.toFixed(2) : '0.00'}</b>
       </div>
-      <div className="total-saving">You save: €{(totalPriceWithoutDiscount - totalPrice).toFixed(2)}</div>
+      <div className="total-saving">You save: €{totalDiscount.toFixed(2)}</div>
       {totalPrice > 0 && (
         <button
           onClick={() => {
@@ -164,7 +157,7 @@ export const Overview = () => {
                 <div className="total-cost">
                   Total: €<b>{totalPrice >= 0 ? totalPrice.toFixed(2) : '0.00'}</b>
                 </div>
-                <div className="total-saving">You save: €{(totalPriceWithoutDiscount - totalPrice).toFixed(2)}</div>
+                <div className="total-saving">You save: €{totalDiscount.toFixed(2)}</div>
                 <button onClick={handlePay}>Pay</button>
                 <button onClick={toggleModal}>Cancel</button>
               </>
@@ -181,7 +174,7 @@ export const Overview = () => {
               <div className="total-cost">
                 Total: €<b>{totalPrice >= 0 ? totalPrice.toFixed(2) : '0.00'}</b>
               </div>
-              <div className="total-saving">You save: €{(totalPriceWithoutDiscount - totalPrice).toFixed(2)}</div>
+              <div className="total-saving">You save: €{totalDiscount.toFixed(2)}</div>
             </div>
             {productWithQuantity(patchData, 'discarded').length ? (
               <div className="payment-result-discard-list">
