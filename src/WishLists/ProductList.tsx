@@ -14,7 +14,7 @@ export const ProductList = ({ products, givenState, ...rest }: IProductList) => 
     <div className="product-list">
       {products &&
         products.map((product: IProduct, index: number) => {
-          const quantity = totalQuantity(product) - 1;
+          const quantity = totalQuantity(product);
           const discountPercent = quantity > 1 && quantity * 10;
           return (
             <div key={index} className="product-card">

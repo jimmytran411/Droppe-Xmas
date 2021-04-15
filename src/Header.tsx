@@ -8,24 +8,14 @@ export interface IHeader {
 
 export const Header = ({ handleCheckout }: IHeader) => {
   const [totalTextGroup, setTotalTextGroup] = useState(true);
-  const {
-    allwishlist,
-    handleOpenWishList,
-    totalPrice,
-    totalPriceWithoutDiscount,
-    isLoading,
-    totalApprovedProduct,
-  } = useCart();
+  const { allwishlist, handleOpenWishList, totalPrice, totalDiscount, isLoading, totalApprovedProduct } = useCart();
   return (
     <header className="App-header">
       Droppe Assignment
       {totalTextGroup && (
         <div className="total-text-group">
           <span className="total-price">Total: €{totalPrice >= 0 && totalPrice.toFixed(2)}</span>
-          <span className="total-saving">
-            Total Saving: €
-            {totalPriceWithoutDiscount - totalPrice > 0 ? (totalPriceWithoutDiscount - totalPrice).toFixed(2) : '0.00'}
-          </span>
+          <span className="total-saving">Total Saving: €{totalDiscount > 0 ? totalDiscount.toFixed(2) : '0.00'}</span>
           <span className="total-approved-product">#IconCart here:{totalApprovedProduct}</span>
           <button
             className="checkout"

@@ -1,15 +1,13 @@
 import { IProduct, patchWishlist } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import React, { useEffect, useState } from 'react';
+import { IProductWithQuantity, productWithQuantity } from 'utils/wishlistAndProduct';
 import { IWishlistWithProductDetail } from 'WishLists';
 import { Product } from 'WishLists/Product';
 import Modal from '../Modal';
 import './Overview.css';
 import { PaymentResult } from './PaymentResult';
 
-interface IProductWithQuantity extends IProduct {
-  quantity: number;
-}
 export interface IOverviewProductReturn {
   wishlistToUpdate: IWishlistWithProductDetail;
   returnedProduct: IProduct;
@@ -66,27 +64,6 @@ export const Overview = () => {
       handleProduct(productReturnParam.returnedProduct, 'pending', productReturnParam.wishlistToUpdate);
   };
 
-  const productWithQuantity = (
-    listToCheck: IWishlistWithProductDetail[],
-    stateToCheck: 'pending' | 'approved' | 'discarded'
-  ) => {
-    const productWithCheckedStateList: IProduct[] = [];
-    listToCheck.forEach((wishlist: IWishlistWithProductDetail) => {
-      return wishlist.products.forEach(
-        (product: IProduct) => product.currentState === stateToCheck && productWithCheckedStateList.push(product)
-      );
-    });
-    const mapOfApprovedProducts = productWithCheckedStateList
-      .reduce((mapObj, product: IProduct) => {
-        const id: string = JSON.stringify([product.id]);
-        if (!mapObj.has(id)) mapObj.set(id, { ...product, quantity: 0 });
-        mapObj.get(id).quantity++;
-        return mapObj;
-      }, new Map())
-      .values();
-    const productWithQuantityList: IProductWithQuantity[] = [...mapOfApprovedProducts];
-    return productWithQuantityList;
-  };
   useEffect(() => {
     const approveList = productWithQuantity(allwishlist, 'approved');
     setApprovedProductList(approveList);

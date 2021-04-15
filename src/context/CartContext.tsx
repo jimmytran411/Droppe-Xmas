@@ -1,6 +1,7 @@
-import { getAllWishLists, getProduct, IProduct, IWishList, IWishListProduct, patchWishlist } from 'api/wishList';
-import { IOverviewProductReturn } from 'Overview';
+import { getAllWishLists, getProduct, IProduct, IWishList, IWishListProduct } from 'api/wishList';
 import * as React from 'react';
+import { totalDiscountCal, totalPriceCal, wishlistPriceCal } from 'utils/priceCalculation';
+import { totalProductWithGivenState } from 'utils/wishlistAndProduct';
 import { IWishlistWithProductDetail } from 'WishLists';
 
 export interface ICart {
@@ -10,7 +11,7 @@ export interface ICart {
   currentCartPrice: number;
   currentSaving: number;
   totalPrice: number;
-  totalPriceWithoutDiscount: number;
+  totalDiscount: number;
   handleProduct: (
     product: IProduct,
     newState: 'pending' | 'approved' | 'discarded',
@@ -23,11 +24,6 @@ export interface ICart {
   handlePayment: () => void;
 }
 
-interface IDiscountCheck {
-  discountCheckedPrice: number;
-  quantity: number;
-}
-
 const initialCartValue: ICart = {
   allwishlist: [],
   currentWishList: undefined,
@@ -35,7 +31,7 @@ const initialCartValue: ICart = {
   currentCartPrice: 0,
   currentSaving: 0,
   totalPrice: 0,
-  totalPriceWithoutDiscount: 0,
+  totalDiscount: 0,
   handleProduct: () => {},
   productListEmptyCheck: () => false,
   totalQuantity: () => 0,
@@ -50,7 +46,7 @@ function CartProvider(props: any) {
   const [currentCartPrice, setCurrentCartPrice] = React.useState<number>(0);
   const [currentSaving, setCurrentSaving] = React.useState<number>(0);
   const [totalPrice, setTotalPrice] = React.useState<number>(0);
-  const [totalPriceWithoutDiscount, setTotalPriceWithoutDiscount] = React.useState<number>(0);
+  const [totalDiscount, setTotalDiscount] = React.useState<number>(0);
   const [isLoading, setIsLoading] = React.useState(true);
   const [totalApprovedProduct, setTotalApprovedProduct] = React.useState<number>(0);
 
@@ -60,6 +56,7 @@ function CartProvider(props: any) {
         setIsLoading(true);
         const { data } = await getAllWishLists();
         const allWLWithDetailedProduct = data.map((wishlist: IWishList) => {
+          // this method to prevent Promise return type
           const detailedProducts: IProduct[] = [];
           wishlist.products.forEach(async ({ productId }: IWishListProduct) => {
             const product = await getProduct(productId);
@@ -80,104 +77,43 @@ function CartProvider(props: any) {
 
   const handleOpenWishList = (wishlist: IWishlistWithProductDetail) => {
     setCurrentWishList(wishlist);
-    let currentPrice = 0;
-    let totalCartPrice = 0;
-    wishlist.products.forEach((product: IProduct) => {
-      let discount = 0;
-      if (product.currentState === 'approved') {
-        totalCartPrice += product.price;
-        discount = discountPrice(product, wishlist.id).discountCheckedPrice;
-      }
-      currentPrice += discount;
-    });
-    setCurrentSaving(totalCartPrice - currentPrice);
-    setCurrentCartPrice(currentPrice);
+    const { priceAfterDiscount, totalDiscount } = wishlistPriceCal(wishlist, allWishList);
+    setCurrentSaving(totalDiscount);
+    setCurrentCartPrice(priceAfterDiscount);
   };
 
-  const handleCurrentPrice = (
-    productCurrentState: 'pending' | 'approved' | 'discarded',
-    productNewState: 'pending' | 'approved' | 'discarded',
-    { discountCheckedPrice, quantity }: IDiscountCheck,
-    originalPrice: number
-  ) => {
-    const possibleSaving = originalPrice - discountCheckedPrice;
-    if (productNewState === 'approved') {
-      setCurrentCartPrice((prev: number) => prev + discountCheckedPrice);
-      setTotalPrice((prev: number) => {
-        if (quantity === 1) {
-          return prev + originalPrice;
-        } else if (quantity === 2) {
-          return prev - originalPrice + (2 * originalPrice * 8) / 10;
-        } else {
-          return (
-            prev -
-            ((quantity - 1) * originalPrice * (10 - quantity + 1)) / 10 + //minus the previous discount
-            quantity * discountCheckedPrice // add new discount
-          );
-        }
-      });
-      setCurrentSaving((prev: number) => prev + possibleSaving);
-      setTotalPriceWithoutDiscount((prev: number) => prev + originalPrice);
-      setTotalApprovedProduct((prev) => prev + 1);
-    }
-    if (productCurrentState === 'approved') {
-      setCurrentCartPrice((prev: number) => prev - discountCheckedPrice);
-      setTotalPrice((prev: number) => {
-        if (quantity === 1) {
-          return prev - originalPrice;
-        } else if (quantity === 2) {
-          return prev + originalPrice - (2 * originalPrice * 8) / 10;
-        } else {
-          return (
-            prev +
-            ((quantity - 1) * originalPrice * (10 - quantity + 1)) / 10 - // add the new discount
-            quantity * discountCheckedPrice // minus the previous discount
-          );
-        }
-      });
-      setCurrentSaving((prev: number) => prev - possibleSaving);
-      setTotalPriceWithoutDiscount((prev: number) => prev - originalPrice);
-      setTotalApprovedProduct((prev) => prev - 1);
-    }
-  };
-
-  const discountPrice = (currentProduct: IProduct, currentWLId: number) => {
-    let quantity: number = 1;
-    allWishList.forEach((wishlist: IWishlistWithProductDetail) => {
-      wishlist.products.forEach((product: IProduct) => {
-        if (product.currentState === 'approved' && product.id === currentProduct.id && wishlist.id !== currentWLId) {
-          quantity += 1;
-        }
-      });
-    });
-    const discountedPrice = quantity > 1 ? (currentProduct.price * (10 - quantity)) / 10 : currentProduct.price;
-    const discountCheck: IDiscountCheck = {
-      discountCheckedPrice: discountedPrice,
-      quantity,
-    };
-    return discountCheck;
-  };
-
+  // product's state change => change in:
+  //    allwishlist, currentwishlist, currentCartPrice, currentSaving, totalPrice, totalSaving
   const handleProduct = (
     handledProduct: IProduct,
     productNewState: 'pending' | 'approved' | 'discarded',
     wishListOfProduct: IWishlistWithProductDetail
   ) => {
-    // Display Total Price wih possible discount
-    const discountCheckedProduct = discountPrice(handledProduct, wishListOfProduct.id);
-    handleCurrentPrice(handledProduct.currentState, productNewState, discountCheckedProduct, handledProduct.price);
-    // Update AllWishlist , CurrentWishList and Overview
+    // Update AllWishlist , CurrentWishList
     const updateProductList: IProduct[] = wishListOfProduct.products.map((prevProduct: IProduct) => {
       const updatedProduct: IProduct = { ...prevProduct, currentState: productNewState };
       return prevProduct.id === handledProduct.id ? updatedProduct : prevProduct;
     });
-    const updateCurrentWL: IWishlistWithProductDetail = { ...wishListOfProduct, products: updateProductList };
-    setAllWishList((prev: IWishlistWithProductDetail[]) => {
-      return prev.map((wishlist: IWishlistWithProductDetail) => {
-        return wishlist.id === updateCurrentWL.id ? updateCurrentWL : wishlist;
-      });
+    const updatedWishlist: IWishlistWithProductDetail = { ...wishListOfProduct, products: updateProductList };
+    const updatedAllWishlist: IWishlistWithProductDetail[] = allWishList.map((wishlist: IWishlistWithProductDetail) => {
+      return wishlist.id === updatedWishlist.id ? updatedWishlist : wishlist;
     });
-    setCurrentWishList(updateCurrentWL);
+
+    const { totalDiscount, priceAfterDiscount } = wishlistPriceCal(updatedWishlist, updatedAllWishlist);
+    setCurrentCartPrice(priceAfterDiscount);
+    setCurrentSaving(totalDiscount);
+
+    const updatedTotalPrice = totalPriceCal(updatedAllWishlist);
+    setTotalPrice(updatedTotalPrice);
+
+    const updatedTotalDiscount = totalDiscountCal(updatedAllWishlist);
+    setTotalDiscount(updatedTotalDiscount);
+
+    const updatedTotalApprovedProduct = totalProductWithGivenState(updatedAllWishlist, 'approved');
+    setTotalApprovedProduct(updatedTotalApprovedProduct);
+
+    setAllWishList(updatedAllWishlist);
+    setCurrentWishList(updatedWishlist);
   };
 
   const productListEmptyCheck = (productList: IProduct[], givenState: 'pending' | 'approved' | 'discarded') => {
@@ -194,7 +130,7 @@ function CartProvider(props: any) {
           product.id === productToCheck.id && currentWishList.id !== id && quantity++;
         });
       });
-    return quantity === 1 ? 1 : quantity + 1;
+    return quantity === 1 ? 1 : quantity;
   };
 
   const handlePayment = () => {
@@ -211,7 +147,7 @@ function CartProvider(props: any) {
     });
     setTotalPrice(0);
     setTotalApprovedProduct(0);
-    setTotalPriceWithoutDiscount(0);
+    setTotalDiscount(0);
   };
 
   return (
@@ -224,7 +160,7 @@ function CartProvider(props: any) {
         currentCartPrice,
         currentSaving,
         totalPrice,
-        totalPriceWithoutDiscount,
+        totalDiscount,
         productListEmptyCheck,
         totalQuantity,
         isLoading,
