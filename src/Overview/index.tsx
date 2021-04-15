@@ -78,9 +78,7 @@ export const Overview = () => {
                         return (
                           product.currentState === 'approved' && (
                             <div className="overview-product-card" key={product.id}>
-                              <img src={product.image} alt={product.title} />
-                              <h5>{product.title}</h5>
-                              <p className="price">€{product.price}</p>
+                              <Product {...product} />
                               <button
                                 onClick={() => {
                                   setReturnConfirmation(true);
@@ -101,7 +99,7 @@ export const Overview = () => {
           : `You haven't approved any gift yet`}
       </div>
       <div className="total-cost">
-        Total: €<b>{totalPrice >= 0 ? totalPrice.toFixed(2) : '0.00'}</b>
+        Total: €<b>{totalPrice.toFixed(2)}</b>
       </div>
       <div className="total-saving">You save: €{totalDiscount.toFixed(2)}</div>
       {totalPrice > 0 && (

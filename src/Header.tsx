@@ -14,8 +14,8 @@ export const Header = ({ handleCheckout }: IHeader) => {
       Droppe Assignment
       {totalTextGroup && (
         <div className="total-text-group">
-          <span className="total-price">Total: €{totalPrice >= 0 && totalPrice.toFixed(2)}</span>
-          <span className="total-saving">Total Saving: €{totalDiscount > 0 ? totalDiscount.toFixed(2) : '0.00'}</span>
+          <span className="total-price">Total: €{totalPrice.toFixed(2)}</span>
+          <span className="total-saving">Total Saving: €{totalDiscount.toFixed(2)}</span>
           <span className="total-approved-product">#IconCart here:{totalApprovedProduct}</span>
           <button
             className="checkout"
