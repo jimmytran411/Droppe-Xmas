@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { IProduct } from 'api/wishList';
 import { IProductList, ProductList } from 'WishLists/ProductList';
+import { IWishlistWithProductDetail } from 'WishLists';
 
 test('Render pending wishlist with test input', () => {
   const testPendingList: IProduct[] = [
@@ -24,7 +25,8 @@ test('Render pending wishlist with test input', () => {
       currentState: 'pending',
     },
   ];
-  const testPendingListProp: IProductList = { productList: testPendingList, givenState: 'pending' };
+  const testCurrentWLProp: IWishlistWithProductDetail = { id: 1, userid: 1, products: testPendingList };
+  const testPendingListProp: IProductList = { ...testCurrentWLProp, givenState: 'pending' };
 
   const { getByText, getByRole } = render(<ProductList {...testPendingListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
@@ -59,7 +61,8 @@ test('Render approve list with test input', () => {
       currentState: 'approved',
     },
   ];
-  const testApproveListProp: IProductList = { productList: testApproveList, givenState: 'approved' };
+  const testCurrentWLProp: IWishlistWithProductDetail = { id: 1, userid: 1, products: testApproveList };
+  const testApproveListProp: IProductList = { ...testCurrentWLProp, givenState: 'approved' };
 
   const { getByText, getByRole } = render(<ProductList {...testApproveListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
@@ -94,7 +97,8 @@ test('Render discard list with test input', () => {
       currentState: 'discarded',
     },
   ];
-  const testDiscardListProp: IProductList = { productList: testDiscardList, givenState: 'discarded' };
+  const testCurrentWLProp: IWishlistWithProductDetail = { id: 1, userid: 1, products: testDiscardList };
+  const testDiscardListProp: IProductList = { ...testCurrentWLProp, givenState: 'discarded' };
 
   const { getByText, getByRole } = render(<ProductList {...testDiscardListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();

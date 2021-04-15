@@ -41,7 +41,6 @@ const mockValue = {
   currentWishList: { ...testCurrentWLProp },
   handleOpenWishList: jest.fn(),
   handleProduct: jest.fn(),
-  updateWishList: jest.fn(),
   totalPrice: 20,
   totalPriceWithoutDiscount: 40,
   productListEmptyCheck: jest.fn(),
@@ -81,7 +80,4 @@ test('Test App show value from provider', () => {
   expect(mockValue.handleProduct).toHaveBeenCalledTimes(5);
   userEvent.click(getByRole('button', { name: /return-btn-3/i }));
   expect(mockValue.handleProduct).toHaveBeenCalledTimes(6);
-
-  userEvent.click(getByRole('button', { name: /save/i }));
-  expect(mockValue.updateWishList).toHaveBeenCalledTimes(1);
 });

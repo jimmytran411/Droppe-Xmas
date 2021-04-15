@@ -1,19 +1,19 @@
 import { IProduct } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import React from 'react';
+import { IWishlistWithProductDetail } from 'WishLists';
 import { Product } from './Product';
 
-export interface IProductList {
-  productList: IProduct[];
+export interface IProductList extends IWishlistWithProductDetail {
   givenState: 'pending' | 'approved' | 'discarded';
 }
 
-export const ProductList = ({ productList, givenState }: IProductList) => {
+export const ProductList = ({ products, givenState, ...rest }: IProductList) => {
   const { handleProduct, totalQuantity } = useCart();
   return (
     <div className="product-list">
-      {productList &&
-        productList.map((product: IProduct, index: number) => {
+      {products &&
+        products.map((product: IProduct, index: number) => {
           const quantity = totalQuantity(product) - 1;
           const discountPercent = quantity > 1 && quantity * 10;
           return (
@@ -33,8 +33,8 @@ export const ProductList = ({ productList, givenState }: IProductList) => {
                     }
                     onClick={() => {
                       product.currentState === 'pending'
-                        ? handleProduct(product, 'approved')
-                        : handleProduct(product, 'pending');
+                        ? handleProduct(product, 'approved', { products, ...rest })
+                        : handleProduct(product, 'pending', { products, ...rest });
                     }}
                   >
                     {product.currentState === 'pending' ? 'Approve' : 'Return to Wishlist'}
@@ -45,8 +45,8 @@ export const ProductList = ({ productList, givenState }: IProductList) => {
                     }
                     onClick={() => {
                       product.currentState === 'discarded'
-                        ? handleProduct(product, 'approved')
-                        : handleProduct(product, 'discarded');
+                        ? handleProduct(product, 'approved', { products, ...rest })
+                        : handleProduct(product, 'discarded', { products, ...rest });
                     }}
                   >
                     {product.currentState === 'discarded' ? 'Approve' : 'Discard'}

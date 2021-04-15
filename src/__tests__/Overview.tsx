@@ -4,6 +4,7 @@ import { IProduct } from 'api/wishList';
 import { Overview } from 'Overview';
 import { CartContext } from 'context/CartContext';
 import { IWishlistWithProductDetail } from 'WishLists';
+import userEvent from '@testing-library/user-event';
 
 const testCurrentWL: IProduct[] = [
   {
@@ -62,6 +63,6 @@ test('Test Overview show value from provider', () => {
   expect(getByText(/total:/i).textContent).toBe('Total: €20.00');
   expect(getByText(/you save:/i).textContent).toBe('You save: €20.00');
   expect(getByText(/These items are still in your wishlists:/i)).toBeInTheDocument();
-  expect(getByText(/You discard these:/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /checkout/i })).toBeInTheDocument;
+  expect(getByRole('button', { name: '⃔' })).toBeInTheDocument();
 });

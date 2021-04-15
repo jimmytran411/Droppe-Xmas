@@ -1,26 +1,41 @@
-import { IProduct } from 'api/wishList';
+import { IProduct, patchWishlist } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import React, { useEffect, useState } from 'react';
 import { IWishlistWithProductDetail } from 'WishLists';
 import { Product } from 'WishLists/Product';
 import Modal from '../Modal';
 import './Overview.css';
+import { PaymentResult } from './PaymentResult';
 
 interface IProductWithQuantity extends IProduct {
   quantity: number;
 }
+export interface IOverviewProductReturn {
+  wishlistToUpdate: IWishlistWithProductDetail;
+  returnedProduct: IProduct;
+}
 
 export const Overview = () => {
-  const { totalPrice, totalPriceWithoutDiscount, overview, productListEmptyCheck, handlePayment } = useCart();
+  const {
+    totalPrice,
+    totalPriceWithoutDiscount,
+    allwishlist,
+    productListEmptyCheck,
+    handlePayment,
+    handleProduct,
+  } = useCart();
   const [approvedProductList, setApprovedProductList] = useState<IProductWithQuantity[]>([]);
   const [confirm, setConfirm] = useState(false);
   const [pay, setPay] = useState(false);
+  const [returnConfirmation, setReturnConfirmation] = useState(false);
+  const [productReturnParam, setProductReturnParam] = useState<IOverviewProductReturn>();
+  const [patchData, setPatchData] = useState<IWishlistWithProductDetail[]>([]);
 
-  const allWLEmptyCheck = (
-    overview: IWishlistWithProductDetail[],
+  const wishlistEmptyCheck = (
+    wishListsToCheck: IWishlistWithProductDetail[],
     givenState: 'pending' | 'approved' | 'discarded'
   ) => {
-    const allWLCheck = overview.map(({ products }: IWishlistWithProductDetail) => {
+    const allWLCheck = wishListsToCheck.map(({ products }: IWishlistWithProductDetail) => {
       return products.filter((product: IProduct) => product.currentState === givenState);
     });
     return allWLCheck.some((a) => {
@@ -31,19 +46,37 @@ export const Overview = () => {
   };
 
   const toggleModal = () => setConfirm(!confirm);
-  const handlePay = () => {
+  const handlePay = async () => {
+    allwishlist.forEach(async (wishlist: IWishlistWithProductDetail) => {
+      const notPedingProduct = wishlist.products.filter((product: IProduct) => product.currentState !== 'pending');
+      if (notPedingProduct.length) {
+        const patchedWishlist: IWishlistWithProductDetail = { ...wishlist, products: notPedingProduct };
+        const { data } = await patchWishlist(patchedWishlist);
+        setPatchData((prev) => {
+          return [...prev, { ...data }];
+        });
+      }
+    });
+    setConfirm(!confirm);
     setPay(true);
-    handlePayment();
+  };
+  const handleConfirmReturn = () => {
+    setReturnConfirmation(false);
+    productReturnParam &&
+      handleProduct(productReturnParam.returnedProduct, 'pending', productReturnParam.wishlistToUpdate);
   };
 
-  useEffect(() => {
-    const allApprovedProducts: IProduct[] = [];
-    overview.forEach((wishlist: IWishlistWithProductDetail) => {
+  const productWithQuantity = (
+    listToCheck: IWishlistWithProductDetail[],
+    stateToCheck: 'pending' | 'approved' | 'discarded'
+  ) => {
+    const productWithCheckedStateList: IProduct[] = [];
+    listToCheck.forEach((wishlist: IWishlistWithProductDetail) => {
       return wishlist.products.forEach(
-        (product: IProduct) => product.currentState === 'approved' && allApprovedProducts.push(product)
+        (product: IProduct) => product.currentState === stateToCheck && productWithCheckedStateList.push(product)
       );
     });
-    const mapOfApprovedProducts = allApprovedProducts
+    const mapOfApprovedProducts = productWithCheckedStateList
       .reduce((mapObj, product: IProduct) => {
         const id: string = JSON.stringify([product.id]);
         if (!mapObj.has(id)) mapObj.set(id, { ...product, quantity: 0 });
@@ -51,15 +84,19 @@ export const Overview = () => {
         return mapObj;
       }, new Map())
       .values();
-    const approvedProductWithQuantity: IProductWithQuantity[] = [...mapOfApprovedProducts];
-    setApprovedProductList(approvedProductWithQuantity);
-  }, [overview]);
+    const productWithQuantityList: IProductWithQuantity[] = [...mapOfApprovedProducts];
+    return productWithQuantityList;
+  };
+  useEffect(() => {
+    const approveList = productWithQuantity(allwishlist, 'approved');
+    setApprovedProductList(approveList);
+  }, [allwishlist]);
 
   return (
     <div className="overview-container">
       <div className="overview-approve-list">
-        {totalPrice > 0 && overview.length
-          ? overview.map((wishlist: IWishlistWithProductDetail) => {
+        {totalPrice > 0
+          ? allwishlist.map((wishlist: IWishlistWithProductDetail) => {
               return (
                 <div className="child-approve-list" key={wishlist.id}>
                   <h5>{`Child ${wishlist.id}:`}</h5>
@@ -74,7 +111,14 @@ export const Overview = () => {
                               <img src={product.image} alt={product.title} />
                               <h5>{product.title}</h5>
                               <p className="price">€{product.price}</p>
-                              <button>⏎</button>
+                              <button
+                                onClick={() => {
+                                  setReturnConfirmation(true);
+                                  setProductReturnParam({ wishlistToUpdate: wishlist, returnedProduct: product });
+                                }}
+                              >
+                                ⃔
+                              </button>
                             </div>
                           )
                         );
@@ -86,80 +130,117 @@ export const Overview = () => {
             })
           : `You haven't approved any gift yet`}
       </div>
-      <div className="total-cost">Total: €{overview.length ? <b>{totalPrice.toFixed(2)}</b> : '0.00'}</div>
-      <div className="total-saving">
-        You save: €{overview.length ? (totalPriceWithoutDiscount - totalPrice).toFixed(2) : '0.00'}
+      <div className="total-cost">
+        Total: €<b>{totalPrice >= 0 ? totalPrice.toFixed(2) : '0.00'}</b>
       </div>
-      <button
-        onClick={() => {
-          toggleModal();
-        }}
-      >
-        Proceed to Checkout
-      </button>
-      {!allWLEmptyCheck(overview, 'pending') && (
-        <div className="overview-pending-list">
-          <h5>These items are still in your wishlists:</h5>
-          {overview.map((wishlist: IWishlistWithProductDetail, index: number) => {
-            return (
-              <div className="child-pending-list" key={index}>
-                <p>Child {wishlist.id}</p>
-                {wishlist.products.map((product: IProduct) => {
-                  return product.currentState === 'pending' && <Product key={product.id} {...product} />;
-                })}
-              </div>
-            );
-          })}
-        </div>
+      <div className="total-saving">You save: €{(totalPriceWithoutDiscount - totalPrice).toFixed(2)}</div>
+      {totalPrice > 0 && (
+        <button
+          onClick={() => {
+            toggleModal();
+          }}
+        >
+          Proceed to Checkout
+        </button>
       )}
-      {!allWLEmptyCheck(overview, 'discarded') && (
-        <div className="overview-discard-list">
-          <h5>You discard these:</h5>
-          {overview.map((wishlist: IWishlistWithProductDetail) => {
-            return wishlist.products.map((product: IProduct) => {
-              return product.currentState === 'discarded' && <Product key={product.id} {...product} />;
-            });
-          })}
-        </div>
+      {totalPrice > 0 && (
+        <>
+          {!wishlistEmptyCheck(allwishlist, 'pending') && (
+            <div className="overview-pending-list">
+              <h5>These items are still in your wishlists:</h5>
+              {allwishlist.map((wishlist: IWishlistWithProductDetail, index: number) => {
+                return (
+                  <div className="child-pending-list" key={index}>
+                    <p>Child {wishlist.id}</p>
+                    {wishlist.products.map((product: IProduct) => {
+                      return product.currentState === 'pending' && <Product key={product.id} {...product} />;
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </>
       )}
       {confirm && (
         <Modal>
-          {pay && (
-            <div className="success-payment">
-              <p>Payment successfully</p>
-              <button
-                onClick={() => {
-                  setPay(false);
-                  setConfirm(!confirm);
-                }}
-              >
-                OK
-              </button>
+          <div className="payment-overview">
+            <h6>
+              {approvedProductList.length ? 'You have these gifts in your cart:' : `You haven't approved any gifts yet`}
+            </h6>
+            {approvedProductList &&
+              approvedProductList.map(({ id, image, title, quantity, price }: IProductWithQuantity) => {
+                return (
+                  <div key={id} className="confirmation-product-card">
+                    <h5>{title}</h5>
+                    <img style={{ width: '50px', height: '50px', borderRadius: '20px' }} src={image} alt={title} />
+                    <p>Quantity: {quantity}</p>
+                    <p>
+                      Total: €{quantity > 1 ? ((price * quantity * (10 - quantity)) / 10).toFixed(2) : price.toFixed(2)}
+                    </p>
+                    {quantity > 1 && <p>You save: €{((price * quantity * quantity) / 10).toFixed(2)}</p>}
+                  </div>
+                );
+              })}
+            {approvedProductList.length && (
+              <>
+                <div className="total-cost">
+                  Total: €<b>{totalPrice >= 0 ? totalPrice.toFixed(2) : '0.00'}</b>
+                </div>
+                <div className="total-saving">You save: €{(totalPriceWithoutDiscount - totalPrice).toFixed(2)}</div>
+                <button onClick={handlePay}>Pay</button>
+                <button onClick={toggleModal}>Cancel</button>
+              </>
+            )}
+          </div>
+        </Modal>
+      )}
+      {pay && (
+        <Modal>
+          <div className="success-payment">
+            <div className="payment-result-approved-list">
+              <h5>You have successfully purchased these gifts:</h5>
+              <PaymentResult {...{ patchData, productState: 'approved' }} />
+              <div className="total-cost">
+                Total: €<b>{totalPrice >= 0 ? totalPrice.toFixed(2) : '0.00'}</b>
+              </div>
+              <div className="total-saving">You save: €{(totalPriceWithoutDiscount - totalPrice).toFixed(2)}</div>
             </div>
-          )}
-          {!pay && (
-            <div className="payment-overview">
-              <h6>
-                {approvedProductList.length
-                  ? 'You have these gifts in your cart:'
-                  : `You haven't approved any gifts yet`}
-              </h6>
-              {approvedProductList &&
-                approvedProductList.map(({ id, image, title, quantity, price }: IProductWithQuantity) => {
-                  return (
-                    <div key={id} className="confirmation-product-card">
-                      <img style={{ width: '50px', height: '50px', borderRadius: '20px' }} src={image} alt={title} />
-                      <h5>{title}</h5>
-                      <p>Quantity: {quantity}</p>
-                      <p>Total: {quantity > 1 ? (price * quantity * (10 - quantity)) / 10 : price.toFixed(2)}</p>
-                      {quantity > 1 && <p>You save: {((price * quantity * quantity) / 10).toFixed(2)}</p>}
-                    </div>
-                  );
-                })}
-              {approvedProductList.length && <button onClick={handlePay}>Pay</button>}
-              <button onClick={toggleModal}>Cancel</button>
+            <div className="payment-result-discard-list">
+              <h5>You have discarded these:</h5>
+              <PaymentResult {...{ patchData, productState: 'discarded' }} />
             </div>
-          )}
+            <button
+              onClick={() => {
+                setPay(false);
+                setPatchData([]);
+                handlePayment();
+              }}
+            >
+              OK
+            </button>
+          </div>
+        </Modal>
+      )}
+      {returnConfirmation && (
+        <Modal>
+          <div className="overview-return-confirmation">
+            <p>Are you sure you want to return this gift?</p>
+            <button
+              onClick={() => {
+                handleConfirmReturn();
+              }}
+            >
+              Yes
+            </button>
+            <button
+              onClick={() => {
+                setReturnConfirmation(false);
+              }}
+            >
+              No
+            </button>
+          </div>
         </Modal>
       )}
     </div>

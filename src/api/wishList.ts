@@ -34,6 +34,6 @@ export const getProduct = async (id: number) => {
 };
 
 export const patchWishlist = async (wishlist: IWishlistWithProductDetail) => {
-  const updateData = { ...wishlist, date: new Date() };
-  return await axios.patch(`https://fakestoreapi.com/carts/${wishlist.id}`, updateData);
+  // const updateData = { ...wishlist, date: new Date().toJSON().slice(0, 10).split('-').reverse().join('/') };
+  return await axios.patch(`https://fakestoreapi.com/carts/${wishlist.id}`, wishlist);
 };

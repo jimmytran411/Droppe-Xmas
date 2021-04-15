@@ -10,7 +10,7 @@ export interface IWishlistWithProductDetail {
 }
 
 export const CurrentWishList = (currentWishList: IWishlistWithProductDetail) => {
-  const { currentCartPrice, currentSaving, updateWishList, productListEmptyCheck } = useCart();
+  const { currentCartPrice, currentSaving, productListEmptyCheck } = useCart();
   return (
     <div className="wishlist-container">
       <span className="current-price">
@@ -22,7 +22,7 @@ export const CurrentWishList = (currentWishList: IWishlistWithProductDetail) => 
       <div className="pending-list">
         <h4>Wishlist</h4>
         {!productListEmptyCheck(currentWishList.products, 'pending') ? (
-          <ProductList {...{ productList: currentWishList.products, givenState: 'pending' }} />
+          <ProductList {...{ ...currentWishList, givenState: 'pending' }} />
         ) : (
           'No more gift to show'
         )}
@@ -30,7 +30,7 @@ export const CurrentWishList = (currentWishList: IWishlistWithProductDetail) => 
       <div className="approved-list">
         <h4>Approve List</h4>
         {!productListEmptyCheck(currentWishList.products, 'approved') ? (
-          <ProductList {...{ productList: currentWishList.products, givenState: 'approved' }} />
+          <ProductList {...{ ...currentWishList, givenState: 'approved' }} />
         ) : (
           `You haven't approved anything yet`
         )}
@@ -38,18 +38,11 @@ export const CurrentWishList = (currentWishList: IWishlistWithProductDetail) => 
       <div className="discarded-list">
         <h4>Discarded List</h4>
         {!productListEmptyCheck(currentWishList.products, 'discarded') ? (
-          <ProductList {...{ productList: currentWishList.products, givenState: 'discarded' }} />
+          <ProductList {...{ ...currentWishList, givenState: 'discarded' }} />
         ) : (
           `You haven't discarded anything yet`
         )}
       </div>
-      <button
-        onClick={() => {
-          updateWishList(currentWishList);
-        }}
-      >
-        Save to Cart
-      </button>
     </div>
   );
 };
