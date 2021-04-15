@@ -206,10 +206,14 @@ export const Overview = () => {
               </div>
               <div className="total-saving">You save: €{(totalPriceWithoutDiscount - totalPrice).toFixed(2)}</div>
             </div>
-            <div className="payment-result-discard-list">
-              <h5>You have discarded these:</h5>
-              <PaymentResult {...{ patchData, productState: 'discarded' }} />
-            </div>
+            {productWithQuantity(patchData, 'discarded').length ? (
+              <div className="payment-result-discard-list">
+                <h5>You have discarded these:</h5>
+                <PaymentResult {...{ patchData, productState: 'discarded' }} />
+              </div>
+            ) : (
+              ''
+            )}
             <button
               onClick={() => {
                 setPay(false);
