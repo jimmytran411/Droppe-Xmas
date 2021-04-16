@@ -1,11 +1,19 @@
 import { useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { CountTotalProductWithGivenStatus } from 'utils/wishlistAndProduct';
 
 export const Header = () => {
-  const { totalApprovedProduct } = useCart();
+  const [totalApprovedProduct, setTotalApprovedProduct] = React.useState<number>(0);
+
+  const { wishlists } = useCart();
   const { totalPrice, totalDiscount } = usePrice();
+
+  useEffect(() => {
+    const totalApprovedProduct = CountTotalProductWithGivenStatus(wishlists, 'approved');
+    setTotalApprovedProduct(totalApprovedProduct);
+  }, [wishlists]);
   return (
     <header className="App-header">
       Droppe Assignment

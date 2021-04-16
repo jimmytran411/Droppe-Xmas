@@ -28,20 +28,20 @@ export const productWithQuantity = (
   return productWithQuantityList;
 };
 
-export const CountTotalProductWithGivenState = (
+export const CountTotalProductWithGivenStatus = (
   listToCheck: WishlistWithProductDetail[],
-  givenState: 'approved' | 'pending' | 'discarded'
+  givenStatus: ApprovalStatus
 ) => {
   let count = 0;
   listToCheck.forEach((wishlist) => {
     wishlist.products.forEach((product) => {
-      product.approvalStatus === givenState && count++;
+      product.approvalStatus === givenStatus && count++;
     });
   });
   return count;
 };
 
-export const productListEmptyCheck = (productList: IProduct[], givenState: ApprovalStatus) => {
-  const productListcheck = productList.filter((product: IProduct) => product.approvalStatus === givenState);
+export const productListEmptyCheck = (productList: IProduct[], givenStatus: ApprovalStatus) => {
+  const productListcheck = productList.filter((product: IProduct) => product.approvalStatus === givenStatus);
   return productListcheck.length ? false : true;
 };

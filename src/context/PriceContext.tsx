@@ -20,7 +20,6 @@ function PriceProvider(props: any) {
   React.useEffect(() => {
     const updatedTotalPrice = calculateTotalPrice(wishlists);
     setTotalPrice(updatedTotalPrice);
-
     const updatedTotalDiscount = calculateTotalDiscount(wishlists);
     setTotalDiscount(updatedTotalDiscount);
   });

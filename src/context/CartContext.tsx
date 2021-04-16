@@ -1,7 +1,6 @@
 import { getProduct, IProduct, WishList, WishListProduct, getWishLists } from 'api/wishList';
 import { ApprovalStatus } from 'common/commonType';
 import * as React from 'react';
-import { CountTotalProductWithGivenState } from 'utils/wishlistAndProduct';
 import { WishlistWithProductDetail } from 'WishLists';
 
 export interface Cart {
@@ -12,7 +11,6 @@ export interface Cart {
     wishListOfProduct: WishlistWithProductDetail
   ) => void;
   totalQuantity: (product: IProduct) => number;
-  totalApprovedProduct: number;
   handlePayment: () => void;
 }
 
@@ -20,13 +18,11 @@ const initialCartValue: Cart = {
   wishlists: [],
   handleProduct: () => {},
   totalQuantity: () => 0,
-  totalApprovedProduct: 0,
   handlePayment: () => {},
 };
 const CartContext = React.createContext<Cart>(initialCartValue);
 function CartProvider(props: any) {
   const [wishlists, setWishlists] = React.useState<WishlistWithProductDetail[]>([]);
-  const [totalApprovedProduct, setTotalApprovedProduct] = React.useState<number>(0);
 
   React.useEffect(() => {
     const fetchAllWishList = async () => {
@@ -53,7 +49,6 @@ function CartProvider(props: any) {
     updatedStatus: ApprovalStatus,
     wishListOfProduct: WishlistWithProductDetail
   ) => {
-    // Update AllWishlist , CurrentWishList
     const updateProductList: IProduct[] = wishListOfProduct.products.map((prevProduct: IProduct) => {
       const updatedProduct: IProduct = { ...prevProduct, approvalStatus: updatedStatus };
       return prevProduct.id === handledProduct.id ? updatedProduct : prevProduct;
@@ -62,10 +57,6 @@ function CartProvider(props: any) {
     const updatedAllWishlist: WishlistWithProductDetail[] = wishlists.map((wishlist: WishlistWithProductDetail) => {
       return wishlist.id === updatedWishlist.id ? updatedWishlist : wishlist;
     });
-
-    const updatedTotalApprovedProduct = CountTotalProductWithGivenState(updatedAllWishlist, 'approved');
-    setTotalApprovedProduct(updatedTotalApprovedProduct);
-
     setWishlists(updatedAllWishlist);
   };
 
@@ -82,7 +73,7 @@ function CartProvider(props: any) {
   };
 
   const handlePayment = () => {
-    // Reset allprice, cart, and change state of all product to pending
+    // Set approvalstatus of all product to pending
     setWishlists((prev: WishlistWithProductDetail[]) => {
       const resetWishlists: WishlistWithProductDetail[] = prev.map((wishlist: WishlistWithProductDetail) => {
         const productList = wishlist.products.map((product: IProduct) => {
@@ -93,7 +84,6 @@ function CartProvider(props: any) {
       });
       return resetWishlists;
     });
-    setTotalApprovedProduct(0);
   };
 
   return (
@@ -102,7 +92,6 @@ function CartProvider(props: any) {
         wishlists,
         handleProduct,
         totalQuantity,
-        totalApprovedProduct,
         handlePayment,
       }}
       {...props}
