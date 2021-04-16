@@ -1,6 +1,7 @@
 import { Product } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import React from 'react';
+import { countTotalProductQuantity } from 'utils/wishlistAndProduct';
 import { WishlistWithProductDetail } from 'WishLists';
 import { ProductCard } from './ProductCard';
 
@@ -9,12 +10,12 @@ export interface ProductListProps extends WishlistWithProductDetail {
 }
 
 export const ProductList = ({ products, givenStatus, ...rest }: ProductListProps) => {
-  const { handleProduct, totalQuantity } = useCart();
+  const { handleProduct, wishlists } = useCart();
   return (
     <div className="product-list">
       {products &&
         products.map((product: Product, index: number) => {
-          const quantity = totalQuantity(product);
+          const quantity = countTotalProductQuantity(product, { products, ...rest }, wishlists);
           const discountPercent = quantity > 1 && quantity * 10;
           return (
             <div key={index} className="product-card">

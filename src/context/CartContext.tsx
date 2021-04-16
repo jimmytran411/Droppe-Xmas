@@ -6,14 +6,12 @@ import { WishlistWithProductDetail } from 'WishLists';
 export interface Cart {
   wishlists: WishlistWithProductDetail[];
   handleProduct: (product: Product, updatedState: ApprovalStatus, wishListOfProduct: WishlistWithProductDetail) => void;
-  totalQuantity: (product: Product) => number;
   handlePayment: () => void;
 }
 
 const initialCartValue: Cart = {
   wishlists: [],
   handleProduct: () => {},
-  totalQuantity: () => 0,
   handlePayment: () => {},
 };
 const CartContext = React.createContext<Cart>(initialCartValue);
@@ -56,18 +54,6 @@ function CartProvider(props: any) {
     setWishlists(updatedAllWishlist);
   };
 
-  const totalQuantity = (productToCheck: Product, wishlistOfProduct: WishlistWithProductDetail) => {
-    let quantity = 1;
-    wishlists &&
-      wishlistOfProduct &&
-      wishlists.forEach(({ products, id }: WishlistWithProductDetail) => {
-        products.forEach((product: Product) => {
-          product.id === productToCheck.id && wishlistOfProduct.id !== id && quantity++;
-        });
-      });
-    return quantity === 1 ? 1 : quantity;
-  };
-
   const handlePayment = () => {
     // Set approvalstatus of all product to pending
     setWishlists((prev: WishlistWithProductDetail[]) => {
@@ -87,7 +73,6 @@ function CartProvider(props: any) {
       value={{
         wishlists,
         handleProduct,
-        totalQuantity,
         handlePayment,
       }}
       {...props}

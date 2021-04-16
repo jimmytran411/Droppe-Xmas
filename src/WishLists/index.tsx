@@ -15,20 +15,20 @@ export interface WishlistWithProductDetail {
 
 export const WishList = (wishlist: WishlistWithProductDetail) => {
   const { wishlists } = useCart();
-  const [currentCartPrice, setCurrentCartPrice] = useState<number>(0);
-  const [currentSaving, setCurrentSaving] = useState<number>(0);
+  const [currentWishlistPrice, setCurrentWishlistPrice] = useState<number>(0);
+  const [currentDiscount, setCurrentDiscount] = useState<number>(0);
 
   useEffect(() => {
     const { totalDiscount, priceAfterDiscount } = calculateWishlistPrice(wishlist, wishlists);
-    setCurrentCartPrice(priceAfterDiscount);
-    setCurrentSaving(totalDiscount);
+    setCurrentWishlistPrice(priceAfterDiscount);
+    setCurrentDiscount(totalDiscount);
   }, [wishlist]);
   return (
     <div className="wishlist-container">
       <span className="current-price">
         <p>
-          {currentCartPrice >= 0 && `Current Cart: €${currentCartPrice.toFixed(2)}`}{' '}
-          {currentSaving > 0 && `You save: €${currentSaving.toFixed(2)}`}
+          {currentWishlistPrice >= 0 && `Current Cart: €${currentWishlistPrice.toFixed(2)}`}{' '}
+          {currentDiscount > 0 && `You save: €${currentDiscount.toFixed(2)}`}
         </p>
       </span>
       <div className="pending-list">

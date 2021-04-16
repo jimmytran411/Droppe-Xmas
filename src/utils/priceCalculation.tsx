@@ -1,6 +1,6 @@
 import { Product } from 'api/wishList';
 import { WishlistWithProductDetail } from 'WishLists';
-import { ProductWithQuantity, countQuantityOfProduct } from './wishlistAndProduct';
+import { ProductWithQuantity, getProductWithQuantity } from './wishlistAndProduct';
 
 export interface IDiscountCheck {
   discountCheckedPrice: number;
@@ -47,7 +47,7 @@ export const calculateWishlistPrice = (wishlist: WishlistWithProductDetail, wish
 };
 
 export const calculateTotalPrice = (wishlists: WishlistWithProductDetail[]) => {
-  const approvedProductList = countQuantityOfProduct(wishlists, 'approved');
+  const approvedProductList = getProductWithQuantity(wishlists, 'approved');
   let totalPrice = 0;
   approvedProductList.forEach(({ price, quantity }: ProductWithQuantity) => {
     quantity > 1 ? (totalPrice += (price * quantity * (10 - quantity)) / 10) : (totalPrice += price);
@@ -56,7 +56,7 @@ export const calculateTotalPrice = (wishlists: WishlistWithProductDetail[]) => {
 };
 
 export const calculateTotalDiscount = (wishlists: WishlistWithProductDetail[]) => {
-  const approvedProductList = countQuantityOfProduct(wishlists, 'approved');
+  const approvedProductList = getProductWithQuantity(wishlists, 'approved');
   let totalDiscount = 0;
   approvedProductList.forEach(({ price, quantity }: ProductWithQuantity) => {
     quantity > 1 && (totalDiscount += (price * quantity * quantity) / 10);

@@ -2,8 +2,8 @@ import { Product, patchWishlist } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ProductWithQuantity, productListEmptyCheck, countQuantityOfProduct } from 'utils/wishlistAndProduct';
+import { Link, useHistory } from 'react-router-dom';
+import { ProductWithQuantity, productListEmptyCheck, getProductWithQuantity } from 'utils/wishlistAndProduct';
 import { WishlistWithProductDetail } from 'WishLists';
 import { ProductCard } from 'WishLists/ProductCard';
 import Modal from '../Modal';
@@ -25,6 +25,8 @@ export const Overview = () => {
   const [returnConfirmation, setReturnConfirmation] = useState(false);
   const [productReturnParam, setProductReturnParam] = useState<IOverviewProductReturn>();
   const [patchData, setPatchData] = useState<WishlistWithProductDetail[]>([]);
+
+  const history = useHistory();
 
   const wishlistEmptyCheck = (
     wishListsToCheck: WishlistWithProductDetail[],
@@ -60,9 +62,15 @@ export const Overview = () => {
     productReturnParam &&
       handleProduct(productReturnParam.returnedProduct, 'pending', productReturnParam.wishlistToUpdate);
   };
+  const handleAfterPaymentConfirm = () => {
+    setPay(false);
+    setPatchData([]);
+    handlePayment();
+    history.push('/');
+  };
 
   useEffect(() => {
-    const approveList = countQuantityOfProduct(wishlists, 'approved');
+    const approveList = getProductWithQuantity(wishlists, 'approved');
     setApprovedProductList(approveList);
   }, [wishlists]);
 
@@ -175,30 +183,28 @@ export const Overview = () => {
         <Modal>
           <div className="success-payment">
             <div className="payment-result-approved-list">
+              <h4>Thank you for your purchase 🙂</h4>
               <h5>You have successfully purchased these gifts:</h5>
               <PaymentResult {...{ patchData, productStatus: 'approved' }} />
-              <div className="total-cost">
-                Total: €<b>{totalPrice >= 0 ? totalPrice.toFixed(2) : '0.00'}</b>
-              </div>
-              <div className="total-saving">You save: €{totalDiscount.toFixed(2)}</div>
             </div>
-            {countQuantityOfProduct(patchData, 'discarded').length ? (
+            {getProductWithQuantity(patchData, 'discarded').length ? (
               <div className="payment-result-discard-list">
                 <h5>You have discarded these:</h5>
-                <PaymentResult {...{ patchData, productStatus: 'discarded' }} />
+                {getProductWithQuantity(patchData, 'discarded').map(({ title, image, price, quantity, id }) => {
+                  return (
+                    <div key={id}>
+                      <h6>{title}</h6>
+                      <img style={{ width: '50px', height: '50px', borderRadius: '20px' }} src={image} alt={title} />
+                      <p>Price: €{price}</p>
+                      <p>Quantity: {quantity}</p>
+                    </div>
+                  );
+                })}
               </div>
             ) : (
               ''
             )}
-            <button
-              onClick={() => {
-                setPay(false);
-                setPatchData([]);
-                handlePayment();
-              }}
-            >
-              OK
-            </button>
+            <button onClick={handleAfterPaymentConfirm}>OK</button>
           </div>
         </Modal>
       )}

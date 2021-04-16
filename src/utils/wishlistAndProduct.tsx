@@ -6,7 +6,7 @@ export interface ProductWithQuantity extends Product {
   quantity: number;
 }
 
-export const countQuantityOfProduct = (
+export const getProductWithQuantity = (
   listToCheck: WishlistWithProductDetail[],
   givenStatus: 'pending' | 'approved' | 'discarded'
 ) => {
@@ -28,7 +28,7 @@ export const countQuantityOfProduct = (
   return productWithQuantityList;
 };
 
-export const CountTotalProductWithGivenStatus = (
+export const countTotalProductWithGivenStatus = (
   listToCheck: WishlistWithProductDetail[],
   givenStatus: ApprovalStatus
 ) => {
@@ -44,4 +44,20 @@ export const CountTotalProductWithGivenStatus = (
 export const productListEmptyCheck = (productList: Product[], givenStatus: ApprovalStatus) => {
   const productListcheck = productList.filter((product: Product) => product.approvalStatus === givenStatus);
   return productListcheck.length ? false : true;
+};
+
+export const countTotalProductQuantity = (
+  productToCheck: Product,
+  wishlistOfProduct: WishlistWithProductDetail,
+  wishlists: WishlistWithProductDetail[]
+) => {
+  let quantity = 1;
+  wishlists &&
+    wishlistOfProduct &&
+    wishlists.forEach(({ products, id }: WishlistWithProductDetail) => {
+      products.forEach((product: Product) => {
+        product.id === productToCheck.id && wishlistOfProduct.id !== id && quantity++;
+      });
+    });
+  return quantity === 1 ? 1 : quantity;
 };

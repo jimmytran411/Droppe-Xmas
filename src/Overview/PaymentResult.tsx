@@ -19,7 +19,7 @@ export const PaymentResult = ({ patchData, productStatus }: IPaymentResult) => {
                     <div key={id} className="confirmation-product-card">
                       <h5>{title}</h5>
                       <img style={{ width: '50px', height: '50px', borderRadius: '20px' }} src={image} alt={title} />
-                      <p>Original Price: €{price}</p>
+                      <p>Price: €{price}</p>
                     </div>
                   )
                 );

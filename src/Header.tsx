@@ -2,7 +2,7 @@ import { useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CountTotalProductWithGivenStatus } from 'utils/wishlistAndProduct';
+import { countTotalProductWithGivenStatus } from 'utils/wishlistAndProduct';
 
 export const Header = () => {
   const [totalApprovedProduct, setTotalApprovedProduct] = React.useState<number>(0);
@@ -11,7 +11,7 @@ export const Header = () => {
   const { totalPrice, totalDiscount } = usePrice();
 
   useEffect(() => {
-    const totalApprovedProduct = CountTotalProductWithGivenStatus(wishlists, 'approved');
+    const totalApprovedProduct = countTotalProductWithGivenStatus(wishlists, 'approved');
     setTotalApprovedProduct(totalApprovedProduct);
   }, [wishlists]);
   return (
