@@ -20,7 +20,7 @@ export const Header = () => {
       <div className="total-text-group">
         <span className="total-price">Total: €{totalPrice.toFixed(2)}</span>
         <span className="total-saving">Total Saving: €{totalDiscount.toFixed(2)}</span>
-        <span className="total-approved-product">#IconCart here:{totalApprovedProduct}</span>
+        <span className="total-approved-product">🛒{totalApprovedProduct}</span>
         <Link to="/overview">
           <button className="checkout">Checkout</button>
         </Link>

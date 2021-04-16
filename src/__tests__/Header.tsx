@@ -6,6 +6,7 @@ import { WishlistWithProductDetail } from 'WishLists';
 import { Header } from 'Header';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
+import { PriceContext } from 'context/PriceContext';
 
 const testCurrentWL: Product[] = [
   {
@@ -37,15 +38,25 @@ const testCurrentWL: Product[] = [
   },
 ];
 const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testCurrentWL };
-const mockValue = {
+const mockCartValue = {
   wishlists: [
     { ...testCurrentWLProp },
     { ...testCurrentWLProp, id: 2, userid: 2 },
     { ...testCurrentWLProp, id: 3, userid: 3 },
   ],
+  handleProduct: jest.fn(),
+  handlePayment: jest.fn(),
 };
-test('Test Overview show value from provider', () => {
-  const wrapper = ({ children }: any) => <CartContext.Provider value={mockValue}>{children}</CartContext.Provider>;
+const mockPriceValue = {
+  totalPrice: 420,
+  totalDiscount: 240,
+};
+test('Test Header show value from provider', () => {
+  const wrapper = ({ children }: any) => (
+    <CartContext.Provider value={mockCartValue}>
+      <PriceContext.Provider value={mockPriceValue}>{children}</PriceContext.Provider>
+    </CartContext.Provider>
+  );
   const { getByText, getByRole } = render(
     <BrowserRouter>
       <Header />
@@ -55,23 +66,11 @@ test('Test Overview show value from provider', () => {
     }
   );
   const totalPrice = getByText(/total:/i);
-  expect(totalPrice.textContent).toBe('Total: €20.00');
+  expect(totalPrice.textContent).toBe('Total: €420.00');
 
   const saving = getByText(/total saving:/i);
-  expect(saving.textContent).toBe('Total Saving: €20.00');
+  expect(saving.textContent).toBe('Total Saving: €240.00');
 
-  // userEvent.click(getByRole('button', { name: /child-1/i }));
-  // expect(mockValue.handleOpenWishList).toHaveBeenCalledTimes(1);
-
-  // userEvent.click(getByRole('button', { name: /child-2/i }));
-  // expect(mockValue.handleOpenWishList).toHaveBeenCalledTimes(2);
-
-  // userEvent.click(getByRole('button', { name: /child-3/i }));
-  // expect(mockValue.handleOpenWishList).toHaveBeenCalledTimes(3);
-
-  // const checkoutBtn = getByRole('button', { name: /checkout/i });
-  // userEvent.click(checkoutBtn);
-  // expect(checkoutBtn).not.toBeInTheDocument();
-  // expect(totalPrice).not.toBeInTheDocument();
-  // expect(saving).not.toBeInTheDocument();
+  expect(getByText(/🛒/i).textContent).toBe('🛒3');
+  expect(getByRole('button', { name: /checkout/i })).toBeInTheDocument();
 });

@@ -101,7 +101,7 @@ export const Overview = () => {
                                   setProductReturnParam({ wishlistToUpdate: wishlist, returnedProduct: product });
                                 }}
                               >
-                                ⃔
+                                ❌
                               </button>
                             </div>
                           )

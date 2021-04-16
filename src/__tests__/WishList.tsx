@@ -2,6 +2,8 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { Product } from 'api/wishList';
 import { WishList, WishlistWithProductDetail } from 'WishLists';
+import { BrowserRouter, Router } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
 
 test('Render discard list with test input', () => {
   const testCurrentWL: Product[] = [
@@ -34,21 +36,24 @@ test('Render discard list with test input', () => {
     },
   ];
   const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testCurrentWL };
-
-  const { getByText, getByRole } = render(<WishList {...testCurrentWLProp} />);
-  expect(getByText(/Current Cart: €0.00/i)).toBeInTheDocument();
+  const history = createMemoryHistory({ initialEntries: ['/wishlist/1'] });
+  const { getByText, getByRole } = render(
+    <Router history={history}>
+      <WishList {...testCurrentWLProp} />
+    </Router>
+  );
+  expect(getByText(/Current Cart: €222.00/i)).toBeInTheDocument();
   expect(getByText(/test title 1/i)).toBeInTheDocument();
-  expect(getByText(/111/i)).toBeInTheDocument();
+  expect(getByText(/€111/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /discard-btn-2/i })).toBeInTheDocument();
 
   expect(getByText(/test title 2/i)).toBeInTheDocument();
-  expect(getByText(/222/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /return-btn-2/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /discard-btn-2/i })).toBeInTheDocument();
 
   expect(getByText(/test title 3/i)).toBeInTheDocument();
-  expect(getByText(/333/i)).toBeInTheDocument();
+  expect(getByText(/€333/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /return-btn-3/i })).toBeInTheDocument();
   expect(getByRole('button', { name: /approve-btn-3/i })).toBeInTheDocument();
 });

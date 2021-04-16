@@ -1,11 +1,14 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Router } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
+
 import { Product } from 'api/wishList';
 import { Overview } from 'Overview';
 import { CartContext } from 'context/CartContext';
 import { WishlistWithProductDetail } from 'WishLists';
-import userEvent from '@testing-library/user-event';
-import { BrowserRouter } from 'react-router-dom';
+import { PriceContext } from 'context/PriceContext';
 
 const testCurrentWL: Product[] = [
   {
@@ -37,38 +40,36 @@ const testCurrentWL: Product[] = [
   },
 ];
 const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testCurrentWL };
-const mockValue = {
+const mockCartValue = {
   wishlists: [{ ...testCurrentWLProp }],
-  currentWishList: { ...testCurrentWLProp },
-  handleOpenWishList: jest.fn(),
   handleProduct: jest.fn(),
-  updateWishList: jest.fn(),
-  totalPrice: 20,
-  totalDiscount: 20,
-  productListEmptyCheck: jest.fn(),
-  currentCartPrice: 20,
-  currentSaving: 20,
-  totalQuantity: jest.fn(),
-  overview: [{ ...testCurrentWLProp }],
-  isLoading: false,
-  totalApprovedProduct: 1,
   handlePayment: jest.fn(),
+};
+const mockPriceValue = {
+  totalPrice: 420,
+  totalDiscount: 240,
 };
 
 test('Test Overview show value from provider', () => {
-  const wrapper = ({ children }: any) => <CartContext.Provider value={mockValue}>{children}</CartContext.Provider>;
+  const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testCurrentWL };
+  const history = createMemoryHistory({ initialEntries: ['/overview'] });
+  const wrapper = ({ children }: any) => (
+    <CartContext.Provider value={mockCartValue}>
+      <PriceContext.Provider value={mockPriceValue}>{children}</PriceContext.Provider>
+    </CartContext.Provider>
+  );
   const { getByText, getByRole } = render(
-    <BrowserRouter>
+    <Router history={history}>
       <Overview />
-    </BrowserRouter>,
+    </Router>,
     {
       wrapper,
     }
   );
 
-  expect(getByText(/total:/i).textContent).toBe('Total: €20.00');
-  expect(getByText(/you save:/i).textContent).toBe('You save: €20.00');
+  expect(getByText(/total:/i).textContent).toBe('Total: €420.00');
+  expect(getByText(/you save:/i).textContent).toBe('You save: €240.00');
   expect(getByText(/These items are still in your wishlists:/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /checkout/i })).toBeInTheDocument;
-  expect(getByRole('button', { name: '⃔' })).toBeInTheDocument();
+  expect(getByRole('button', { name: '❌' })).toBeInTheDocument();
 });

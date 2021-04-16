@@ -39,8 +39,8 @@ const testPatchData = [{ ...testWL }];
 test('Test render Payment result with given patchData', () => {
   const { getByText } = render(<PaymentResult {...{ patchData: testPatchData, productStatus: 'approved' }} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
-  expect(getByText(/111/i).textContent).toBe('Original Price: €111');
+  expect(getByText(/111/i).textContent).toBe('Price: €111');
 
   expect(getByText(/test title 2/i)).toBeInTheDocument();
-  expect(getByText(/222/i).textContent).toBe('Original Price: €222');
+  expect(getByText(/222/i).textContent).toBe('Price: €222');
 });
