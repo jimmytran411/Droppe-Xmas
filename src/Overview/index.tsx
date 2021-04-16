@@ -1,7 +1,9 @@
 import { IProduct, patchWishlist } from 'api/wishList';
 import { useCart } from 'context/CartContext';
+import { usePrice } from 'context/PriceContext';
 import React, { useEffect, useState } from 'react';
-import { IProductWithQuantity, productWithQuantity } from 'utils/wishlistAndProduct';
+import { Link } from 'react-router-dom';
+import { IProductWithQuantity, productListEmptyCheck, productWithQuantity } from 'utils/wishlistAndProduct';
 import { WishlistWithProductDetail } from 'WishLists';
 import { Product } from 'WishLists/Product';
 import Modal from '../Modal';
@@ -14,7 +16,8 @@ export interface IOverviewProductReturn {
 }
 
 export const Overview = () => {
-  const { totalPrice, totalDiscount, wishlists, productListEmptyCheck, handlePayment, handleProduct } = useCart();
+  const { wishlists, handlePayment, handleProduct } = useCart();
+  const { totalPrice, totalDiscount } = usePrice();
   const [approvedProductList, setApprovedProductList] = useState<IProductWithQuantity[]>([]);
   const [confirm, setConfirm] = useState(false);
   const [pay, setPay] = useState(false);
@@ -65,6 +68,10 @@ export const Overview = () => {
   return (
     <div className="overview-container">
       <div className="overview-approve-list">
+        <Link to="/">
+          <button>Back </button>
+        </Link>
+
         {totalPrice > 0
           ? wishlists.map((wishlist: WishlistWithProductDetail) => {
               return (

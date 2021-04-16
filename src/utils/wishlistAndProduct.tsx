@@ -1,4 +1,5 @@
 import { IProduct } from 'api/wishList';
+import { ApprovalStatus } from 'common/commonType';
 import { WishlistWithProductDetail } from 'WishLists';
 
 export interface IProductWithQuantity extends IProduct {
@@ -38,4 +39,9 @@ export const CountTotalProductWithGivenState = (
     });
   });
   return count;
+};
+
+export const productListEmptyCheck = (productList: IProduct[], givenState: ApprovalStatus) => {
+  const productListcheck = productList.filter((product: IProduct) => product.approvalStatus === givenState);
+  return productListcheck.length ? false : true;
 };

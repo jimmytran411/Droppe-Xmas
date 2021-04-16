@@ -3,8 +3,9 @@ import { render } from '@testing-library/react';
 import { IProduct } from 'api/wishList';
 import { Overview } from 'Overview';
 import { CartContext } from 'context/CartContext';
-import { IWishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishLists';
 import userEvent from '@testing-library/user-event';
+import { BrowserRouter } from 'react-router-dom';
 
 const testCurrentWL: IProduct[] = [
   {
@@ -14,7 +15,7 @@ const testCurrentWL: IProduct[] = [
     description: 'test description 1',
     image: 'test img link 1',
     category: 'test category 1',
-    currentState: 'pending',
+    approvalStatus: 'pending',
   },
   {
     id: 2,
@@ -23,7 +24,7 @@ const testCurrentWL: IProduct[] = [
     description: 'test description 2',
     image: 'test img link 2',
     category: 'test category 2',
-    currentState: 'approved',
+    approvalStatus: 'approved',
   },
   {
     id: 3,
@@ -32,12 +33,12 @@ const testCurrentWL: IProduct[] = [
     description: 'test description 3',
     image: 'test img link 3',
     category: 'test category 3',
-    currentState: 'discarded',
+    approvalStatus: 'discarded',
   },
 ];
-const testCurrentWLProp: IWishlistWithProductDetail = { id: 1, userid: 1, products: testCurrentWL };
+const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testCurrentWL };
 const mockValue = {
-  allwishlist: [{ ...testCurrentWLProp }],
+  wishlists: [{ ...testCurrentWLProp }],
   currentWishList: { ...testCurrentWLProp },
   handleOpenWishList: jest.fn(),
   handleProduct: jest.fn(),
@@ -56,9 +57,14 @@ const mockValue = {
 
 test('Test Overview show value from provider', () => {
   const wrapper = ({ children }: any) => <CartContext.Provider value={mockValue}>{children}</CartContext.Provider>;
-  const { getByText, getByRole } = render(<Overview />, {
-    wrapper,
-  });
+  const { getByText, getByRole } = render(
+    <BrowserRouter>
+      <Overview />
+    </BrowserRouter>,
+    {
+      wrapper,
+    }
+  );
 
   expect(getByText(/total:/i).textContent).toBe('Total: €20.00');
   expect(getByText(/you save:/i).textContent).toBe('You save: €20.00');
