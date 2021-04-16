@@ -1,11 +1,11 @@
 import React from 'react';
-import { IWishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishLists';
 
 export interface IPaymentResult {
-  patchData: IWishlistWithProductDetail[];
-  productState: 'approved' | 'discarded';
+  patchData: WishlistWithProductDetail[];
+  productStatus: 'approved' | 'discarded';
 }
-export const PaymentResult = ({ patchData, productState }: IPaymentResult) => {
+export const PaymentResult = ({ patchData, productStatus }: IPaymentResult) => {
   return (
     <>
       {patchData.length ? (
@@ -13,9 +13,9 @@ export const PaymentResult = ({ patchData, productState }: IPaymentResult) => {
           return (
             <div key={wishlist.id}>
               <h6>Child {wishlist.id}</h6>
-              {wishlist.products.map(({ id, image, title, currentState, price }) => {
+              {wishlist.products.map(({ id, image, title, approvalStatus, price }) => {
                 return (
-                  currentState === productState && (
+                  approvalStatus === productStatus && (
                     <div key={id} className="confirmation-product-card">
                       <h5>{title}</h5>
                       <img style={{ width: '50px', height: '50px', borderRadius: '20px' }} src={image} alt={title} />

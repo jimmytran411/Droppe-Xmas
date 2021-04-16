@@ -1,0 +1,16 @@
+.landing {
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+}
+
+.user-card {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: baseline;
+
+  border: 1px rgb(117, 116, 116);
+  box-shadow: 2px 2px 2.25px 2.25px #ccc;
+  border-radius: 4px;
+  margin: 20px;
+}

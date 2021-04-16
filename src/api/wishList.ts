@@ -1,14 +1,14 @@
-import axios from 'axios';
-import { IWishlistWithProductDetail } from 'WishLists';
+import axios, { AxiosResponse } from 'axios';
+import { WishlistWithProductDetail } from 'WishLists';
 
-export interface IWishList {
+export interface WishList {
   id: number;
   userId: number;
   date: string;
-  products: IWishListProduct[];
+  products: WishListProduct[];
 }
 
-export interface IWishListProduct {
+export interface WishListProduct {
   productId: number;
   quantity: number;
 }
@@ -20,20 +20,24 @@ export interface IProduct {
   category: string;
   description: string;
   image: string;
-  currentState: 'pending' | 'approved' | 'discarded';
+  approvalStatus: 'pending' | 'approved' | 'discarded';
 }
 
-export const getAllWishLists = async () => {
-  return axios.get<IWishList[]>('https://fakestoreapi.com/carts?limit=5');
+export const getWishLists = async (): Promise<AxiosResponse<WishList[]>> => {
+  return axios.get('https://fakestoreapi.com/carts?limit=5');
 };
 
-export const getProduct = async (id: number) => {
+export const getWishList = async (id: number): Promise<AxiosResponse<WishList>> => {
+  return axios.get(`https://fakestoreapi.com/carts/${id}`);
+};
+
+export const getProduct = async (id: number): Promise<IProduct> => {
   const { data } = await axios.get<IProduct>(`https://fakestoreapi.com/products/${id}`);
-  const productWithPendingState: IProduct = { ...data, currentState: 'pending' };
+  const productWithPendingState: IProduct = { ...data, approvalStatus: 'pending' };
   return productWithPendingState;
 };
 
-export const patchWishlist = async (wishlist: IWishlistWithProductDetail) => {
+export const patchWishlist = async (wishlist: WishlistWithProductDetail) => {
   // const updateData = { ...wishlist, date: new Date().toJSON().slice(0, 10).split('-').reverse().join('/') };
   return await axios.patch(`https://fakestoreapi.com/carts/${wishlist.id}`, wishlist);
 };

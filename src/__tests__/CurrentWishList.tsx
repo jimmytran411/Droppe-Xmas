@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { IProduct } from 'api/wishList';
-import { CurrentWishList, IWishlistWithProductDetail } from 'WishLists';
+import { WishList, WishlistWithProductDetail } from 'WishLists';
 
 test('Render discard list with test input', () => {
   const testCurrentWL: IProduct[] = [
@@ -12,7 +12,7 @@ test('Render discard list with test input', () => {
       description: 'test description 1',
       image: 'test img link 1',
       category: 'test category 1',
-      currentState: 'pending',
+      approvalStatus: 'pending',
     },
     {
       id: 2,
@@ -21,7 +21,7 @@ test('Render discard list with test input', () => {
       description: 'test description 2',
       image: 'test img link 2',
       category: 'test category 2',
-      currentState: 'approved',
+      approvalStatus: 'approved',
     },
     {
       id: 3,
@@ -30,12 +30,12 @@ test('Render discard list with test input', () => {
       description: 'test description 3',
       image: 'test img link 3',
       category: 'test category 3',
-      currentState: 'discarded',
+      approvalStatus: 'discarded',
     },
   ];
-  const testCurrentWLProp: IWishlistWithProductDetail = { id: 1, userid: 1, products: testCurrentWL };
+  const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testCurrentWL };
 
-  const { getByText, getByRole } = render(<CurrentWishList {...testCurrentWLProp} />);
+  const { getByText, getByRole } = render(<WishList {...testCurrentWLProp} />);
   expect(getByText(/Current Cart: €0.00/i)).toBeInTheDocument();
   expect(getByText(/test title 1/i)).toBeInTheDocument();
   expect(getByText(/111/i)).toBeInTheDocument();

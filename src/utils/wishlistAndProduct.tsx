@@ -1,18 +1,18 @@
 import { IProduct } from 'api/wishList';
-import { IWishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishLists';
 
 export interface IProductWithQuantity extends IProduct {
   quantity: number;
 }
 
 export const productWithQuantity = (
-  listToCheck: IWishlistWithProductDetail[],
+  listToCheck: WishlistWithProductDetail[],
   stateToCheck: 'pending' | 'approved' | 'discarded'
 ) => {
   const productWithCheckedStateList: IProduct[] = [];
-  listToCheck.forEach((wishlist: IWishlistWithProductDetail) => {
+  listToCheck.forEach((wishlist: WishlistWithProductDetail) => {
     return wishlist.products.forEach(
-      (product: IProduct) => product.currentState === stateToCheck && productWithCheckedStateList.push(product)
+      (product: IProduct) => product.approvalStatus === stateToCheck && productWithCheckedStateList.push(product)
     );
   });
   const mapOfApprovedProducts = productWithCheckedStateList
@@ -27,14 +27,14 @@ export const productWithQuantity = (
   return productWithQuantityList;
 };
 
-export const totalProductWithGivenState = (
-  listToCheck: IWishlistWithProductDetail[],
+export const CountTotalProductWithGivenState = (
+  listToCheck: WishlistWithProductDetail[],
   givenState: 'approved' | 'pending' | 'discarded'
 ) => {
   let count = 0;
   listToCheck.forEach((wishlist) => {
     wishlist.products.forEach((product) => {
-      product.currentState === givenState && count++;
+      product.approvalStatus === givenState && count++;
     });
   });
   return count;

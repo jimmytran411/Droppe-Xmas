@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { IProduct } from 'api/wishList';
 import { IProductList, ProductList } from 'WishLists/ProductList';
-import { IWishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishLists';
 
 test('Render pending wishlist with test input', () => {
   const testPendingList: IProduct[] = [
@@ -13,7 +13,7 @@ test('Render pending wishlist with test input', () => {
       description: 'test description 1',
       image: 'test img link 1',
       category: 'test category 1',
-      currentState: 'pending',
+      approvalStatus: 'pending',
     },
     {
       id: 2,
@@ -22,10 +22,10 @@ test('Render pending wishlist with test input', () => {
       description: 'test description 2',
       image: 'test img link 2',
       category: 'test category 2',
-      currentState: 'pending',
+      approvalStatus: 'pending',
     },
   ];
-  const testCurrentWLProp: IWishlistWithProductDetail = { id: 1, userid: 1, products: testPendingList };
+  const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testPendingList };
   const testPendingListProp: IProductList = { ...testCurrentWLProp, givenState: 'pending' };
 
   const { getByText, getByRole } = render(<ProductList {...testPendingListProp} />);
@@ -49,7 +49,7 @@ test('Render approve list with test input', () => {
       description: 'test description 1',
       image: 'test img link 1',
       category: 'test category 1',
-      currentState: 'approved',
+      approvalStatus: 'approved',
     },
     {
       id: 2,
@@ -58,10 +58,10 @@ test('Render approve list with test input', () => {
       description: 'test description 2',
       image: 'test img link 2',
       category: 'test category 2',
-      currentState: 'approved',
+      approvalStatus: 'approved',
     },
   ];
-  const testCurrentWLProp: IWishlistWithProductDetail = { id: 1, userid: 1, products: testApproveList };
+  const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testApproveList };
   const testApproveListProp: IProductList = { ...testCurrentWLProp, givenState: 'approved' };
 
   const { getByText, getByRole } = render(<ProductList {...testApproveListProp} />);
@@ -85,7 +85,7 @@ test('Render discard list with test input', () => {
       description: 'test description 1',
       image: 'test img link 1',
       category: 'test category 1',
-      currentState: 'discarded',
+      approvalStatus: 'discarded',
     },
     {
       id: 2,
@@ -94,10 +94,10 @@ test('Render discard list with test input', () => {
       description: 'test description 2',
       image: 'test img link 2',
       category: 'test category 2',
-      currentState: 'discarded',
+      approvalStatus: 'discarded',
     },
   ];
-  const testCurrentWLProp: IWishlistWithProductDetail = { id: 1, userid: 1, products: testDiscardList };
+  const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testDiscardList };
   const testDiscardListProp: IProductList = { ...testCurrentWLProp, givenState: 'discarded' };
 
   const { getByText, getByRole } = render(<ProductList {...testDiscardListProp} />);

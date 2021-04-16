@@ -2,32 +2,32 @@ import { IProduct, patchWishlist } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import React, { useEffect, useState } from 'react';
 import { IProductWithQuantity, productWithQuantity } from 'utils/wishlistAndProduct';
-import { IWishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishLists';
 import { Product } from 'WishLists/Product';
 import Modal from '../Modal';
 import './Overview.css';
 import { PaymentResult } from './PaymentResult';
 
 export interface IOverviewProductReturn {
-  wishlistToUpdate: IWishlistWithProductDetail;
+  wishlistToUpdate: WishlistWithProductDetail;
   returnedProduct: IProduct;
 }
 
 export const Overview = () => {
-  const { totalPrice, totalDiscount, allwishlist, productListEmptyCheck, handlePayment, handleProduct } = useCart();
+  const { totalPrice, totalDiscount, wishlists, productListEmptyCheck, handlePayment, handleProduct } = useCart();
   const [approvedProductList, setApprovedProductList] = useState<IProductWithQuantity[]>([]);
   const [confirm, setConfirm] = useState(false);
   const [pay, setPay] = useState(false);
   const [returnConfirmation, setReturnConfirmation] = useState(false);
   const [productReturnParam, setProductReturnParam] = useState<IOverviewProductReturn>();
-  const [patchData, setPatchData] = useState<IWishlistWithProductDetail[]>([]);
+  const [patchData, setPatchData] = useState<WishlistWithProductDetail[]>([]);
 
   const wishlistEmptyCheck = (
-    wishListsToCheck: IWishlistWithProductDetail[],
+    wishListsToCheck: WishlistWithProductDetail[],
     givenState: 'pending' | 'approved' | 'discarded'
   ) => {
-    const allWLCheck = wishListsToCheck.map(({ products }: IWishlistWithProductDetail) => {
-      return products.filter((product: IProduct) => product.currentState === givenState);
+    const allWLCheck = wishListsToCheck.map(({ products }: WishlistWithProductDetail) => {
+      return products.filter((product: IProduct) => product.approvalStatus === givenState);
     });
     return allWLCheck.some((a) => {
       return a.length;
@@ -38,10 +38,10 @@ export const Overview = () => {
 
   const toggleModal = () => setConfirm(!confirm);
   const handlePay = async () => {
-    allwishlist.forEach(async (wishlist: IWishlistWithProductDetail) => {
-      const notPedingProduct = wishlist.products.filter((product: IProduct) => product.currentState !== 'pending');
+    wishlists.forEach(async (wishlist: WishlistWithProductDetail) => {
+      const notPedingProduct = wishlist.products.filter((product: IProduct) => product.approvalStatus !== 'pending');
       if (notPedingProduct.length) {
-        const patchedWishlist: IWishlistWithProductDetail = { ...wishlist, products: notPedingProduct };
+        const patchedWishlist: WishlistWithProductDetail = { ...wishlist, products: notPedingProduct };
         const { data } = await patchWishlist(patchedWishlist);
         setPatchData((prev) => {
           return [...prev, { ...data }];
@@ -58,15 +58,15 @@ export const Overview = () => {
   };
 
   useEffect(() => {
-    const approveList = productWithQuantity(allwishlist, 'approved');
+    const approveList = productWithQuantity(wishlists, 'approved');
     setApprovedProductList(approveList);
-  }, [allwishlist]);
+  }, [wishlists]);
 
   return (
     <div className="overview-container">
       <div className="overview-approve-list">
         {totalPrice > 0
-          ? allwishlist.map((wishlist: IWishlistWithProductDetail) => {
+          ? wishlists.map((wishlist: WishlistWithProductDetail) => {
               return (
                 <div className="child-approve-list" key={wishlist.id}>
                   <h5>{`Child ${wishlist.id}:`}</h5>
@@ -76,7 +76,7 @@ export const Overview = () => {
                     <React.Fragment>
                       {wishlist.products.map((product: IProduct) => {
                         return (
-                          product.currentState === 'approved' && (
+                          product.approvalStatus === 'approved' && (
                             <div className="overview-product-card" key={product.id}>
                               <Product {...product} />
                               <button
@@ -113,15 +113,15 @@ export const Overview = () => {
       )}
       {totalPrice > 0 && (
         <>
-          {!wishlistEmptyCheck(allwishlist, 'pending') && (
+          {!wishlistEmptyCheck(wishlists, 'pending') && (
             <div className="overview-pending-list">
               <h5>These items are still in your wishlists:</h5>
-              {allwishlist.map((wishlist: IWishlistWithProductDetail, index: number) => {
+              {wishlists.map((wishlist: WishlistWithProductDetail, index: number) => {
                 return (
                   <div className="child-pending-list" key={index}>
                     <p>Child {wishlist.id}</p>
                     {wishlist.products.map((product: IProduct) => {
-                      return product.currentState === 'pending' && <Product key={product.id} {...product} />;
+                      return product.approvalStatus === 'pending' && <Product key={product.id} {...product} />;
                     })}
                   </div>
                 );
@@ -168,7 +168,7 @@ export const Overview = () => {
           <div className="success-payment">
             <div className="payment-result-approved-list">
               <h5>You have successfully purchased these gifts:</h5>
-              <PaymentResult {...{ patchData, productState: 'approved' }} />
+              <PaymentResult {...{ patchData, productStatus: 'approved' }} />
               <div className="total-cost">
                 Total: €<b>{totalPrice >= 0 ? totalPrice.toFixed(2) : '0.00'}</b>
               </div>
@@ -177,7 +177,7 @@ export const Overview = () => {
             {productWithQuantity(patchData, 'discarded').length ? (
               <div className="payment-result-discard-list">
                 <h5>You have discarded these:</h5>
-                <PaymentResult {...{ patchData, productState: 'discarded' }} />
+                <PaymentResult {...{ patchData, productStatus: 'discarded' }} />
               </div>
             ) : (
               ''

@@ -1,31 +1,31 @@
-import { getAllWishLists, getProduct, IProduct, IWishList, IWishListProduct } from 'api/wishList';
+import { getProduct, IProduct, WishList, WishListProduct, getWishLists } from 'api/wishList';
+import { ApprovalStatus } from 'common/commonType';
 import * as React from 'react';
 import { totalDiscountCal, totalPriceCal, wishlistPriceCal } from 'utils/priceCalculation';
-import { totalProductWithGivenState } from 'utils/wishlistAndProduct';
-import { IWishlistWithProductDetail } from 'WishLists';
+import { CountTotalProductWithGivenState } from 'utils/wishlistAndProduct';
+import { WishlistWithProductDetail } from 'WishLists';
 
 export interface ICart {
-  allwishlist: IWishlistWithProductDetail[];
-  currentWishList: IWishlistWithProductDetail | undefined;
-  handleOpenWishList: (wishlist: IWishlistWithProductDetail) => void;
+  wishlists: WishlistWithProductDetail[];
+  currentWishList: WishlistWithProductDetail | undefined;
+  handleOpenWishList: (wishlist: WishlistWithProductDetail) => void;
   currentCartPrice: number;
   currentSaving: number;
   totalPrice: number;
   totalDiscount: number;
   handleProduct: (
     product: IProduct,
-    newState: 'pending' | 'approved' | 'discarded',
-    wishListOfProduct: IWishlistWithProductDetail
+    updatedState: ApprovalStatus,
+    wishListOfProduct: WishlistWithProductDetail
   ) => void;
-  productListEmptyCheck: (product: IProduct[], givenState: 'pending' | 'approved' | 'discarded') => boolean;
+  productListEmptyCheck: (product: IProduct[], givenState: ApprovalStatus) => boolean;
   totalQuantity: (product: IProduct) => number;
-  isLoading: boolean;
   totalApprovedProduct: number;
   handlePayment: () => void;
 }
 
 const initialCartValue: ICart = {
-  allwishlist: [],
+  wishlists: [],
   currentWishList: undefined,
   handleOpenWishList: () => {},
   currentCartPrice: 0,
@@ -35,39 +35,33 @@ const initialCartValue: ICart = {
   handleProduct: () => {},
   productListEmptyCheck: () => false,
   totalQuantity: () => 0,
-  isLoading: true,
   totalApprovedProduct: 0,
   handlePayment: () => {},
 };
 const CartContext = React.createContext<ICart>(initialCartValue);
 function CartProvider(props: any) {
-  const [allWishList, setAllWishList] = React.useState<IWishlistWithProductDetail[]>([]);
-  const [currentWishList, setCurrentWishList] = React.useState<IWishlistWithProductDetail>();
+  const [wishlists, setWishlists] = React.useState<WishlistWithProductDetail[]>([]);
+  const [currentWishList, setCurrentWishList] = React.useState<WishlistWithProductDetail>();
   const [currentCartPrice, setCurrentCartPrice] = React.useState<number>(0);
   const [currentSaving, setCurrentSaving] = React.useState<number>(0);
   const [totalPrice, setTotalPrice] = React.useState<number>(0);
   const [totalDiscount, setTotalDiscount] = React.useState<number>(0);
-  const [isLoading, setIsLoading] = React.useState(true);
   const [totalApprovedProduct, setTotalApprovedProduct] = React.useState<number>(0);
 
   React.useEffect(() => {
     const fetchAllWishList = async () => {
       try {
-        setIsLoading(true);
-        const { data } = await getAllWishLists();
-        const allWLWithDetailedProduct = data.map((wishlist: IWishList) => {
+        const { data } = await getWishLists();
+        const allWLWithDetailedProduct = data.map((wishlist: WishList) => {
           // this method to prevent Promise return type
           const detailedProducts: IProduct[] = [];
-          wishlist.products.forEach(async ({ productId }: IWishListProduct) => {
+          wishlist.products.forEach(async ({ productId }: WishListProduct) => {
             const product = await getProduct(productId);
             detailedProducts.push(product);
           });
           return { id: wishlist.id, userid: wishlist.userId, products: detailedProducts };
         });
-        setAllWishList(allWLWithDetailedProduct);
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 2000);
+        setWishlists(allWLWithDetailedProduct);
       } catch (error) {
         console.log(error);
       }
@@ -75,9 +69,9 @@ function CartProvider(props: any) {
     fetchAllWishList();
   }, []);
 
-  const handleOpenWishList = (wishlist: IWishlistWithProductDetail) => {
+  const handleOpenWishList = (wishlist: WishlistWithProductDetail) => {
     setCurrentWishList(wishlist);
-    const { priceAfterDiscount, totalDiscount } = wishlistPriceCal(wishlist, allWishList);
+    const { priceAfterDiscount, totalDiscount } = wishlistPriceCal(wishlist, wishlists);
     setCurrentSaving(totalDiscount);
     setCurrentCartPrice(priceAfterDiscount);
   };
@@ -86,16 +80,16 @@ function CartProvider(props: any) {
   //    allwishlist, currentwishlist, currentCartPrice, currentSaving, totalPrice, totalSaving
   const handleProduct = (
     handledProduct: IProduct,
-    productNewState: 'pending' | 'approved' | 'discarded',
-    wishListOfProduct: IWishlistWithProductDetail
+    updatedStatus: ApprovalStatus,
+    wishListOfProduct: WishlistWithProductDetail
   ) => {
     // Update AllWishlist , CurrentWishList
     const updateProductList: IProduct[] = wishListOfProduct.products.map((prevProduct: IProduct) => {
-      const updatedProduct: IProduct = { ...prevProduct, currentState: productNewState };
+      const updatedProduct: IProduct = { ...prevProduct, approvalStatus: updatedStatus };
       return prevProduct.id === handledProduct.id ? updatedProduct : prevProduct;
     });
-    const updatedWishlist: IWishlistWithProductDetail = { ...wishListOfProduct, products: updateProductList };
-    const updatedAllWishlist: IWishlistWithProductDetail[] = allWishList.map((wishlist: IWishlistWithProductDetail) => {
+    const updatedWishlist: WishlistWithProductDetail = { ...wishListOfProduct, products: updateProductList };
+    const updatedAllWishlist: WishlistWithProductDetail[] = wishlists.map((wishlist: WishlistWithProductDetail) => {
       return wishlist.id === updatedWishlist.id ? updatedWishlist : wishlist;
     });
 
@@ -109,23 +103,23 @@ function CartProvider(props: any) {
     const updatedTotalDiscount = totalDiscountCal(updatedAllWishlist);
     setTotalDiscount(updatedTotalDiscount);
 
-    const updatedTotalApprovedProduct = totalProductWithGivenState(updatedAllWishlist, 'approved');
+    const updatedTotalApprovedProduct = CountTotalProductWithGivenState(updatedAllWishlist, 'approved');
     setTotalApprovedProduct(updatedTotalApprovedProduct);
 
-    setAllWishList(updatedAllWishlist);
+    setWishlists(updatedAllWishlist);
     setCurrentWishList(updatedWishlist);
   };
 
-  const productListEmptyCheck = (productList: IProduct[], givenState: 'pending' | 'approved' | 'discarded') => {
-    const productListcheck = productList.filter((product: IProduct) => product.currentState === givenState);
+  const productListEmptyCheck = (productList: IProduct[], givenState: ApprovalStatus) => {
+    const productListcheck = productList.filter((product: IProduct) => product.approvalStatus === givenState);
     return productListcheck.length ? false : true;
   };
 
   const totalQuantity = (productToCheck: IProduct) => {
     let quantity = 1;
-    allWishList &&
+    wishlists &&
       currentWishList &&
-      allWishList.forEach(({ products, id }: IWishlistWithProductDetail) => {
+      wishlists.forEach(({ products, id }: WishlistWithProductDetail) => {
         products.forEach((product: IProduct) => {
           product.id === productToCheck.id && currentWishList.id !== id && quantity++;
         });
@@ -135,15 +129,15 @@ function CartProvider(props: any) {
 
   const handlePayment = () => {
     // Reset allprice, cart, and change state of all product to pending
-    setAllWishList((prev: IWishlistWithProductDetail[]) => {
-      const resetAllWishList: IWishlistWithProductDetail[] = prev.map((wishlist: IWishlistWithProductDetail) => {
+    setWishlists((prev: WishlistWithProductDetail[]) => {
+      const resetWishlists: WishlistWithProductDetail[] = prev.map((wishlist: WishlistWithProductDetail) => {
         const productList = wishlist.products.map((product: IProduct) => {
-          const resetStateProduct: IProduct = { ...product, currentState: 'pending' };
+          const resetStateProduct: IProduct = { ...product, approvalStatus: 'pending' };
           return resetStateProduct;
         });
         return { ...wishlist, products: productList };
       });
-      return resetAllWishList;
+      return resetWishlists;
     });
     setTotalPrice(0);
     setTotalApprovedProduct(0);
@@ -153,7 +147,7 @@ function CartProvider(props: any) {
   return (
     <CartContext.Provider
       value={{
-        allwishlist: allWishList,
+        wishlists,
         currentWishList,
         handleOpenWishList,
         handleProduct,
@@ -163,7 +157,6 @@ function CartProvider(props: any) {
         totalDiscount,
         productListEmptyCheck,
         totalQuantity,
-        isLoading,
         totalApprovedProduct,
         handlePayment,
       }}

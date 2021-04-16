@@ -1,14 +1,10 @@
 import { useCart } from 'context/CartContext';
 import React, { useState } from 'react';
-import { IWishlistWithProductDetail } from 'WishLists';
+import { Link } from 'react-router-dom';
 
-export interface IHeader {
-  handleCheckout: (overviewState: boolean) => void;
-}
-
-export const Header = ({ handleCheckout }: IHeader) => {
+export const Header = () => {
   const [totalTextGroup, setTotalTextGroup] = useState(true);
-  const { allwishlist, handleOpenWishList, totalPrice, totalDiscount, isLoading, totalApprovedProduct } = useCart();
+  const { totalPrice, totalDiscount, totalApprovedProduct } = useCart();
   return (
     <header className="App-header">
       Droppe Assignment
@@ -17,34 +13,18 @@ export const Header = ({ handleCheckout }: IHeader) => {
           <span className="total-price">Total: €{totalPrice.toFixed(2)}</span>
           <span className="total-saving">Total Saving: €{totalDiscount.toFixed(2)}</span>
           <span className="total-approved-product">#IconCart here:{totalApprovedProduct}</span>
-          <button
-            className="checkout"
-            onClick={() => {
-              handleCheckout(true);
-              setTotalTextGroup(false);
-            }}
-          >
-            Checkout
-          </button>
+          <Link to="/overview">
+            <button
+              className="checkout"
+              onClick={() => {
+                setTotalTextGroup(false);
+              }}
+            >
+              Checkout
+            </button>
+          </Link>
         </div>
       )}
-      <div className="wishlist-nav">
-        {isLoading && <div className="loading-animation">Loading ...</div>}
-        {!isLoading &&
-          allwishlist.map((wishlist: IWishlistWithProductDetail, index: number) => {
-            return (
-              <button
-                key={index}
-                aria-label={`child-${wishlist.id}`}
-                onClick={() => {
-                  handleOpenWishList(wishlist);
-                  handleCheckout(false);
-                  setTotalTextGroup(true);
-                }}
-              >{`Child ${wishlist.id}`}</button>
-            );
-          })}
-      </div>
     </header>
   );
 };

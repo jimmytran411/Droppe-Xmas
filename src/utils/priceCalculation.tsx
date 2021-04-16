@@ -1,5 +1,5 @@
 import { IProduct } from 'api/wishList';
-import { IWishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishLists';
 import { IProductWithQuantity, productWithQuantity } from './wishlistAndProduct';
 
 export interface IDiscountCheck {
@@ -14,14 +14,14 @@ export interface ICurrentWishlistPrice {
 }
 
 export const discountCheck = (
-  allwishlist: IWishlistWithProductDetail[],
+  allwishlist: WishlistWithProductDetail[],
   currentProduct: IProduct,
   currentWLId: number
 ) => {
   let quantity: number = 1;
-  allwishlist.forEach((wishlist: IWishlistWithProductDetail) => {
+  allwishlist.forEach((wishlist: WishlistWithProductDetail) => {
     wishlist.products.forEach((product: IProduct) => {
-      if (product.currentState === 'approved' && product.id === currentProduct.id && wishlist.id !== currentWLId) {
+      if (product.approvalStatus === 'approved' && product.id === currentProduct.id && wishlist.id !== currentWLId) {
         quantity += 1;
       }
     });
@@ -34,12 +34,12 @@ export const discountCheck = (
   return discountCheck;
 };
 
-export const wishlistPriceCal = (wishlist: IWishlistWithProductDetail, allWishList: IWishlistWithProductDetail[]) => {
+export const wishlistPriceCal = (wishlist: WishlistWithProductDetail, allWishList: WishlistWithProductDetail[]) => {
   let priceAfterDiscount = 0;
   let totalPrice = 0;
   wishlist.products.forEach((product: IProduct) => {
     let discount = 0;
-    if (product.currentState === 'approved') {
+    if (product.approvalStatus === 'approved') {
       totalPrice += product.price;
       discount = discountCheck(allWishList, product, wishlist.id).discountCheckedPrice;
     }
@@ -50,7 +50,7 @@ export const wishlistPriceCal = (wishlist: IWishlistWithProductDetail, allWishLi
   return currentCartPrice;
 };
 
-export const totalPriceCal = (allwishlist: IWishlistWithProductDetail[]) => {
+export const totalPriceCal = (allwishlist: WishlistWithProductDetail[]) => {
   const approvedProductList = productWithQuantity(allwishlist, 'approved');
   let totalPrice = 0;
   approvedProductList.forEach(({ price, quantity }: IProductWithQuantity) => {
@@ -59,7 +59,7 @@ export const totalPriceCal = (allwishlist: IWishlistWithProductDetail[]) => {
   return totalPrice;
 };
 
-export const totalDiscountCal = (allwishlist: IWishlistWithProductDetail[]) => {
+export const totalDiscountCal = (allwishlist: WishlistWithProductDetail[]) => {
   const approvedProductList = productWithQuantity(allwishlist, 'approved');
   let totalDiscount = 0;
   approvedProductList.forEach(({ price, quantity }: IProductWithQuantity) => {

@@ -1,20 +1,43 @@
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
 import { useCart } from 'context/CartContext';
 import { Header } from 'Header';
 import { Overview } from 'Overview';
-import React, { useState } from 'react';
-import { CurrentWishList } from 'WishLists';
+import { WishList, WishlistWithProductDetail } from 'WishLists';
+import { Landing } from 'Landing/Landing';
 
 function App() {
-  const [overview, setOverview] = useState(false);
-  const { currentWishList } = useCart();
-  const handleCheckout = (overviewState: boolean) => {
-    setOverview(overviewState);
-  };
+  const { wishlists } = useCart();
+
   return (
     <div className="App">
-      <Header {...{ handleCheckout }} />
-      {!overview && currentWishList && <CurrentWishList {...currentWishList} />}
-      {overview && <Overview />}
+      <Router>
+        <Header />
+        <Switch>
+          <Route exact path="/">
+            <Landing />
+          </Route>
+          <Route path={`/wishlist/1`}>
+            <WishList {...wishlists[0]} />
+          </Route>
+          <Route path={`/wishlist/2`}>
+            <WishList {...wishlists[1]} />
+          </Route>
+          <Route path={`/wishlist/3`}>
+            <WishList {...wishlists[2]} />
+          </Route>
+          <Route path={`/wishlist/4`}>
+            <WishList {...wishlists[3]} />
+          </Route>
+          <Route path={`/wishlist/5`}>
+            <WishList {...wishlists[4]} />
+          </Route>
+          <Route path="/overview">
+            <Overview />
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
 }

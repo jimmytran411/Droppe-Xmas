@@ -1,10 +1,10 @@
 import { IProduct } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import React from 'react';
-import { IWishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishLists';
 import { Product } from './Product';
 
-export interface IProductList extends IWishlistWithProductDetail {
+export interface IProductList extends WishlistWithProductDetail {
   givenState: 'pending' | 'approved' | 'discarded';
 }
 
@@ -18,7 +18,7 @@ export const ProductList = ({ products, givenState, ...rest }: IProductList) => 
           const discountPercent = quantity > 1 && quantity * 10;
           return (
             <div key={index} className="product-card">
-              {product.currentState === givenState && (
+              {product.approvalStatus === givenState && (
                 <>
                   <Product {...product} />
                   <p className="discount-message">
@@ -29,27 +29,27 @@ export const ProductList = ({ products, givenState, ...rest }: IProductList) => 
                   </p>
                   <button
                     aria-label={
-                      product.currentState === 'pending' ? `approve-btn-${product.id}` : `return-btn-${product.id}`
+                      product.approvalStatus === 'pending' ? `approve-btn-${product.id}` : `return-btn-${product.id}`
                     }
                     onClick={() => {
-                      product.currentState === 'pending'
+                      product.approvalStatus === 'pending'
                         ? handleProduct(product, 'approved', { products, ...rest })
                         : handleProduct(product, 'pending', { products, ...rest });
                     }}
                   >
-                    {product.currentState === 'pending' ? 'Approve' : 'Return to Wishlist'}
+                    {product.approvalStatus === 'pending' ? 'Approve' : 'Return to Wishlist'}
                   </button>
                   <button
                     aria-label={
-                      product.currentState === 'discarded' ? `approve-btn-${product.id}` : `discard-btn-${product.id}`
+                      product.approvalStatus === 'discarded' ? `approve-btn-${product.id}` : `discard-btn-${product.id}`
                     }
                     onClick={() => {
-                      product.currentState === 'discarded'
+                      product.approvalStatus === 'discarded'
                         ? handleProduct(product, 'approved', { products, ...rest })
                         : handleProduct(product, 'discarded', { products, ...rest });
                     }}
                   >
-                    {product.currentState === 'discarded' ? 'Approve' : 'Discard'}
+                    {product.approvalStatus === 'discarded' ? 'Approve' : 'Discard'}
                   </button>
                 </>
               )}
