@@ -1,10 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { IProduct } from 'api/wishList';
+import { Product } from 'api/wishList';
 import { WishList, WishlistWithProductDetail } from 'WishLists';
 
 test('Render discard list with test input', () => {
-  const testCurrentWL: IProduct[] = [
+  const testCurrentWL: Product[] = [
     {
       id: 1,
       title: 'test title 1',

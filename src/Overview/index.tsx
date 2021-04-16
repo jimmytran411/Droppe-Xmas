@@ -1,24 +1,25 @@
-import { IProduct, patchWishlist } from 'api/wishList';
+import { Product, patchWishlist } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IProductWithQuantity, productListEmptyCheck, productWithQuantity } from 'utils/wishlistAndProduct';
+import { ProductWithQuantity, productListEmptyCheck, countQuantityOfProduct } from 'utils/wishlistAndProduct';
 import { WishlistWithProductDetail } from 'WishLists';
-import { Product } from 'WishLists/Product';
+import { ProductCard } from 'WishLists/ProductCard';
 import Modal from '../Modal';
 import './Overview.css';
 import { PaymentResult } from './PaymentResult';
 
 export interface IOverviewProductReturn {
   wishlistToUpdate: WishlistWithProductDetail;
-  returnedProduct: IProduct;
+  returnedProduct: Product;
 }
 
 export const Overview = () => {
   const { wishlists, handlePayment, handleProduct } = useCart();
   const { totalPrice, totalDiscount } = usePrice();
-  const [approvedProductList, setApprovedProductList] = useState<IProductWithQuantity[]>([]);
+
+  const [approvedProductList, setApprovedProductList] = useState<ProductWithQuantity[]>([]);
   const [confirm, setConfirm] = useState(false);
   const [pay, setPay] = useState(false);
   const [returnConfirmation, setReturnConfirmation] = useState(false);
@@ -30,7 +31,7 @@ export const Overview = () => {
     givenState: 'pending' | 'approved' | 'discarded'
   ) => {
     const allWLCheck = wishListsToCheck.map(({ products }: WishlistWithProductDetail) => {
-      return products.filter((product: IProduct) => product.approvalStatus === givenState);
+      return products.filter((product: Product) => product.approvalStatus === givenState);
     });
     return allWLCheck.some((a) => {
       return a.length;
@@ -42,7 +43,7 @@ export const Overview = () => {
   const toggleModal = () => setConfirm(!confirm);
   const handlePay = async () => {
     wishlists.forEach(async (wishlist: WishlistWithProductDetail) => {
-      const notPedingProduct = wishlist.products.filter((product: IProduct) => product.approvalStatus !== 'pending');
+      const notPedingProduct = wishlist.products.filter((product: Product) => product.approvalStatus !== 'pending');
       if (notPedingProduct.length) {
         const patchedWishlist: WishlistWithProductDetail = { ...wishlist, products: notPedingProduct };
         const { data } = await patchWishlist(patchedWishlist);
@@ -61,7 +62,7 @@ export const Overview = () => {
   };
 
   useEffect(() => {
-    const approveList = productWithQuantity(wishlists, 'approved');
+    const approveList = countQuantityOfProduct(wishlists, 'approved');
     setApprovedProductList(approveList);
   }, [wishlists]);
 
@@ -81,11 +82,11 @@ export const Overview = () => {
                     `You haven't approved any gift for Child ${wishlist.id} yet`
                   ) : (
                     <React.Fragment>
-                      {wishlist.products.map((product: IProduct) => {
+                      {wishlist.products.map((product: Product) => {
                         return (
                           product.approvalStatus === 'approved' && (
                             <div className="overview-product-card" key={product.id}>
-                              <Product {...product} />
+                              <ProductCard {...product} />
                               <button
                                 onClick={() => {
                                   setReturnConfirmation(true);
@@ -127,8 +128,8 @@ export const Overview = () => {
                 return (
                   <div className="child-pending-list" key={index}>
                     <p>Child {wishlist.id}</p>
-                    {wishlist.products.map((product: IProduct) => {
-                      return product.approvalStatus === 'pending' && <Product key={product.id} {...product} />;
+                    {wishlist.products.map((product: Product) => {
+                      return product.approvalStatus === 'pending' && <ProductCard key={product.id} {...product} />;
                     })}
                   </div>
                 );
@@ -144,7 +145,7 @@ export const Overview = () => {
               {approvedProductList.length ? 'You have these gifts in your cart:' : `You haven't approved any gifts yet`}
             </h6>
             {approvedProductList &&
-              approvedProductList.map(({ id, image, title, quantity, price }: IProductWithQuantity) => {
+              approvedProductList.map(({ id, image, title, quantity, price }: ProductWithQuantity) => {
                 return (
                   <div key={id} className="confirmation-product-card">
                     <h5>{title}</h5>
@@ -181,7 +182,7 @@ export const Overview = () => {
               </div>
               <div className="total-saving">You save: €{totalDiscount.toFixed(2)}</div>
             </div>
-            {productWithQuantity(patchData, 'discarded').length ? (
+            {countQuantityOfProduct(patchData, 'discarded').length ? (
               <div className="payment-result-discard-list">
                 <h5>You have discarded these:</h5>
                 <PaymentResult {...{ patchData, productStatus: 'discarded' }} />

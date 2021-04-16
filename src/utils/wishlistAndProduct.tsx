@@ -1,30 +1,30 @@
-import { IProduct } from 'api/wishList';
+import { Product } from 'api/wishList';
 import { ApprovalStatus } from 'common/commonType';
 import { WishlistWithProductDetail } from 'WishLists';
 
-export interface IProductWithQuantity extends IProduct {
+export interface ProductWithQuantity extends Product {
   quantity: number;
 }
 
-export const productWithQuantity = (
+export const countQuantityOfProduct = (
   listToCheck: WishlistWithProductDetail[],
-  stateToCheck: 'pending' | 'approved' | 'discarded'
+  givenStatus: 'pending' | 'approved' | 'discarded'
 ) => {
-  const productWithCheckedStateList: IProduct[] = [];
+  const productWithCheckedStateList: Product[] = [];
   listToCheck.forEach((wishlist: WishlistWithProductDetail) => {
     return wishlist.products.forEach(
-      (product: IProduct) => product.approvalStatus === stateToCheck && productWithCheckedStateList.push(product)
+      (product: Product) => product.approvalStatus === givenStatus && productWithCheckedStateList.push(product)
     );
   });
   const mapOfApprovedProducts = productWithCheckedStateList
-    .reduce((mapObj, product: IProduct) => {
+    .reduce((mapObj, product: Product) => {
       const id: string = JSON.stringify([product.id]);
       if (!mapObj.has(id)) mapObj.set(id, { ...product, quantity: 0 });
       mapObj.get(id).quantity++;
       return mapObj;
     }, new Map())
     .values();
-  const productWithQuantityList: IProductWithQuantity[] = [...mapOfApprovedProducts];
+  const productWithQuantityList: ProductWithQuantity[] = [...mapOfApprovedProducts];
   return productWithQuantityList;
 };
 
@@ -41,7 +41,7 @@ export const CountTotalProductWithGivenStatus = (
   return count;
 };
 
-export const productListEmptyCheck = (productList: IProduct[], givenStatus: ApprovalStatus) => {
-  const productListcheck = productList.filter((product: IProduct) => product.approvalStatus === givenStatus);
+export const productListEmptyCheck = (productList: Product[], givenStatus: ApprovalStatus) => {
+  const productListcheck = productList.filter((product: Product) => product.approvalStatus === givenStatus);
   return productListcheck.length ? false : true;
 };

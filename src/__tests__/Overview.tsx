@@ -1,13 +1,13 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { IProduct } from 'api/wishList';
+import { Product } from 'api/wishList';
 import { Overview } from 'Overview';
 import { CartContext } from 'context/CartContext';
 import { WishlistWithProductDetail } from 'WishLists';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 
-const testCurrentWL: IProduct[] = [
+const testCurrentWL: Product[] = [
   {
     id: 1,
     title: 'test title 1',

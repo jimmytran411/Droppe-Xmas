@@ -13,7 +13,7 @@ export interface WishListProduct {
   quantity: number;
 }
 
-export interface IProduct {
+export interface Product {
   id: number;
   title: string;
   price: number;
@@ -31,9 +31,9 @@ export const getWishList = async (id: number): Promise<AxiosResponse<WishList>> 
   return axios.get(`https://fakestoreapi.com/carts/${id}`);
 };
 
-export const getProduct = async (id: number): Promise<IProduct> => {
-  const { data } = await axios.get<IProduct>(`https://fakestoreapi.com/products/${id}`);
-  const productWithPendingState: IProduct = { ...data, approvalStatus: 'pending' };
+export const getProduct = async (id: number): Promise<Product> => {
+  const { data } = await axios.get<Product>(`https://fakestoreapi.com/products/${id}`);
+  const productWithPendingState: Product = { ...data, approvalStatus: 'pending' };
   return productWithPendingState;
 };
 

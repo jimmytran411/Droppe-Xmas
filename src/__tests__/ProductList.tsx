@@ -1,11 +1,11 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { IProduct } from 'api/wishList';
-import { IProductList, ProductList } from 'WishLists/ProductList';
+import { Product } from 'api/wishList';
+import { ProductList, ProductListProps } from 'WishLists/ProductList';
 import { WishlistWithProductDetail } from 'WishLists';
 
 test('Render pending wishlist with test input', () => {
-  const testPendingList: IProduct[] = [
+  const testPendingList: Product[] = [
     {
       id: 1,
       title: 'test title 1',
@@ -26,7 +26,7 @@ test('Render pending wishlist with test input', () => {
     },
   ];
   const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testPendingList };
-  const testPendingListProp: IProductList = { ...testCurrentWLProp, givenState: 'pending' };
+  const testPendingListProp: ProductListProps = { ...testCurrentWLProp, givenStatus: 'pending' };
 
   const { getByText, getByRole } = render(<ProductList {...testPendingListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
@@ -41,7 +41,7 @@ test('Render pending wishlist with test input', () => {
 });
 
 test('Render approve list with test input', () => {
-  const testApproveList: IProduct[] = [
+  const testApproveList: Product[] = [
     {
       id: 1,
       title: 'test title 1',
@@ -62,7 +62,7 @@ test('Render approve list with test input', () => {
     },
   ];
   const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testApproveList };
-  const testApproveListProp: IProductList = { ...testCurrentWLProp, givenState: 'approved' };
+  const testApproveListProp: ProductListProps = { ...testCurrentWLProp, givenStatus: 'approved' };
 
   const { getByText, getByRole } = render(<ProductList {...testApproveListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
@@ -77,7 +77,7 @@ test('Render approve list with test input', () => {
 });
 
 test('Render discard list with test input', () => {
-  const testDiscardList: IProduct[] = [
+  const testDiscardList: Product[] = [
     {
       id: 1,
       title: 'test title 1',
@@ -98,7 +98,7 @@ test('Render discard list with test input', () => {
     },
   ];
   const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testDiscardList };
-  const testDiscardListProp: IProductList = { ...testCurrentWLProp, givenState: 'discarded' };
+  const testDiscardListProp: ProductListProps = { ...testCurrentWLProp, givenStatus: 'discarded' };
 
   const { getByText, getByRole } = render(<ProductList {...testDiscardListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();

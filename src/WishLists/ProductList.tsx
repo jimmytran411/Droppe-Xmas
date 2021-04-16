@@ -1,26 +1,26 @@
-import { IProduct } from 'api/wishList';
+import { Product } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import React from 'react';
 import { WishlistWithProductDetail } from 'WishLists';
-import { Product } from './Product';
+import { ProductCard } from './ProductCard';
 
-export interface IProductList extends WishlistWithProductDetail {
-  givenState: 'pending' | 'approved' | 'discarded';
+export interface ProductListProps extends WishlistWithProductDetail {
+  givenStatus: 'pending' | 'approved' | 'discarded';
 }
 
-export const ProductList = ({ products, givenState, ...rest }: IProductList) => {
+export const ProductList = ({ products, givenStatus, ...rest }: ProductListProps) => {
   const { handleProduct, totalQuantity } = useCart();
   return (
     <div className="product-list">
       {products &&
-        products.map((product: IProduct, index: number) => {
+        products.map((product: Product, index: number) => {
           const quantity = totalQuantity(product);
           const discountPercent = quantity > 1 && quantity * 10;
           return (
             <div key={index} className="product-card">
-              {product.approvalStatus === givenState && (
+              {product.approvalStatus === givenStatus && (
                 <>
-                  <Product {...product} />
+                  <ProductCard {...product} />
                   <p className="discount-message">
                     <b>
                       {quantity > 1 &&

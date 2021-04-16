@@ -3,11 +3,11 @@ import { CartContext } from 'context/CartContext';
 import React from 'react';
 import { render } from '@testing-library/react';
 import { WishlistWithProductDetail } from 'WishLists';
-import { IProduct } from 'api/wishList';
+import { Product } from 'api/wishList';
 import App from 'App';
 import { BrowserRouter } from 'react-router-dom';
 
-const testCurrentWL: IProduct[] = [
+const testCurrentWL: Product[] = [
   {
     id: 1,
     title: 'test title 1',

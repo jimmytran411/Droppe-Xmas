@@ -1,9 +1,9 @@
-import { IProduct } from 'api/wishList';
+import { Product } from 'api/wishList';
 import Modal from 'Modal';
 import React, { useState } from 'react';
 import './Product.css';
 
-export const Product = (product: IProduct) => {
+export const ProductCard = (product: Product) => {
   const [isModal, setIsModal] = useState(false);
   const toggleModal = () => setIsModal(!isModal);
   return (

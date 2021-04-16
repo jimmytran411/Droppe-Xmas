@@ -1,13 +1,13 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { IProduct } from 'api/wishList';
+import { Product } from 'api/wishList';
 import { CartContext } from 'context/CartContext';
 import { WishlistWithProductDetail } from 'WishLists';
 import { Header } from 'Header';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 
-const testCurrentWL: IProduct[] = [
+const testCurrentWL: Product[] = [
   {
     id: 1,
     title: 'test title 1',
@@ -43,16 +43,6 @@ const mockValue = {
     { ...testCurrentWLProp, id: 2, userid: 2 },
     { ...testCurrentWLProp, id: 3, userid: 3 },
   ],
-  currentWishList: { ...testCurrentWLProp },
-  handleOpenWishList: jest.fn(),
-  handleProduct: jest.fn(),
-  updateWishList: jest.fn(),
-  totalPrice: 20,
-  totalDiscount: 20,
-  productListEmptyCheck: jest.fn(),
-  currentCartPrice: 20,
-  currentSaving: 20,
-  allWishlistDuplicateCount: jest.fn(),
 };
 test('Test Overview show value from provider', () => {
   const wrapper = ({ children }: any) => <CartContext.Provider value={mockValue}>{children}</CartContext.Provider>;

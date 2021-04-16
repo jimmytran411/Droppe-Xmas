@@ -1,6 +1,6 @@
-import { IProduct } from 'api/wishList';
+import { Product } from 'api/wishList';
 import { WishlistWithProductDetail } from 'WishLists';
-import { IProductWithQuantity, productWithQuantity } from './wishlistAndProduct';
+import { ProductWithQuantity, countQuantityOfProduct } from './wishlistAndProduct';
 
 export interface IDiscountCheck {
   discountCheckedPrice: number;
@@ -13,14 +13,10 @@ export interface ICurrentWishlistPrice {
   totalPrice: number;
 }
 
-export const discountCheck = (
-  wishlists: WishlistWithProductDetail[],
-  currentProduct: IProduct,
-  currentWLId: number
-) => {
+export const discountCheck = (wishlists: WishlistWithProductDetail[], currentProduct: Product, currentWLId: number) => {
   let quantity: number = 1;
   wishlists.forEach((wishlist: WishlistWithProductDetail) => {
-    wishlist.products.forEach((product: IProduct) => {
+    wishlist.products.forEach((product: Product) => {
       if (product.approvalStatus === 'approved' && product.id === currentProduct.id && wishlist.id !== currentWLId) {
         quantity += 1;
       }
@@ -37,7 +33,7 @@ export const discountCheck = (
 export const calculateWishlistPrice = (wishlist: WishlistWithProductDetail, wishlists: WishlistWithProductDetail[]) => {
   let priceAfterDiscount = 0;
   let totalPrice = 0;
-  wishlist.products.forEach((product: IProduct) => {
+  wishlist.products.forEach((product: Product) => {
     let discount = 0;
     if (product.approvalStatus === 'approved') {
       totalPrice += product.price;
@@ -51,18 +47,18 @@ export const calculateWishlistPrice = (wishlist: WishlistWithProductDetail, wish
 };
 
 export const calculateTotalPrice = (wishlists: WishlistWithProductDetail[]) => {
-  const approvedProductList = productWithQuantity(wishlists, 'approved');
+  const approvedProductList = countQuantityOfProduct(wishlists, 'approved');
   let totalPrice = 0;
-  approvedProductList.forEach(({ price, quantity }: IProductWithQuantity) => {
+  approvedProductList.forEach(({ price, quantity }: ProductWithQuantity) => {
     quantity > 1 ? (totalPrice += (price * quantity * (10 - quantity)) / 10) : (totalPrice += price);
   });
   return totalPrice;
 };
 
 export const calculateTotalDiscount = (wishlists: WishlistWithProductDetail[]) => {
-  const approvedProductList = productWithQuantity(wishlists, 'approved');
+  const approvedProductList = countQuantityOfProduct(wishlists, 'approved');
   let totalDiscount = 0;
-  approvedProductList.forEach(({ price, quantity }: IProductWithQuantity) => {
+  approvedProductList.forEach(({ price, quantity }: ProductWithQuantity) => {
     quantity > 1 && (totalDiscount += (price * quantity * quantity) / 10);
   });
   return totalDiscount;
