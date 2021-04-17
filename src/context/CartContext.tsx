@@ -22,15 +22,19 @@ function CartProvider(props: any) {
     const fetchAllWishList = async () => {
       try {
         const { data } = await getWishLists();
-        const allWLWithDetailedProduct = data.map((wishlist: WishList) => {
-          const detailedProducts: Product[] = [];
-          wishlist.products.forEach(async ({ productId }: WishListProduct) => {
-            const product = await getProduct(productId);
-            detailedProducts.push(product);
-          });
-          return { id: wishlist.id, userid: wishlist.userId, products: detailedProducts };
-        });
-        setWishlists(allWLWithDetailedProduct);
+        const wishlistsWithProductDetail = await Promise.all(
+          data.map(async (wishlist: WishList) => {
+            const details = await Promise.all(
+              wishlist.products.map(async ({ productId }: WishListProduct) => {
+                const product = await getProduct(productId);
+                return product;
+              })
+            );
+
+            return { id: wishlist.id, userid: wishlist.userId, products: details };
+          })
+        );
+        setWishlists(wishlistsWithProductDetail);
       } catch (error) {
         console.log(error);
       }

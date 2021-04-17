@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { ProductList } from './ProductList';
 import { productListEmptyCheck } from 'utils/wishlistAndProduct';
 import { calculateWishlistPrice } from 'utils/priceCalculation';
+import { Navbar } from 'Navbar';
+import './wishlist.css';
 
 export interface WishlistWithProductDetail {
   id: number;
@@ -25,39 +27,44 @@ export const WishList = (wishlist: WishlistWithProductDetail) => {
   }, [wishlist]);
   return (
     <div className="wishlist-container">
-      <span className="current-price">
-        <p>
-          {currentWishlistPrice >= 0 && `Current Cart: €${currentWishlistPrice.toFixed(2)}`}{' '}
-          {currentDiscount > 0 && `You save: €${currentDiscount.toFixed(2)}`}
-        </p>
-      </span>
-      <div className="pending-list">
-        <h4>Wishlist</h4>
-        {!productListEmptyCheck(wishlist.products, 'pending') ? (
-          <ProductList {...wishlist} givenStatus="pending" />
-        ) : (
-          'No more gift to show'
-        )}
+      <div className="wishlist-products">
+        <span className="current-price">
+          <p>
+            {currentWishlistPrice >= 0 && `Current Cart: €${currentWishlistPrice.toFixed(2)}`}{' '}
+            {currentDiscount > 0 && `You save: €${currentDiscount.toFixed(2)}`}
+          </p>
+        </span>
+        <div className="pending-list">
+          <h4>Wishlist</h4>
+          {!productListEmptyCheck(wishlist.products, 'pending') ? (
+            <ProductList {...wishlist} givenStatus="pending" />
+          ) : (
+            'No more gift to show'
+          )}
+        </div>
+        <div className="approved-list">
+          <h4>Approve List</h4>
+          {!productListEmptyCheck(wishlist.products, 'approved') ? (
+            <ProductList {...wishlist} givenStatus="approved" />
+          ) : (
+            `You haven't approved anything yet`
+          )}
+        </div>
+        <div className="discarded-list">
+          <h4>Discarded List</h4>
+          {!productListEmptyCheck(wishlist.products, 'discarded') ? (
+            <ProductList {...wishlist} givenStatus="discarded" />
+          ) : (
+            `You haven't discarded anything yet`
+          )}
+        </div>
+        <Link to="/">
+          <button>Done</button>
+        </Link>
       </div>
-      <div className="approved-list">
-        <h4>Approve List</h4>
-        {!productListEmptyCheck(wishlist.products, 'approved') ? (
-          <ProductList {...wishlist} givenStatus="approved" />
-        ) : (
-          `You haven't approved anything yet`
-        )}
+      <div className="wishlist-navbar">
+        <Navbar />
       </div>
-      <div className="discarded-list">
-        <h4>Discarded List</h4>
-        {!productListEmptyCheck(wishlist.products, 'discarded') ? (
-          <ProductList {...wishlist} givenStatus="discarded" />
-        ) : (
-          `You haven't discarded anything yet`
-        )}
-      </div>
-      <Link to="/">
-        <button>Done</button>
-      </Link>
     </div>
   );
 };
