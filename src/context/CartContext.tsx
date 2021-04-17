@@ -1,7 +1,7 @@
 import { getProduct, Product, WishList, WishListProduct, getWishLists } from 'api/wishList';
 import { ApprovalStatus } from 'common/commonType';
 import * as React from 'react';
-import { WishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishList';
 
 export interface Cart {
   wishlists: WishlistWithProductDetail[];

@@ -1,7 +1,7 @@
 import { Product } from 'api/wishList';
 import Modal from 'Modal';
 import React, { useState } from 'react';
-import { WishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishList';
 import { useCart } from 'context/CartContext';
 
 export const ProductCard = (product: Product, wishlistOProduct: WishlistWithProductDetail) => {

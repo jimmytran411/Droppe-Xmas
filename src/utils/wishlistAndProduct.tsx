@@ -1,6 +1,6 @@
 import { Product } from 'api/wishList';
 import { ApprovalStatus } from 'common/commonType';
-import { WishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishList';
 
 export interface ProductWithQuantity extends Product {
   quantity: number;

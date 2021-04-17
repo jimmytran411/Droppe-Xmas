@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { Product } from 'api/wishList';
-import { WishList, WishlistWithProductDetail } from 'WishLists';
+import { WishList, WishlistWithProductDetail } from 'WishList';
 import { BrowserRouter, Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 

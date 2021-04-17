@@ -7,7 +7,7 @@ import { createMemoryHistory } from 'history';
 import { Product } from 'api/wishList';
 import { Overview } from 'Overview';
 import { CartContext } from 'context/CartContext';
-import { WishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishList';
 import { PriceContext } from 'context/PriceContext';
 
 const testCurrentWL: Product[] = [

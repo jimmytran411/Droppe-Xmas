@@ -1,5 +1,5 @@
 import React from 'react';
-import { WishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishList';
 
 export interface IPaymentResult {
   patchData: WishlistWithProductDetail[];

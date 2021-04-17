@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { ProductCard } from '../WishLists/ProductCard';
+import { ProductCard } from '../WishList/ProductCard';
 import { Product } from 'api/wishList';
 
 const testProduct: Product = {

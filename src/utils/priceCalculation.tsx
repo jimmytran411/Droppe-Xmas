@@ -1,5 +1,5 @@
 import { Product } from 'api/wishList';
-import { WishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishList';
 import { ProductWithQuantity, getProductWithQuantity } from './wishlistAndProduct';
 
 export interface IDiscountCheck {

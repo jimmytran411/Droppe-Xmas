@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { WishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishList';
 
 export interface WishList {
   id: number;

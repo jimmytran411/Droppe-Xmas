@@ -2,7 +2,7 @@ import { Product } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import React from 'react';
 import { countTotalProductQuantity } from 'utils/wishlistAndProduct';
-import { WishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishList';
 import { ProductCard } from './ProductCard';
 
 export interface ProductListProps extends WishlistWithProductDetail {

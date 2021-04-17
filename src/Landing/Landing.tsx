@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { useCart } from 'context/CartContext';
-import { WishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishList';
 import { UserCard, UserCardProps } from './UserCard';
 import './Landing.css';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { Product } from 'api/wishList';
-import { WishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishList';
 import { PaymentResult } from 'Overview/PaymentResult';
 
 const testProductList: Product[] = [

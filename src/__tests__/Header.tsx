@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { Product } from 'api/wishList';
 import { CartContext } from 'context/CartContext';
-import { WishlistWithProductDetail } from 'WishLists';
+import { WishlistWithProductDetail } from 'WishList';
 import { Header } from 'Header';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
