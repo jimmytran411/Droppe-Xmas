@@ -1,26 +1,167 @@
-.child-approve-list {
-  padding: 20px;
+.overview-container .child-approve-list {
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.overview-container .child-approve-list .cap-title {
+  width: 100%;
+  display: block;
+  border-bottom: 1px solid #f2f2f2;
+  font-size: 14px;
+  line-height: 21px;
+  padding-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .overview-product-card {
   display: flex;
-  border: 1px solid black;
-  padding: 0.75rem;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px #c9bfbf solid;
+  padding: 20px 0px;
 }
 
-.overview-product-card > img {
-  width: 100px;
-  height: 100px;
+.overview-product-card:last-child {
+  border-bottom: none;
 }
 
-.overview-product-card > button {
-  width: 40px;
-  height: 40px;
-  align-self: flex-end;
-  background: #f5f5f5;
-  background-image: linear-gradient(180deg, #fafafa, #f5f5f5);
-  border: 1px solid #c4c4c4;
-  border-radius: 3px;
-  box-sizing: content-box;
-  cursor: pointer;
+.overview-product-card .opc-image > div {
+  width: 120px;
+  height: 120px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.overview-product-card .opc-product-info {
+  flex: 1 1;
+  padding-left: 35px;
+  display: flex;
+  flex-direction: column;
+}
+
+.overview-product-card .opc-product-info .opc-title {
+  margin-bottom: 15px;
+}
+
+.overview-product-card .opc-product-info .opc-price {
+  font-weight: 600;
+}
+
+.overview-product-card .opc-remove-btn {
+  padding: 0 50px;
+}
+
+.content-wrapper {
+  background-color: #f2f2f2;
+}
+.overview-container {
+  display: flex;
+  max-width: 1200px;
+  margin: 15px auto;
+}
+
+.overview-container .main {
+  flex: 0 0 70%;
+  width: 70%;
+  max-width: 70%;
+  padding-top: 50px;
+}
+
+.overview-container .side {
+  flex: 0 0 30%;
+  width: 30%;
+  max-width: 30%;
+  padding-left: 8px;
+  padding-right: 8px;
+  position: relative;
+  padding-top: 50px;
+}
+
+.overview-container .side .side-wrapper {
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 8px
+}
+
+.overview-container .side .side-wrapper > div {
+  margin-bottom: 20px;
+}
+
+.overview-container .side .side-wrapper > div:first-of-type {
+  border-bottom: 1px solid #e0dbdb;
+}
+
+.overview-container .side .side-wrapper .checkout-btn {
+  text-transform: uppercase;
+    background-color: #36a636;
+    border-radius: 4px;
+    padding: 0 48px;
+    height: 44px;
+    line-height: 42px;
+    font-size: 16px;
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+
+.overview-container .child-pending-list .product-card-img > div {
+  background-image: url(https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg);
+  background-repeat: no-repeat;
+  height: 150px;
+  width: 150px;
+  background-size: contain;
+  background-position: center;
+}
+
+.product-card-title {
+  width: 500px;
+}
+
+.overview-pending-list .opl-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.overview-pending-list .opl-wrapper .opl-child {
+  padding: 15px 16px;
+  background: #fff;
+  border-radius: 8px;
+  margin-top: 14px;
+  margin-right: 14px;
+}
+.overview-pending-list .opl-wrapper .opl-child .opl-title {
+  width: 100%;
+  display: block;
+  border-bottom: 1px solid #f2f2f2;
+  font-size: 14px;
+  line-height: 21px;
+  padding-bottom: 10px;
+  margin-bottom: 5px;
+}
+
+.overview-pending-list .opl-wrapper .opl-child .product-card-content {
+  max-width: 150px;
+  margin-top: 15px;
+}
+
+.overview-pending-list .opl-wrapper .opl-child .product-card-content .product-card-btn > span:first-child {
+  margin-right: 35px;
+}
+
+.overview-pending-list .opl-wrapper .opl-child .product-card-content .title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.overview-pending-list .opl-wrapper .child-pending-list {
+  display: flex;
+}
+
+.overview-pending-list .opl-wrapper .child-pending-list .opl-child-wrapper {
+  padding: 0 20px;
 }

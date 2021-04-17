@@ -18,18 +18,18 @@ export const UserCard = ({
 }: UserCardProps) => {
   return (
     <Link to={`/wishlist/${wishlistId}`}>
-      <div className="user-card">
-        <h4>{userName}</h4>
+      <div className="landing-row">
+        <div className="landing-row--userInfo">
+          <img src="https://randomuser.me/api/portraits/lego/8.jpg"></img>
+          <span>userId_{wishlistId}</span>
+        </div>
         <div className="user-card-approved-count">
-          <p>✓</p>
           <p>{approvedProductCount}</p>
         </div>
         <div className="user-card-discarded-count">
-          <p>❌</p>
           <p>{discardedProductCount}</p>
         </div>
         <div className="user-card-pending-count">
-          <p>❓</p>
           <p>{pendingProductCount}</p>
         </div>
       </div>

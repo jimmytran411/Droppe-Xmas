@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 export const Navbar = () => {
   const { wishlists } = useCart();
+
   return (
     <div className="navbar">
       {wishlists.map((wishlist) => {

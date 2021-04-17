@@ -1,27 +1,33 @@
 .landing {
   display: flex;
   flex-direction: column;
-  padding: 40px;
+  padding: 20px 80px;
 }
 
-.user-card {
+.landing-row {
   display: flex;
-  justify-content: space-evenly;
-  align-items: baseline;
-
-  border: 1px rgb(117, 116, 116);
-  box-shadow: 2px 2px 2.25px 2.25px #ccc;
-  border-radius: 4px;
-  margin: 0.75rem;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px #c9bfbf solid;
+  padding: 20px 60px;
 }
 
-.user-card-container > a {
+.landing-row.row-header > span:first-child {
+  margin-left: 10px;
+}
+
+.landing a {
   text-decoration: none;
-  color: rgb(75, 77, 76);
 }
 
-.user-card {
-  background-color: rgb(228, 228, 228);
+.landing-row--userInfo {
+  display: flex;
+  align-items: center;
+}
+
+.landing-row--userInfo img {
+  width: 50px;
+  margin-right: 10px;
 }
 
 .loader:after {

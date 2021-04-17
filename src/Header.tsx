@@ -24,6 +24,9 @@ export const Header = () => {
         <Link to="/overview">
           <button className="checkout">Checkout</button>
         </Link>
+        <Link to="/">
+          <button>Back </button>
+        </Link>
       </div>
     </header>
   );
