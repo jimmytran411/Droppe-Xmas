@@ -4,7 +4,12 @@ import React, { useState } from 'react';
 import { WishlistWithProductDetail } from 'WishList';
 import { useCart } from 'context/CartContext';
 
-export const ProductCard = (product: Product, wishlistOProduct: WishlistWithProductDetail) => {
+export interface ProductCardProps {
+  product: Product;
+  wishlist: WishlistWithProductDetail;
+}
+
+export const ProductCard = ({ product, wishlist }: ProductCardProps) => {
   const [isModal, setIsModal] = useState(false);
   const { handleProduct } = useCart();
   const toggleModal = () => setIsModal(!isModal);
@@ -27,8 +32,8 @@ export const ProductCard = (product: Product, wishlistOProduct: WishlistWithProd
                   }
                   onClick={() => {
                     product.approvalStatus === 'pending'
-                      ? handleProduct(product, 'approved', wishlistOProduct)
-                      : handleProduct(product, 'pending', wishlistOProduct);
+                      ? handleProduct(product, 'approved', wishlist)
+                      : handleProduct(product, 'pending', wishlist);
                   }}
                 >
                   {product.approvalStatus === 'pending' ? '✅' : '⏎'}
@@ -39,8 +44,8 @@ export const ProductCard = (product: Product, wishlistOProduct: WishlistWithProd
                   }
                   onClick={() => {
                     product.approvalStatus === 'discarded'
-                      ? handleProduct(product, 'approved', wishlistOProduct)
-                      : handleProduct(product, 'discarded', wishlistOProduct);
+                      ? handleProduct(product, 'approved', wishlist)
+                      : handleProduct(product, 'discarded', wishlist);
                   }}
                 >
                   {product.approvalStatus === 'discarded' ? '✅' : '❌'}

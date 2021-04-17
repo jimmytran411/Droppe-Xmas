@@ -35,7 +35,7 @@ export const WishList = (wishlist: WishlistWithProductDetail) => {
       <div className="pending-list">
         <h4>Wishlist</h4>
         {!productListEmptyCheck(wishlist.products, 'pending') ? (
-          <ProductList {...wishlist} givenStatus="pending" />
+          <ProductList wishlist={wishlist} givenStatus="pending" />
         ) : (
           'No more gift to show'
         )}
@@ -43,7 +43,7 @@ export const WishList = (wishlist: WishlistWithProductDetail) => {
       <div className="approved-list">
         <h4>Approve List</h4>
         {!productListEmptyCheck(wishlist.products, 'approved') ? (
-          <ProductList {...wishlist} givenStatus="approved" />
+          <ProductList wishlist={wishlist} givenStatus="approved" />
         ) : (
           `You haven't approved anything yet`
         )}
@@ -51,7 +51,7 @@ export const WishList = (wishlist: WishlistWithProductDetail) => {
       <div className="discarded-list">
         <h4>Discarded List</h4>
         {!productListEmptyCheck(wishlist.products, 'discarded') ? (
-          <ProductList {...wishlist} givenStatus="discarded" />
+          <ProductList wishlist={wishlist} givenStatus="discarded" />
         ) : (
           `You haven't discarded anything yet`
         )}
