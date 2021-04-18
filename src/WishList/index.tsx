@@ -58,9 +58,6 @@ export const WishList = (wishlist: WishlistWithProductDetail) => {
             `You haven't discarded anything yet`
           )}
         </div>
-        <Link to="/">
-          <button>Done</button>
-        </Link>
       </div>
       <div className="side">
         <Navbar />

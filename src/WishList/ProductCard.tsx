@@ -1,10 +1,11 @@
 import { Product } from 'api/wishList';
 import Modal from 'Modal';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { WishlistWithProductDetail } from 'WishList';
 import { Loading, useCart } from 'context/CartContext';
 import { Loader } from 'utils/Loader';
 import './ProductCard.css';
+import { countTotalProductQuantity } from 'utils/wishlistAndProduct';
 
 export interface ProductCardProps {
   product: Product | Loading;
@@ -13,8 +14,14 @@ export interface ProductCardProps {
 
 export const ProductCard = ({ product, wishlist }: ProductCardProps) => {
   const [isModal, setIsModal] = useState(false);
-  const { handleProduct } = useCart();
+  const [discount, setDiscount] = useState(0);
+  const { handleProduct, wishlists } = useCart();
   const toggleModal = () => setIsModal(!isModal);
+  useEffect(() => {
+    const quantity = countTotalProductQuantity(product, wishlist, wishlists);
+    const discountPercent = quantity > 1 && quantity * 10;
+    discountPercent && setDiscount(discountPercent);
+  }, [wishlists]);
   return (
     <>
       {!isModal && (
@@ -22,7 +29,7 @@ export const ProductCard = ({ product, wishlist }: ProductCardProps) => {
           {product === 'loading' && <Loader />}
           {product !== 'loading' && (
             <div className="product-card">
-              <div className="discount-label"></div>
+              {discount > 0 && <div className={`discount-label discount--${discount}`}>{discount}%</div>}
               <div className="product-card-img">
                 <div style={{ backgroundImage: `url(${product.image})` }} onClick={toggleModal}></div>
               </div>
