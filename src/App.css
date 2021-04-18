@@ -27,9 +27,14 @@
   display: inline-block;
   margin-right: 15px;
 }
+.App-header {
+  border-bottom: 1px solid #e0dbdb;
+  padding: 40px;
+}
+
 .footer {
-  height: 100px;
-  background-color: black;
+  height: 200px;
+  background-color: #0a1816;
   color: white;
   display: flex;
   align-items: center;
@@ -63,4 +68,25 @@
   padding-right: 8px;
   position: relative;
   padding-top: 50px;
+}
+
+.App-header .total-text-group {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+}
+
+.App-header .total-price,
+.App-header .total-saving,
+.App-header .total-approved-product {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 30px;
+  height: 60px;
+  line-height: 30px;
+}
+
+a, a:visited, a:focus {
+  text-decoration: none;
 }

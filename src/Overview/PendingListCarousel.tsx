@@ -7,11 +7,13 @@ import { Loader } from 'utils/Loader';
 import { WishlistWithProductDetail } from 'WishList';
 import { ProductCard } from 'WishList/ProductCard';
 
+type CarouselDirection = 'next' | 'prev';
+
 export const PendingListCarousel = () => {
-  const [carouselTranslateXValue, setCarouselTranslateXValue] = useState(0);
+  let [carouselTranslateXValue, setCarouselTranslateXValue] = useState(0);
 
   const { totalPrice } = usePrice();
-  const { wishlists, handleProduct } = useCart();
+  const { wishlists } = useCart();
 
   const wishlistEmptyCheck = (
     wishListsToCheck: WishlistWithProductDetail[],
@@ -30,23 +32,25 @@ export const PendingListCarousel = () => {
   };
 
   const divRef = useRef<HTMLDivElement>(null);
-  const slideCarousel = (direction: string) => {
+  const slideCarousel = (direction: CarouselDirection) => {
     const a = divRef.current?.scrollWidth || 0;
     const b = divRef.current?.offsetWidth || 0;
     const increase = b / 2;
 
     if (direction === 'next') {
-      setCarouselTranslateXValue((prev) => prev - increase);
+      carouselTranslateXValue = carouselTranslateXValue - increase;
     }
     if (direction === 'prev') {
-      setCarouselTranslateXValue((prev) => prev + increase);
+      carouselTranslateXValue = carouselTranslateXValue + increase;
     }
     if (carouselTranslateXValue < b - a) {
-      setCarouselTranslateXValue(b - a);
+      carouselTranslateXValue = b - a;
     }
     if (carouselTranslateXValue > 0) {
-      setCarouselTranslateXValue(0);
+      carouselTranslateXValue = 0;
     }
+
+    setCarouselTranslateXValue(carouselTranslateXValue);
   };
   return (
     <>

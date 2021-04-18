@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 
 import { Product } from 'api/wishList';
 import { Loading, useCart } from 'context/CartContext';
-import { Link } from 'react-router-dom';
 import { ProductList } from './ProductList';
 import { productListEmptyCheck } from 'utils/wishlistAndProduct';
 import { calculateWishlistPrice } from 'utils/priceCalculation';
 import './Product.css';
-import { Navbar } from 'Navbar';
+import { Navbar } from 'WishList/Navbar';
 
 export interface WishlistWithProductDetail {
   id: number;
@@ -35,7 +34,7 @@ export const WishList = (wishlist: WishlistWithProductDetail) => {
           </p>
         </span>
         <div className="pending-list">
-          <h4>Wishlist</h4>
+          <span className="section-title">Wishlist</span>
           {!productListEmptyCheck(wishlist.products, 'pending') ? (
             <ProductList wishlist={wishlist} givenStatus="pending" />
           ) : (
@@ -43,7 +42,7 @@ export const WishList = (wishlist: WishlistWithProductDetail) => {
           )}
         </div>
         <div className="approved-list">
-          <h4>Approve List</h4>
+          <span className="section-title">Approve List</span>
           {!productListEmptyCheck(wishlist.products, 'approved') ? (
             <ProductList wishlist={wishlist} givenStatus="approved" />
           ) : (
@@ -51,7 +50,7 @@ export const WishList = (wishlist: WishlistWithProductDetail) => {
           )}
         </div>
         <div className="discarded-list">
-          <h4>Discarded List</h4>
+          <span className="section-title">Discarded List</span>
           {!productListEmptyCheck(wishlist.products, 'discarded') ? (
             <ProductList wishlist={wishlist} givenStatus="discarded" />
           ) : (

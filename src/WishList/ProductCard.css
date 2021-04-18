@@ -61,9 +61,29 @@
 }
 
 .product-card .discount-label {
-  width: 20px;
-  height: 20px;
-  background-color: red;
+  border-radius: 50%;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  background-color: #5abe5e;
   position: absolute;
   top: 0;
+}
+
+.product-card .discount-label.discount--40::before {
+  content: '-40%';
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  top: 14px;
+  position: relative;
+}
+
+.product-card .discount-label.discount--20::before {
+  content: '-20%';
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  top: 14px;
+  position: relative;
 }

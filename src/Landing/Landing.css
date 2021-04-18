@@ -29,3 +29,8 @@
   width: 50px;
   margin-right: 10px;
 }
+
+.user-card-container a {
+  color: rgb(47 115 102);
+  font-weight: 600;
+}

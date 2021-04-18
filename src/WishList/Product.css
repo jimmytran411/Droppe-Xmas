@@ -6,11 +6,22 @@
 .wishlist-container {
   display: flex;
 }
+
+.wishlist-container .section-title {
+  font-size: 24px;
+  font-weight: 500;
+  margin: 40px 0;
+  display: block;
+  border-bottom: 1px solid #e0dbdb;
+  padding-bottom: 6px;
+}
+
 .wishlist-container .wishlist-side {
   padding: 20px 30px;
   background-color: #fff;
   border-radius: 8px;
 }
+
 .wishlist-container .wishlist-side a {
   text-decoration: none;
   color: black;
@@ -18,4 +29,27 @@
 
 .wishlist-container .product-card {
   margin-right: 20px;
+}
+
+.wishlist-container .navbar {
+  padding: 15px;
+  max-width: 200px;
+  box-shadow: 0 4px 4px 0 rgb(0 0 0 / 20%);
+}
+
+.wishlist-container .navbar .navbar-list {
+  padding: 15px;
+}
+
+.wishlist-container .navbar .navbar-list a {
+  color: black;
+  font-weight: 600;
+}
+
+.wishlist-container .navbar .navbar-list a:hover {
+  color: grey;
+}
+
+.wishlist-container .navbar .navbar-list a.navbar-active {
+  color: green;
 }

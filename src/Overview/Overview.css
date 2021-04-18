@@ -87,6 +87,10 @@
   border: none;
   font-weight: 600;
 }
+.overview-container .side .side-wrapper .checkout-btn:hover {
+  background-color: #50cb50;
+  cursor: pointer;
+}
 
 .overview-pending-list .carousel-section {
   display: flex;
@@ -159,4 +163,10 @@
 .overview-pending-list .btn-next > span:hover,
 .overview-pending-list .btn-prev > span:hover {
   opacity: 0.5;
+}
+
+/* override product card's style */
+.overview-container .product-card {
+  border: none;
+  box-shadow: none;
 }

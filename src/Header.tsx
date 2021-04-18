@@ -16,16 +16,25 @@ export const Header = () => {
   }, [wishlists]);
   return (
     <header className="App-header">
-      Droppe Assignment
+      <h1>Droppe Assignment</h1>
       <div className="total-text-group">
-        <span className="total-price">Total: €{totalPrice.toFixed(2)}</span>
-        <span className="total-saving">Total Saving: €{totalDiscount.toFixed(2)}</span>
-        <span className="total-approved-product">🛒{totalApprovedProduct}</span>
-        <Link to="/overview">
-          <button className="checkout">Checkout</button>
-        </Link>
         <Link to="/">
-          <button>Back </button>
+          <button>Home</button>
+        </Link>
+        <span className="total-price">
+          <span>Total</span>
+          <span>€{totalPrice.toFixed(2)}</span>
+        </span>
+        <span className="total-saving">
+          <span>Total Saving</span>
+          <span>€{totalDiscount.toFixed(2)}</span>
+        </span>
+        <span className="total-approved-product">
+          <span>🛒</span>
+          <span>{totalApprovedProduct}</span>
+        </span>
+        <Link to="/overview">
+          <button className="view-cart">View cart</button>
         </Link>
       </div>
     </header>
