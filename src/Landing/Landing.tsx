@@ -54,26 +54,29 @@ export const Landing = () => {
   }, [wishlists]);
 
   return (
-    <div className="landing">
-      {loading && <Loader />}
-      {!loading && (
-        <>
-          <div className="landing-row row-header">
-            <span>User's wishlist</span>
-            <span>Approved</span>
-            <span>Discarded</span>
-            <span>Pending</span>
-          </div>
-          {userInfo &&
-            userInfo.map((userCard, index) => {
-              return (
-                <div key={index} className={`user-card-container`}>
-                  <UserCard {...userCard} />
-                </div>
-              );
-            })}
-        </>
-      )}
+    <div className="content-wrapper">
+      <div className="main">
+        {loading && <Loader />}
+        {!loading && (
+          <>
+            <div className="landing-row row-header">
+              <span>User's wishlist</span>
+              <span>Approved</span>
+              <span>Discarded</span>
+              <span>Pending</span>
+            </div>
+            {userInfo &&
+              userInfo.map((userCard, index) => {
+                return (
+                  <div key={index} className={`user-card-container`}>
+                    <UserCard {...userCard} />
+                  </div>
+                );
+              })}
+          </>
+        )}
+      </div>
+      <div className="side"></div>
     </div>
   );
 };

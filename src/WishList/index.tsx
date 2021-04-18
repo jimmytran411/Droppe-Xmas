@@ -27,7 +27,7 @@ export const WishList = (wishlist: WishlistWithProductDetail) => {
   }, [wishlist]);
   return (
     <div className="wishlist-container">
-      <div className="wishlist-main">
+      <div className="main">
         <span className="current-price">
           <p>
             {currentWishlistPrice >= 0 && `Current Cart: €${currentWishlistPrice.toFixed(2)}`}{' '}
@@ -62,7 +62,7 @@ export const WishList = (wishlist: WishlistWithProductDetail) => {
           <button>Done</button>
         </Link>
       </div>
-      <div className="wishlist-side">
+      <div className="side">
         <Navbar />
       </div>
     </div>

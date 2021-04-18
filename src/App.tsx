@@ -15,24 +15,26 @@ function App() {
     <div className="App">
       <Router>
         <Header />
-        <Switch>
-          <Route exact path="/">
-            <Landing />
-          </Route>
-          {wishlists &&
-            wishlists.map((wishlist, index) => {
-              return (
-                <Route key={index} path={`/wishlist/${wishlist.id}`}>
-                  <WishList {...wishlist} />
-                </Route>
-              );
-            })}
-          <Route path="/overview">
-            <Overview />
-          </Route>
-        </Switch>
+        <div className="App-content">
+          <Switch>
+            <Route exact path="/">
+              <Landing />
+            </Route>
+            {wishlists &&
+              wishlists.map((wishlist, index) => {
+                return (
+                  <Route key={index} path={`/wishlist/${wishlist.id}`}>
+                    <WishList {...wishlist} />
+                  </Route>
+                );
+              })}
+            <Route path="/overview">
+              <Overview />
+            </Route>
+          </Switch>
+        </div>
+        <Footer />
       </Router>
-      <Footer />
     </div>
   );
 }
