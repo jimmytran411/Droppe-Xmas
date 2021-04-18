@@ -17,46 +17,5 @@
 }
 
 .wishlist-container .product-card {
-  border: 1px solid #f2f2f2;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2);
-  max-width: 300px;
-  max-height: fit-content;
-  text-align: center;
-  font-family: arial;
-  margin: 10px;
-  width: 40%;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-}
-
-.wishlist-container .product-card img {
-  width: 100px;
-  height: 100px;
-}
-
-.wishlist-container .product-card-btn {
-  display: flex;
-  justify-content: space-between;
-  width: 100px;
-  margin-left: 75px;
-  cursor: pointer;
-}
-
-.wishlist-container .product-card-img {
-  display: flex;
-  justify-content: center;
-  padding-top: 15px;
-}
-.wishlist-container .product-card-img > div {
-  background-image: url(https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg);
-  background-repeat: no-repeat;
-  height: 150px;
-  width: 150px;
-  background-size: contain;
-  background-position: center;
-}
-
-.wishlist-container .product-card-content {
-  padding: 20px;
+  margin-right: 20px;
 }

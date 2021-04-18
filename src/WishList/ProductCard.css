@@ -1,0 +1,69 @@
+.product-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+  white-space: normal;
+  position: relative;
+  border: 1px solid #f2f2f2;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  max-height: fit-content;
+  text-align: center;
+  font-family: arial;
+  background-color: white;
+}
+
+.product-card .product-card-img {
+  padding-top: 15px;
+}
+
+.product-card-img > div {
+  background-image: url(https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg);
+  background-repeat: no-repeat;
+  height: 150px;
+  width: 150px;
+  background-size: contain;
+  background-position: center;
+}
+
+.product-card-content {
+  max-width: 150px;
+  margin-top: 15px;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.product-card-content .product-card-btn > span:first-child {
+  margin-right: 35px;
+}
+
+.product-card-content .product-card-btn > a {
+  font-size: 14px;
+  line-height: 20px;
+  text-decoration: underline;
+  display: block;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+.product-card-content .product-card-btn > a.primary {
+  color: rgb(0, 187, 9);
+}
+.product-card-content .product-card-btn > a.secondary {
+  color: grey;
+}
+
+.product-card-content .product-card-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.product-card .discount-label {
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  position: absolute;
+  top: 0;
+}

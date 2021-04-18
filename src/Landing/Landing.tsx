@@ -54,7 +54,7 @@ export const Landing = () => {
   }, [wishlists]);
 
   return (
-    <div className="content-wrapper">
+    <div className="landing-container">
       <div className="main">
         {loading && <Loader />}
         {!loading && (

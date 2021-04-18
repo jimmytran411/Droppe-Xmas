@@ -35,3 +35,32 @@
   align-items: center;
   justify-content: center;
 }
+
+.App-content {
+  background-color: #f2f2f2;
+  min-height: 90vh;
+  padding-bottom: 60px;
+}
+
+.App-content > div {
+  display: flex;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.App-content .main {
+  flex: 0 0 70%;
+  width: 70%;
+  max-width: 70%;
+  padding-top: 50px;
+}
+
+.App-content .side {
+  flex: 0 0 30%;
+  width: 30%;
+  max-width: 30%;
+  padding-left: 8px;
+  padding-right: 8px;
+  position: relative;
+  padding-top: 50px;
+}

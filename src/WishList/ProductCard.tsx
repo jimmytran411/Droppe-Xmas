@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { WishlistWithProductDetail } from 'WishList';
 import { Loading, useCart } from 'context/CartContext';
 import { Loader } from 'utils/Loader';
+import './ProductCard.css';
 
 export interface ProductCardProps {
   product: Product | Loading;
@@ -21,15 +22,17 @@ export const ProductCard = ({ product, wishlist }: ProductCardProps) => {
           {product === 'loading' && <Loader />}
           {product !== 'loading' && (
             <div className="product-card">
+              <div className="discount-label"></div>
               <div className="product-card-img">
                 <div style={{ backgroundImage: `url(${product.image})` }} onClick={toggleModal}></div>
               </div>
 
               <div className="product-card-content">
-                <span>{product.title}</span>
+                <span className="product-card-title">{product.title}</span>
                 <p className="price">€{product.price}</p>
                 <div className="product-card-btn">
-                  <span
+                  <a
+                    className={product.approvalStatus === 'pending' ? 'primary' : 'secondary'}
                     aria-label={
                       product.approvalStatus === 'pending' ? `approve-btn-${product.id}` : `return-btn-${product.id}`
                     }
@@ -39,9 +42,10 @@ export const ProductCard = ({ product, wishlist }: ProductCardProps) => {
                         : handleProduct(product, 'pending', wishlist);
                     }}
                   >
-                    {product.approvalStatus === 'pending' ? '✅' : '⏎'}
-                  </span>
-                  <span
+                    {product.approvalStatus === 'pending' ? 'Add to cart' : 'Save to wishlist'}
+                  </a>
+                  <a
+                    className={product.approvalStatus === 'discarded' ? 'primary' : 'secondary'}
                     aria-label={
                       product.approvalStatus === 'discarded' ? `approve-btn-${product.id}` : `discard-btn-${product.id}`
                     }
@@ -51,8 +55,8 @@ export const ProductCard = ({ product, wishlist }: ProductCardProps) => {
                         : handleProduct(product, 'discarded', wishlist);
                     }}
                   >
-                    {product.approvalStatus === 'discarded' ? '✅' : '❌'}
-                  </span>
+                    {product.approvalStatus === 'discarded' ? 'Add to cart' : 'Remove'}
+                  </a>
                 </div>
               </div>
             </div>

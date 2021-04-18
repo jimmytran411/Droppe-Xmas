@@ -5,6 +5,7 @@ import { Loading, useCart } from 'context/CartContext';
 import { Product } from 'api/wishList';
 import { Loader } from 'utils/Loader';
 import { WishlistWithProductDetail } from 'WishList';
+import { ProductCard } from 'WishList/ProductCard';
 
 export const PendingListCarousel = () => {
   const [carouselTranslateXValue, setCarouselTranslateXValue] = useState(0);
@@ -85,35 +86,7 @@ export const PendingListCarousel = () => {
                                     <React.Fragment key={index}>
                                       {product === 'loading' && <Loader />}
                                       {product !== 'loading' && product.approvalStatus === 'pending' && (
-                                        <div className="opl-child-wrapper">
-                                          <div className="product-card-img">
-                                            <div style={{ backgroundImage: `url(${product.image})` }}></div>
-                                          </div>
-                                          <div className="product-card-content">
-                                            <span title={product.title} className="title">
-                                              {product.title}
-                                            </span>
-                                            <p className="price">€{product.price}</p>
-                                            <div className="product-card-btn">
-                                              <a
-                                                className="add-to-wishlist"
-                                                onClick={() => {
-                                                  handleProduct(product, 'approved', wishlist);
-                                                }}
-                                              >
-                                                Add to cart
-                                              </a>
-                                              <a
-                                                className="remove-from-wishlist"
-                                                onClick={() => {
-                                                  handleProduct(product, 'discarded', wishlist);
-                                                }}
-                                              >
-                                                Remove
-                                              </a>
-                                            </div>
-                                          </div>
-                                        </div>
+                                        <ProductCard product={product} wishlist={wishlist} />
                                       )}
                                     </React.Fragment>
                                   );
