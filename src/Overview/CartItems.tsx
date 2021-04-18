@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { Product } from 'api/wishList';
-import { useCart } from 'context/CartContext';
+import { Loading, useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
 import { Loader } from 'utils/Loader';
 import { productListEmptyCheck } from 'utils/wishlistAndProduct';
@@ -38,7 +38,7 @@ export const CartItems = () => {
                   `You haven't approved any gift for Child ${wishlist.id} yet`
                 ) : (
                   <React.Fragment>
-                    {wishlist.products.map((product: Product | 'loading') => {
+                    {wishlist.products.map((product: Product | Loading) => {
                       return (
                         <>
                           {product === 'loading' && <Loader />}

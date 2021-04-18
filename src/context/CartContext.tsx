@@ -56,9 +56,9 @@ function CartProvider(props: any) {
     updatedStatus: ApprovalStatus,
     wishListOfProduct: WishlistWithProductDetail
   ) => {
-    const updateProductList: (Product | 'loading')[] = wishListOfProduct.products.map(
-      (prevProduct: Product | 'loading') => {
-        const updatedProduct: Product | 'loading' =
+    const updateProductList: (Product | Loading)[] = wishListOfProduct.products.map(
+      (prevProduct: Product | Loading) => {
+        const updatedProduct: Product | Loading =
           prevProduct !== 'loading' ? { ...prevProduct, approvalStatus: updatedStatus } : 'loading';
         if (prevProduct !== 'loading') {
           return prevProduct.id === handledProduct.id ? updatedProduct : prevProduct;
@@ -78,8 +78,8 @@ function CartProvider(props: any) {
     // Set approvalstatus of all product to pending
     setWishlists((prev: WishlistWithProductDetail[]) => {
       const resetWishlists: WishlistWithProductDetail[] = prev.map((wishlist: WishlistWithProductDetail) => {
-        const productList = wishlist.products.map((product: Product | 'loading') => {
-          const resetStateProduct: Product | 'loading' =
+        const productList = wishlist.products.map((product: Product | Loading) => {
+          const resetStateProduct: Product | Loading =
             product !== 'loading' ? { ...product, approvalStatus: 'pending' } : 'loading';
           return resetStateProduct;
         });

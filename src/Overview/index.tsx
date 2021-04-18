@@ -1,5 +1,5 @@
 import { Product, patchWishlist } from 'api/wishList';
-import { useCart } from 'context/CartContext';
+import { Loading, useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
@@ -28,7 +28,7 @@ export const Overview = () => {
   const handlePay = async () => {
     wishlists.forEach(async (wishlist: WishlistWithProductDetail) => {
       const notPedingProduct = wishlist.products.filter(
-        (product: Product | 'loading') => product !== 'loading' && product.approvalStatus !== 'pending'
+        (product: Product | Loading) => product !== 'loading' && product.approvalStatus !== 'pending'
       );
       if (notPedingProduct.length) {
         const patchedWishlist: WishlistWithProductDetail = { ...wishlist, products: notPedingProduct };

@@ -1,4 +1,5 @@
 import { Product } from 'api/wishList';
+import { Loading } from 'context/CartContext';
 import React from 'react';
 import { WishlistWithProductDetail } from 'WishList';
 
@@ -14,7 +15,7 @@ export const PaymentResult = ({ patchData, productStatus }: IPaymentResult) => {
           return (
             <div key={wishlist.id}>
               <h6>Child {wishlist.id}</h6>
-              {wishlist.products.map((product: Product | 'loading') => {
+              {wishlist.products.map((product: Product | Loading) => {
                 return (
                   product !== 'loading' &&
                   product.approvalStatus === productStatus && (

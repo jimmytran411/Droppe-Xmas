@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 
 import { usePrice } from 'context/PriceContext';
-import { useCart } from 'context/CartContext';
+import { Loading, useCart } from 'context/CartContext';
 import { Product } from 'api/wishList';
 import { Loader } from 'utils/Loader';
 import { WishlistWithProductDetail } from 'WishList';
@@ -18,7 +18,7 @@ export const PendingListCarousel = () => {
   ) => {
     const checkedWishlists = wishListsToCheck.map(({ products }: WishlistWithProductDetail) => {
       return products.filter(
-        (product: Product | 'loading') => product !== 'loading' && product.approvalStatus === givenState
+        (product: Product | Loading) => product !== 'loading' && product.approvalStatus === givenState
       );
     });
     return checkedWishlists.some((a) => {
@@ -80,7 +80,7 @@ export const PendingListCarousel = () => {
                             <div key={index} className="opl-child">
                               <span className="opl-title">Child {wishlist.id}</span>
                               <div className="child-pending-list" key={index}>
-                                {wishlist.products.map((product: Product | 'loading') => {
+                                {wishlist.products.map((product: Product | Loading) => {
                                   return (
                                     <>
                                       {product === 'loading' && <Loader />}
