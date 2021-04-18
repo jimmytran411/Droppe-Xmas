@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { Product } from 'api/wishList';
-import { useCart } from 'context/CartContext';
+import { Loading, useCart } from 'context/CartContext';
 import { Link } from 'react-router-dom';
 import { ProductList } from './ProductList';
 import { productListEmptyCheck } from 'utils/wishlistAndProduct';
@@ -11,7 +11,7 @@ import './Product.css';
 export interface WishlistWithProductDetail {
   id: number;
   userid: number;
-  products: Product[];
+  products: (Product | Loading)[];
 }
 
 export const WishList = (wishlist: WishlistWithProductDetail) => {

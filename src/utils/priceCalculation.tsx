@@ -1,4 +1,5 @@
 import { Product } from 'api/wishList';
+import { Loading } from 'context/CartContext';
 import { WishlistWithProductDetail } from 'WishList';
 import { ProductWithQuantity, getProductWithQuantity } from './wishlistAndProduct';
 
@@ -16,8 +17,13 @@ export interface ICurrentWishlistPrice {
 export const discountCheck = (wishlists: WishlistWithProductDetail[], currentProduct: Product, currentWLId: number) => {
   let quantity: number = 1;
   wishlists.forEach((wishlist: WishlistWithProductDetail) => {
-    wishlist.products.forEach((product: Product) => {
-      if (product.approvalStatus === 'approved' && product.id === currentProduct.id && wishlist.id !== currentWLId) {
+    wishlist.products.forEach((product: Product | Loading) => {
+      if (
+        product !== 'loading' &&
+        product.approvalStatus === 'approved' &&
+        product.id === currentProduct.id &&
+        wishlist.id !== currentWLId
+      ) {
         quantity += 1;
       }
     });
@@ -33,14 +39,16 @@ export const discountCheck = (wishlists: WishlistWithProductDetail[], currentPro
 export const calculateWishlistPrice = (wishlist: WishlistWithProductDetail, wishlists: WishlistWithProductDetail[]) => {
   let priceAfterDiscount = 0;
   let totalPrice = 0;
-  wishlist.products.forEach((product: Product) => {
-    let discount = 0;
-    if (product.approvalStatus === 'approved') {
-      totalPrice += product.price;
-      discount = discountCheck(wishlists, product, wishlist.id).discountCheckedPrice;
-    }
-    priceAfterDiscount += discount;
-  });
+  if (wishlist.products && wishlist.products.length) {
+    wishlist.products.forEach((product: Product | Loading) => {
+      let discount = 0;
+      if (product !== 'loading' && product.approvalStatus === 'approved') {
+        totalPrice += product.price;
+        discount = discountCheck(wishlists, product, wishlist.id).discountCheckedPrice;
+      }
+      priceAfterDiscount += discount;
+    });
+  }
   let totalDiscount = totalPrice - priceAfterDiscount;
   const currentCartPrice: ICurrentWishlistPrice = { priceAfterDiscount, totalDiscount, totalPrice };
   return currentCartPrice;

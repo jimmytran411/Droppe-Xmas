@@ -12,16 +12,18 @@ export interface ProductListProps {
 }
 
 export const ProductList = ({ wishlist, givenStatus }: ProductListProps) => {
-  const { handleProduct, wishlists } = useCart();
+  const { wishlists } = useCart();
   return (
     <div className="product-list">
       {wishlist.products &&
-        wishlist.products.map((product: Product, index: number) => {
+        wishlist.products.map((product: Product | 'loading', index: number) => {
           const quantity = countTotalProductQuantity(product, wishlist, wishlists);
           const discountPercent = quantity > 1 && quantity * 10;
           return (
             <React.Fragment key={index}>
-              {product.approvalStatus === givenStatus && <ProductCard product={product} wishlist={wishlist} />}
+              {product !== 'loading' && product.approvalStatus === givenStatus && (
+                <ProductCard product={product} wishlist={wishlist} />
+              )}
             </React.Fragment>
           );
         })}

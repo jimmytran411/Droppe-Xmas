@@ -1,3 +1,4 @@
+import { Product } from 'api/wishList';
 import React from 'react';
 import { WishlistWithProductDetail } from 'WishList';
 
@@ -13,13 +14,18 @@ export const PaymentResult = ({ patchData, productStatus }: IPaymentResult) => {
           return (
             <div key={wishlist.id}>
               <h6>Child {wishlist.id}</h6>
-              {wishlist.products.map(({ id, image, title, approvalStatus, price }) => {
+              {wishlist.products.map((product: Product | 'loading') => {
                 return (
-                  approvalStatus === productStatus && (
-                    <div key={id} className="confirmation-product-card">
-                      <h5>{title}</h5>
-                      <img style={{ width: '50px', height: '50px', borderRadius: '20px' }} src={image} alt={title} />
-                      <p>Price: €{price}</p>
+                  product !== 'loading' &&
+                  product.approvalStatus === productStatus && (
+                    <div key={product.id} className="confirmation-product-card">
+                      <h5>{product.title}</h5>
+                      <img
+                        style={{ width: '50px', height: '50px', borderRadius: '20px' }}
+                        src={product.image}
+                        alt={product.title}
+                      />
+                      <p>Price: €{product.price}</p>
                     </div>
                   )
                 );

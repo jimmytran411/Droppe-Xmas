@@ -4,6 +4,7 @@ import { useCart } from 'context/CartContext';
 import { WishlistWithProductDetail } from 'WishList';
 import { UserCard, UserCardProps } from './UserCard';
 import './Landing.css';
+import { Loader } from 'utils/Loader';
 
 export const Landing = () => {
   const [userInfo, setUserInfo] = useState<UserCardProps[]>();
@@ -15,23 +16,23 @@ export const Landing = () => {
       discardCount: number = 0,
       pendingcount: number = 0;
     wishlist.products.forEach((product) => {
-      if (!product) {
+      if (product === 'loading') {
         setLoading(true);
       } else {
         setLoading(false);
-      }
-      switch (product.approvalStatus) {
-        case 'approved':
-          approveCount++;
-          break;
-        case 'discarded':
-          discardCount++;
-          break;
-        case 'pending':
-          pendingcount++;
-          break;
-        default:
-          console.log('Something went wrong');
+        switch (product.approvalStatus) {
+          case 'approved':
+            approveCount++;
+            break;
+          case 'discarded':
+            discardCount++;
+            break;
+          case 'pending':
+            pendingcount++;
+            break;
+          default:
+            console.log('Something went wrong');
+        }
       }
     });
 
@@ -53,11 +54,7 @@ export const Landing = () => {
   }, [wishlists]);
   return (
     <div className="landing">
-      {loading && (
-        <div className="loader">
-          <b>Loading</b>
-        </div>
-      )}
+      {loading && <Loader />}
       {!loading && (
         <>
           <div className="landing-row row-header">

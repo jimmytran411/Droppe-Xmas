@@ -3,6 +3,7 @@ import { useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { Loader } from 'utils/Loader';
 import { ProductWithQuantity, productListEmptyCheck, getProductWithQuantity } from 'utils/wishlistAndProduct';
 import { WishlistWithProductDetail } from 'WishList';
 import { ProductCard } from 'WishList/ProductCard';
@@ -32,10 +33,12 @@ export const Overview = () => {
     wishListsToCheck: WishlistWithProductDetail[],
     givenState: 'pending' | 'approved' | 'discarded'
   ) => {
-    const allWLCheck = wishListsToCheck.map(({ products }: WishlistWithProductDetail) => {
-      return products.filter((product: Product) => product.approvalStatus === givenState);
+    const checkedWishlists = wishListsToCheck.map(({ products }: WishlistWithProductDetail) => {
+      return products.filter(
+        (product: Product | 'loading') => product !== 'loading' && product.approvalStatus === givenState
+      );
     });
-    return allWLCheck.some((a) => {
+    return checkedWishlists.some((a) => {
       return a.length;
     })
       ? false
@@ -45,7 +48,9 @@ export const Overview = () => {
   const toggleModal = () => setConfirm(!confirm);
   const handlePay = async () => {
     wishlists.forEach(async (wishlist: WishlistWithProductDetail) => {
-      const notPedingProduct = wishlist.products.filter((product: Product) => product.approvalStatus !== 'pending');
+      const notPedingProduct = wishlist.products.filter(
+        (product: Product | 'loading') => product !== 'loading' && product.approvalStatus !== 'pending'
+      );
       if (notPedingProduct.length) {
         const patchedWishlist: WishlistWithProductDetail = { ...wishlist, products: notPedingProduct };
         const { data } = await patchWishlist(patchedWishlist);
@@ -88,28 +93,31 @@ export const Overview = () => {
                         `You haven't approved any gift for Child ${wishlist.id} yet`
                       ) : (
                         <React.Fragment>
-                          {wishlist.products.map((product: Product) => {
+                          {wishlist.products.map((product: Product | 'loading') => {
                             return (
-                              product.approvalStatus === 'approved' && (
-                                <div className="overview-product-card" key={product.id}>
-                                  <div className="opc-image">
-                                    <div style={{ backgroundImage: `url(${product.image})` }}></div>
+                              <>
+                                {product === 'loading' && <Loader />}
+                                {product !== 'loading' && product.approvalStatus === 'approved' && (
+                                  <div className="overview-product-card" key={product.id}>
+                                    <div className="opc-image">
+                                      <div style={{ backgroundImage: `url(${product.image})` }}></div>
+                                    </div>
+                                    <div className="opc-product-info">
+                                      <span className="opc-title">{product.title}</span>
+                                      <span className="opc-price">{product.price}</span>
+                                    </div>
+                                    <span
+                                      className="opc-remove-btn"
+                                      onClick={() => {
+                                        setReturnConfirmation(true);
+                                        setProductReturnParam({ wishlistToUpdate: wishlist, returnedProduct: product });
+                                      }}
+                                    >
+                                      ❌
+                                    </span>
                                   </div>
-                                  <div className="opc-product-info">
-                                    <span className="opc-title">{product.title}</span>
-                                    <span className="opc-price">{product.price}</span>
-                                  </div>
-                                  <span
-                                    className="opc-remove-btn"
-                                    onClick={() => {
-                                      setReturnConfirmation(true);
-                                      setProductReturnParam({ wishlistToUpdate: wishlist, returnedProduct: product });
-                                    }}
-                                  >
-                                    ❌
-                                  </span>
-                                </div>
-                              )
+                                )}
+                              </>
                             );
                           })}
                         </React.Fragment>
@@ -130,25 +138,28 @@ export const Overview = () => {
                         <div key={index} className="opl-child">
                           <span className="opl-title">Child {wishlist.id}</span>
                           <div className="child-pending-list" key={index}>
-                            {wishlist.products.map((product: Product) => {
+                            {wishlist.products.map((product: Product | 'loading') => {
                               return (
-                                product.approvalStatus === 'pending' && (
-                                  <div className="opl-child-wrapper">
-                                    <div className="product-card-img">
-                                      <div style={{ backgroundImage: `url(${product.image})` }}></div>
-                                    </div>
-                                    <div className="product-card-content">
-                                      <span title={product.title} className="title">
-                                        {product.title}
-                                      </span>
-                                      <p className="price">€{product.price}</p>
-                                      <div className="product-card-btn">
-                                        <span>✅</span>
-                                        <span>❌</span>
+                                <>
+                                  {product === 'loading' && <Loader />}
+                                  {product !== 'loading' && product.approvalStatus === 'pending' && (
+                                    <div className="opl-child-wrapper">
+                                      <div className="product-card-img">
+                                        <div style={{ backgroundImage: `url(${product.image})` }}></div>
+                                      </div>
+                                      <div className="product-card-content">
+                                        <span title={product.title} className="title">
+                                          {product.title}
+                                        </span>
+                                        <p className="price">€{product.price}</p>
+                                        <div className="product-card-btn">
+                                          <span>✅</span>
+                                          <span>❌</span>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                )
+                                  )}
+                                </>
                               );
                             })}
                           </div>

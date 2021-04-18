@@ -1,5 +1,6 @@
 import { Product } from 'api/wishList';
 import { ApprovalStatus } from 'common/commonType';
+import { Loading } from 'context/CartContext';
 import { WishlistWithProductDetail } from 'WishList';
 
 export interface ProductWithQuantity extends Product {
@@ -13,7 +14,8 @@ export const getProductWithQuantity = (
   const productWithCheckedStateList: Product[] = [];
   listToCheck.forEach((wishlist: WishlistWithProductDetail) => {
     return wishlist.products.forEach(
-      (product: Product) => product.approvalStatus === givenStatus && productWithCheckedStateList.push(product)
+      (product: Product | Loading) =>
+        product !== 'loading' && product.approvalStatus === givenStatus && productWithCheckedStateList.push(product)
     );
   });
   const mapOfApprovedProducts = productWithCheckedStateList
@@ -35,29 +37,41 @@ export const countTotalProductWithGivenStatus = (
   let count = 0;
   listToCheck.forEach((wishlist) => {
     wishlist.products.forEach((product) => {
-      product.approvalStatus === givenStatus && count++;
+      if (product !== 'loading') {
+        product.approvalStatus === givenStatus && count++;
+      }
     });
   });
   return count;
 };
 
-export const productListEmptyCheck = (productList: Product[], givenStatus: ApprovalStatus) => {
-  const productListcheck = productList.filter((product: Product) => product.approvalStatus === givenStatus);
-  return productListcheck.length ? false : true;
+export const productListEmptyCheck = (productList: (Product | Loading)[], givenStatus: ApprovalStatus) => {
+  if (productList && productList.length) {
+    const productListcheck = productList.filter(
+      (product: Product | Loading) => product !== 'loading' && product.approvalStatus === givenStatus
+    );
+    return productListcheck.length ? false : true;
+  }
 };
 
 export const countTotalProductQuantity = (
-  productToCheck: Product,
+  productToCheck: Product | Loading,
   wishlistOfProduct: WishlistWithProductDetail,
   wishlists: WishlistWithProductDetail[]
 ) => {
-  let quantity = 1;
-  wishlists &&
-    wishlistOfProduct &&
-    wishlists.forEach(({ products, id }: WishlistWithProductDetail) => {
-      products.forEach((product: Product) => {
-        product.id === productToCheck.id && wishlistOfProduct.id !== id && quantity++;
+  if (productToCheck !== 'loading') {
+    let quantity = 1;
+    wishlists &&
+      wishlistOfProduct &&
+      wishlists.forEach(({ products, id }: WishlistWithProductDetail) => {
+        products.forEach((product: Product | Loading) => {
+          if (product !== 'loading') {
+            product.id === productToCheck.id && wishlistOfProduct.id !== id && quantity++;
+          }
+        });
       });
-    });
-  return quantity === 1 ? 1 : quantity;
+    return quantity === 1 ? 1 : quantity;
+  } else {
+    return 0;
+  }
 };
