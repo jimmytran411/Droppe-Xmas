@@ -65,12 +65,11 @@ test('Test Header show value from provider', () => {
       wrapper,
     }
   );
-  const totalPrice = getByText(/total:/i);
-  expect(totalPrice.textContent).toBe('Total: €420.00');
 
-  const saving = getByText(/total saving:/i);
-  expect(saving.textContent).toBe('Total Saving: €240.00');
+  expect(getByText(/total saving/i)).toBeInTheDocument();
+  expect(getByText(/€240/i)).toBeInTheDocument();
+  expect(getByText(/€420/i)).toBeInTheDocument();
 
-  expect(getByText(/🛒/i).textContent).toBe('🛒3');
-  expect(getByRole('button', { name: /checkout/i })).toBeInTheDocument();
+  expect(getByText(/🛒/i).textContent).toBe('🛒');
+  expect(getByRole('button', { name: /View Cart/i })).toBeInTheDocument();
 });
