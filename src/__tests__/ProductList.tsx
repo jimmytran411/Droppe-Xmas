@@ -26,18 +26,18 @@ test('Render pending wishlist with test input', () => {
     },
   ];
   const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testPendingList };
-  const testPendingListProp: ProductListProps = { ...testCurrentWLProp, givenStatus: 'pending' };
+  const testPendingListProp: ProductListProps = { wishlist: testCurrentWLProp, givenStatus: 'pending' };
 
-  const { getByText, getByRole } = render(<ProductList {...testPendingListProp} />);
+  const { getByText, getByLabelText } = render(<ProductList {...testPendingListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
   expect(getByText(/111/i)).toBeInTheDocument();
-  expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
-  expect(getByRole('button', { name: /discard-btn-1/i })).toBeInTheDocument();
+  expect(getByLabelText(/approve-btn-1/i)).toBeInTheDocument();
+  expect(getByLabelText(/discard-btn-1/i)).toBeInTheDocument();
 
   expect(getByText(/test title 2/i)).toBeInTheDocument();
   expect(getByText(/222/i)).toBeInTheDocument();
-  expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
-  expect(getByRole('button', { name: /discard-btn-1/i })).toBeInTheDocument();
+  expect(getByLabelText(/approve-btn-1/i)).toBeInTheDocument();
+  expect(getByLabelText(/discard-btn-1/i)).toBeInTheDocument();
 });
 
 test('Render approve list with test input', () => {
@@ -62,18 +62,18 @@ test('Render approve list with test input', () => {
     },
   ];
   const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testApproveList };
-  const testApproveListProp: ProductListProps = { ...testCurrentWLProp, givenStatus: 'approved' };
+  const testApproveListProp: ProductListProps = { wishlist: testCurrentWLProp, givenStatus: 'approved' };
 
-  const { getByText, getByRole } = render(<ProductList {...testApproveListProp} />);
+  const { getByText, getByLabelText } = render(<ProductList {...testApproveListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
   expect(getByText(/111/i)).toBeInTheDocument();
-  expect(getByRole('button', { name: /return-btn-1/i })).toBeInTheDocument();
-  expect(getByRole('button', { name: /discard-btn-1/i })).toBeInTheDocument();
+  expect(getByLabelText(/return-btn-1/i)).toBeInTheDocument();
+  expect(getByLabelText(/discard-btn-1/i)).toBeInTheDocument();
 
   expect(getByText(/test title 2/i)).toBeInTheDocument();
   expect(getByText(/222/i)).toBeInTheDocument();
-  expect(getByRole('button', { name: /return-btn-1/i })).toBeInTheDocument();
-  expect(getByRole('button', { name: /discard-btn-1/i })).toBeInTheDocument();
+  expect(getByLabelText(/return-btn-1/i)).toBeInTheDocument();
+  expect(getByLabelText(/discard-btn-1/i)).toBeInTheDocument();
 });
 
 test('Render discard list with test input', () => {
@@ -98,16 +98,16 @@ test('Render discard list with test input', () => {
     },
   ];
   const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testDiscardList };
-  const testDiscardListProp: ProductListProps = { ...testCurrentWLProp, givenStatus: 'discarded' };
+  const testDiscardListProp: ProductListProps = { wishlist: testCurrentWLProp, givenStatus: 'discarded' };
 
-  const { getByText, getByRole } = render(<ProductList {...testDiscardListProp} />);
+  const { getByText, getByLabelText } = render(<ProductList {...testDiscardListProp} />);
   expect(getByText(/test title 1/i)).toBeInTheDocument();
   expect(getByText(/111/i)).toBeInTheDocument();
-  expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
-  expect(getByRole('button', { name: /return-btn-1/i })).toBeInTheDocument();
+  expect(getByLabelText(/approve-btn-1/i)).toBeInTheDocument();
+  expect(getByLabelText(/return-btn-1/i)).toBeInTheDocument();
 
   expect(getByText(/test title 2/i)).toBeInTheDocument();
   expect(getByText(/222/i)).toBeInTheDocument();
-  expect(getByRole('button', { name: /approve-btn-1/i })).toBeInTheDocument();
-  expect(getByRole('button', { name: /return-btn-1/i })).toBeInTheDocument();
+  expect(getByLabelText(/approve-btn-1/i)).toBeInTheDocument();
+  expect(getByLabelText(/return-btn-1/i)).toBeInTheDocument();
 });

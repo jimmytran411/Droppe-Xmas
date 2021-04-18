@@ -81,13 +81,13 @@ test('Render discard list with test input', () => {
     </Router>,
     { wrapper }
   );
-  expect(getByText(/john/i)).toBeInTheDocument();
-  expect(getByText(/✓/i)).toBeInTheDocument();
-  expect(getByText(/1/i)).toBeInTheDocument();
+  expect(getByText(/user's wishlist/i)).toBeInTheDocument();
+  expect(getByText(/username_1/i)).toBeInTheDocument();
+  expect(getByText(/approved/i)).toBeInTheDocument();
 
-  expect(getByText(/❌/i)).toBeInTheDocument();
+  expect(getByText(/discarded/i)).toBeInTheDocument();
   expect(getByText(/3/i)).toBeInTheDocument();
 
-  expect(getByText(/❓/i)).toBeInTheDocument();
+  expect(getByText(/pending/i)).toBeInTheDocument();
   expect(getByText(/2/i)).toBeInTheDocument();
 });

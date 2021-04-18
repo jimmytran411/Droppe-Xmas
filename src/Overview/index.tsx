@@ -1,12 +1,10 @@
 import { Product, patchWishlist } from 'api/wishList';
 import { Loading, useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
-import React, { useEffect, useState, useRef } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { Loader } from 'utils/Loader';
-import { ProductWithQuantity, productListEmptyCheck, getProductWithQuantity } from 'utils/wishlistAndProduct';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { ProductWithQuantity, getProductWithQuantity } from 'utils/wishlistAndProduct';
 import { WishlistWithProductDetail } from 'WishList';
-import { ProductCard } from 'WishList/ProductCard';
 import Modal from '../Modal';
 import { CartItems } from './CartItems';
 import './Overview.css';

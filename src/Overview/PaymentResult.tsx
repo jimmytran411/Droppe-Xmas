@@ -1,13 +1,14 @@
 import { Product } from 'api/wishList';
 import { Loading } from 'context/CartContext';
 import React from 'react';
+import { Loader } from 'utils/Loader';
 import { WishlistWithProductDetail } from 'WishList';
 
-export interface IPaymentResult {
+export interface PaymentResultProps {
   patchData: WishlistWithProductDetail[];
   productStatus: 'approved' | 'discarded';
 }
-export const PaymentResult = ({ patchData, productStatus }: IPaymentResult) => {
+export const PaymentResult = ({ patchData, productStatus }: PaymentResultProps) => {
   return (
     <>
       {patchData.length ? (
@@ -35,7 +36,7 @@ export const PaymentResult = ({ patchData, productStatus }: IPaymentResult) => {
           );
         })
       ) : (
-        <div className="loading-animation">Loading ....</div>
+        <Loader />
       )}
     </>
   );

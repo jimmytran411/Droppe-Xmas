@@ -10,7 +10,7 @@ export const PendingListCarousel = () => {
   const [carouselTranslateXValue, setCarouselTranslateXValue] = useState(0);
 
   const { totalPrice } = usePrice();
-  const { wishlists } = useCart();
+  const { wishlists, handleProduct } = useCart();
 
   const wishlistEmptyCheck = (
     wishListsToCheck: WishlistWithProductDetail[],
@@ -76,13 +76,13 @@ export const PendingListCarousel = () => {
                       });
                       return (
                         isNotEmptyPending && (
-                          <div className="opl-wrapper">
-                            <div key={index} className="opl-child">
-                              <span className="opl-title">Child {wishlist.id}</span>
-                              <div className="child-pending-list" key={index}>
-                                {wishlist.products.map((product: Product | Loading) => {
+                          <div key={index} className="opl-wrapper">
+                            <div className="opl-child">
+                              <span className="opl-title">Username_{wishlist.id}</span>
+                              <div className="child-pending-list">
+                                {wishlist.products.map((product: Product | Loading, index) => {
                                   return (
-                                    <>
+                                    <React.Fragment key={index}>
                                       {product === 'loading' && <Loader />}
                                       {product !== 'loading' && product.approvalStatus === 'pending' && (
                                         <div className="opl-child-wrapper">
@@ -95,13 +95,27 @@ export const PendingListCarousel = () => {
                                             </span>
                                             <p className="price">€{product.price}</p>
                                             <div className="product-card-btn">
-                                              <a className="add-to-wishlist">Add to cart</a>
-                                              <a className="remove-from-wishlist">Remove</a>
+                                              <a
+                                                className="add-to-wishlist"
+                                                onClick={() => {
+                                                  handleProduct(product, 'approved', wishlist);
+                                                }}
+                                              >
+                                                Add to cart
+                                              </a>
+                                              <a
+                                                className="remove-from-wishlist"
+                                                onClick={() => {
+                                                  handleProduct(product, 'discarded', wishlist);
+                                                }}
+                                              >
+                                                Remove
+                                              </a>
                                             </div>
                                           </div>
                                         </div>
                                       )}
-                                    </>
+                                    </React.Fragment>
                                   );
                                 })}
                               </div>

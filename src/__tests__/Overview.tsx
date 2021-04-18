@@ -71,5 +71,5 @@ test('Test Overview show value from provider', () => {
   expect(getByText(/you save:/i).textContent).toBe('You save: €240.00');
   expect(getByText(/These items are still in your wishlists:/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /checkout/i })).toBeInTheDocument;
-  expect(getByRole('button', { name: '❌' })).toBeInTheDocument();
+  expect(getByText('❌')).toBeInTheDocument();
 });

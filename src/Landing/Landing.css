@@ -1,4 +1,4 @@
-.landing {
+.content-wrapper {
   display: flex;
   flex-direction: column;
   padding: 20px 80px;
@@ -16,7 +16,7 @@
   margin-left: 10px;
 }
 
-.landing a {
+.content-wrapper a {
   text-decoration: none;
 }
 

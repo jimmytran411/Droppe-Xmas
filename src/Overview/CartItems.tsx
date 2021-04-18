@@ -38,9 +38,9 @@ export const CartItems = () => {
                   `You haven't approved any gift for Child ${wishlist.id} yet`
                 ) : (
                   <React.Fragment>
-                    {wishlist.products.map((product: Product | Loading) => {
+                    {wishlist.products.map((product: Product | Loading, index) => {
                       return (
-                        <>
+                        <React.Fragment key={index}>
                           {product === 'loading' && <Loader />}
                           {product !== 'loading' && product.approvalStatus === 'approved' && (
                             <div className="overview-product-card" key={product.id}>
@@ -49,7 +49,7 @@ export const CartItems = () => {
                               </div>
                               <div className="opc-product-info">
                                 <span className="opc-title">{product.title}</span>
-                                <span className="opc-price">{product.price}</span>
+                                <span className="opc-price">€{product.price}</span>
                               </div>
                               <span
                                 className="opc-remove-btn"
@@ -62,7 +62,7 @@ export const CartItems = () => {
                               </span>
                             </div>
                           )}
-                        </>
+                        </React.Fragment>
                       );
                     })}
                   </React.Fragment>
