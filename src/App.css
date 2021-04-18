@@ -27,3 +27,11 @@
   display: inline-block;
   margin-right: 15px;
 }
+.footer {
+  height: 100px;
+  background-color: black;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

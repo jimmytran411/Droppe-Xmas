@@ -6,6 +6,7 @@ import { Header } from 'Header';
 import { Overview } from 'Overview';
 import { WishList } from 'WishList';
 import { Landing } from 'Landing/Landing';
+import { Footer } from 'Footer';
 
 function App() {
   const { wishlists } = useCart();
@@ -18,21 +19,6 @@ function App() {
           <Route exact path="/">
             <Landing />
           </Route>
-          {/* <Route path={`/wishlist/1`}>
-            <WishList {...wishlists[0]} />
-          </Route>
-          <Route path={`/wishlist/2`}>
-            <WishList {...wishlists[1]} />
-          </Route>
-          <Route path={`/wishlist/3`}>
-            <WishList {...wishlists[2]} />
-          </Route>
-          <Route path={`/wishlist/4`}>
-            <WishList {...wishlists[3]} />
-          </Route>
-          <Route path={`/wishlist/5`}>
-            <WishList {...wishlists[4]} />
-          </Route> */}
           {wishlists &&
             wishlists.map((wishlist, index) => {
               return (
@@ -46,6 +32,7 @@ function App() {
           </Route>
         </Switch>
       </Router>
+      <Footer />
     </div>
   );
 }
