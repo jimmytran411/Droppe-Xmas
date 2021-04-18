@@ -9,7 +9,7 @@ export const Navbar = () => {
     <div className="navbar">
       {wishlists.map((wishlist) => {
         return (
-          <div className="navbar-child">
+          <div className="navbar-list">
             <NavLink activeClassName="navbar-active" to={`/wishlist/${wishlist.id}`}>
               Wishlist {wishlist.id}
             </NavLink>

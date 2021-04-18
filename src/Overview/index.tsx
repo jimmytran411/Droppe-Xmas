@@ -133,38 +133,43 @@ export const Overview = () => {
                 <div className="overview-pending-list">
                   <span>These items are still in your wishlists:</span>
                   {wishlists.map((wishlist: WishlistWithProductDetail, index: number) => {
+                    const isNotEmptyPending = wishlist.products.some((product) => {
+                      return product !== 'loading' && product.approvalStatus === 'pending';
+                    });
                     return (
-                      <div className="opl-wrapper">
-                        <div key={index} className="opl-child">
-                          <span className="opl-title">Child {wishlist.id}</span>
-                          <div className="child-pending-list" key={index}>
-                            {wishlist.products.map((product: Product | 'loading') => {
-                              return (
-                                <>
-                                  {product === 'loading' && <Loader />}
-                                  {product !== 'loading' && product.approvalStatus === 'pending' && (
-                                    <div className="opl-child-wrapper">
-                                      <div className="product-card-img">
-                                        <div style={{ backgroundImage: `url(${product.image})` }}></div>
-                                      </div>
-                                      <div className="product-card-content">
-                                        <span title={product.title} className="title">
-                                          {product.title}
-                                        </span>
-                                        <p className="price">€{product.price}</p>
-                                        <div className="product-card-btn">
-                                          <span>✅</span>
-                                          <span>❌</span>
+                      isNotEmptyPending && (
+                        <div className="opl-wrapper">
+                          <div key={index} className="opl-child">
+                            <span className="opl-title">Child {wishlist.id}</span>
+                            <div className="child-pending-list" key={index}>
+                              {wishlist.products.map((product: Product | 'loading') => {
+                                return (
+                                  <>
+                                    {product === 'loading' && <Loader />}
+                                    {product !== 'loading' && product.approvalStatus === 'pending' && (
+                                      <div className="opl-child-wrapper">
+                                        <div className="product-card-img">
+                                          <div style={{ backgroundImage: `url(${product.image})` }}></div>
+                                        </div>
+                                        <div className="product-card-content">
+                                          <span title={product.title} className="title">
+                                            {product.title}
+                                          </span>
+                                          <p className="price">€{product.price}</p>
+                                          <div className="product-card-btn">
+                                            <span>✅</span>
+                                            <span>❌</span>
+                                          </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  )}
-                                </>
-                              );
-                            })}
+                                    )}
+                                  </>
+                                );
+                              })}
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      )
                     );
                   })}
                 </div>

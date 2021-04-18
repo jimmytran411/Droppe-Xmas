@@ -3,6 +3,19 @@
   flex-wrap: wrap;
 }
 
+.wishlist-container {
+  display: flex;
+}
+.wishlist-container .wishlist-side {
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+.wishlist-container .wishlist-side a {
+  text-decoration: none;
+  color: black;
+}
+
 .wishlist-container .product-card {
   border: 1px solid #f2f2f2;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2);
@@ -15,11 +28,6 @@
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-}
-
-.price {
-  color: grey;
-  font-size: 18px;
 }
 
 .wishlist-container .product-card img {
