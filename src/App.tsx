@@ -18,7 +18,7 @@ function App() {
           <Route exact path="/">
             <Landing />
           </Route>
-          <Route path={`/wishlist/1`}>
+          {/* <Route path={`/wishlist/1`}>
             <WishList {...wishlists[0]} />
           </Route>
           <Route path={`/wishlist/2`}>
@@ -32,7 +32,15 @@ function App() {
           </Route>
           <Route path={`/wishlist/5`}>
             <WishList {...wishlists[4]} />
-          </Route>
+          </Route> */}
+          {wishlists &&
+            wishlists.map((wishlist, index) => {
+              return (
+                <Route key={index} path={`/wishlist/${wishlist.id}`}>
+                  <WishList {...wishlist} />
+                </Route>
+              );
+            })}
           <Route path="/overview">
             <Overview />
           </Route>

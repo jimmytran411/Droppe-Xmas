@@ -52,6 +52,7 @@ export const Landing = () => {
     });
     setUserInfo(userCardProps);
   }, [wishlists]);
+
   return (
     <div className="landing">
       {loading && <Loader />}

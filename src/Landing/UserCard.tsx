@@ -21,7 +21,7 @@ export const UserCard = ({
       <div className="landing-row">
         <div className="landing-row--userInfo">
           <img src="https://randomuser.me/api/portraits/lego/8.jpg"></img>
-          <span>userId_{wishlistId}</span>
+          <span>{userName}</span>
         </div>
         <div className="user-card-approved-count">
           <p>{approvedProductCount}</p>
