@@ -1,6 +1,7 @@
-import { getProduct, Product, WishList, WishListProduct, getWishLists } from 'api/wishList';
-import { ApprovalStatus } from 'common/commonType';
 import * as React from 'react';
+
+import { getProduct, Product, WishList, WishListProduct, getWishLists } from 'api/wishList';
+import { ApprovalStatus, Loading } from 'common/commonType';
 import { WishlistWithProductDetail } from 'WishList';
 
 export interface Cart {
@@ -8,7 +9,6 @@ export interface Cart {
   handleProduct: (product: Product, updatedState: ApprovalStatus, wishListOfProduct: WishlistWithProductDetail) => void;
   handlePayment: () => void;
 }
-export type Loading = 'loading';
 
 const initialCartValue: Cart = {
   wishlists: [],
@@ -23,17 +23,20 @@ function CartProvider(props: any) {
     const fetchAllWishList = async () => {
       try {
         const { data } = await getWishLists();
+
         const productIds: number[] = [];
         data.forEach((wishlist) => {
           wishlist.products.forEach((product) => {
             productIds.indexOf(product.productId) === -1 && productIds.push(product.productId);
           });
         });
+
         const detailProductList = await Promise.all(
           productIds.map(async (id) => {
             return await getProduct(id);
           })
         );
+
         const wishlistsWithProductDetail: WishlistWithProductDetail[] = data.map((wishlist: WishList) => {
           const details = wishlist.products.map(({ productId }: WishListProduct) => {
             const detailProduct = detailProductList.find((product) => product.id === productId);

@@ -1,16 +1,12 @@
 import { Product } from 'api/wishList';
-import { ApprovalStatus } from 'common/commonType';
-import { Loading } from 'context/CartContext';
+import { ApprovalStatus, Loading } from 'common/commonType';
 import { WishlistWithProductDetail } from 'WishList';
 
 export interface ProductWithQuantity extends Product {
   quantity: number;
 }
 
-export const getProductWithQuantity = (
-  listToCheck: WishlistWithProductDetail[],
-  givenStatus: 'pending' | 'approved' | 'discarded'
-) => {
+export const getProductWithQuantity = (listToCheck: WishlistWithProductDetail[], givenStatus: ApprovalStatus) => {
   const productWithCheckedStateList: Product[] = [];
   listToCheck.forEach((wishlist: WishlistWithProductDetail) => {
     return wishlist.products.forEach(

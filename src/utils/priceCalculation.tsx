@@ -1,14 +1,14 @@
 import { Product } from 'api/wishList';
-import { Loading } from 'context/CartContext';
+import { Loading } from 'common/commonType';
 import { WishlistWithProductDetail } from 'WishList';
 import { ProductWithQuantity, getProductWithQuantity } from './wishlistAndProduct';
 
-export interface IDiscountCheck {
+export interface DiscountCheck {
   discountCheckedPrice: number;
   quantity: number;
 }
 
-export interface ICurrentWishlistPrice {
+export interface CurrentWishlistPrice {
   priceAfterDiscount: number;
   totalDiscount: number;
   totalPrice: number;
@@ -29,7 +29,7 @@ export const discountCheck = (wishlists: WishlistWithProductDetail[], currentPro
     });
   });
   const discountedPrice = quantity > 1 ? (currentProduct.price * (10 - quantity)) / 10 : currentProduct.price;
-  const discountCheck: IDiscountCheck = {
+  const discountCheck: DiscountCheck = {
     discountCheckedPrice: discountedPrice,
     quantity,
   };
@@ -50,8 +50,8 @@ export const calculateWishlistPrice = (wishlist: WishlistWithProductDetail, wish
     });
   }
   let totalDiscount = totalPrice - priceAfterDiscount;
-  const currentCartPrice: ICurrentWishlistPrice = { priceAfterDiscount, totalDiscount, totalPrice };
-  return currentCartPrice;
+  const currentWishlistPrice: CurrentWishlistPrice = { priceAfterDiscount, totalDiscount, totalPrice };
+  return currentWishlistPrice;
 };
 
 export const calculateTotalPrice = (wishlists: WishlistWithProductDetail[]) => {

@@ -1,7 +1,7 @@
-import { Product } from 'api/wishList';
-import { ApprovalStatus } from 'common/commonType';
-import { Loading, useCart } from 'context/CartContext';
 import React from 'react';
+
+import { Product } from 'api/wishList';
+import { ApprovalStatus, Loading } from 'common/commonType';
 import { WishlistWithProductDetail } from 'WishList';
 import { ProductCard } from './ProductCard';
 
@@ -11,7 +11,6 @@ export interface ProductListProps {
 }
 
 export const ProductList = ({ wishlist, givenStatus }: ProductListProps) => {
-  const { wishlists } = useCart();
   return (
     <div className="product-list">
       {wishlist.products &&

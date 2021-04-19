@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
 import { Product } from 'api/wishList';
-import { Loading, useCart } from 'context/CartContext';
+import { useCart } from 'context/CartContext';
 import { ProductList } from './ProductList';
 import { productListEmptyCheck } from 'utils/wishlistAndProduct';
 import { calculateWishlistPrice } from 'utils/priceCalculation';
-import './Product.css';
 import { Navbar } from 'WishList/Navbar';
+import { Loading } from 'common/commonType';
+import './Product.css';
 
 export interface WishlistWithProductDetail {
   id: number;
@@ -26,6 +27,9 @@ export const WishList = (wishlist: WishlistWithProductDetail) => {
   }, [wishlist]);
   return (
     <div className="wishlist-container">
+      <div className="side">
+        <Navbar />
+      </div>
       <div className="main">
         <span className="current-price">
           <p>
@@ -57,9 +61,6 @@ export const WishList = (wishlist: WishlistWithProductDetail) => {
             `You haven't discarded anything yet`
           )}
         </div>
-      </div>
-      <div className="side">
-        <Navbar />
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
-import { Product } from 'api/wishList';
-import { Loading } from 'context/CartContext';
 import React from 'react';
+
+import { Product } from 'api/wishList';
 import { Loader } from 'utils/Loader';
 import { WishlistWithProductDetail } from 'WishList';
+import { Loading } from 'common/commonType';
 
 export interface PaymentResultProps {
   patchData: WishlistWithProductDetail[];

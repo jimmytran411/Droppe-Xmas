@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { calculateTotalPrice, calculateTotalDiscount } from 'utils/priceCalculation';
 import { useCart } from './CartContext';
 
@@ -22,7 +23,7 @@ function PriceProvider(props: any) {
     setTotalPrice(updatedTotalPrice);
     const updatedTotalDiscount = calculateTotalDiscount(wishlists);
     setTotalDiscount(updatedTotalDiscount);
-  });
+  }, [wishlists]);
 
   return (
     <PriceContext.Provider

@@ -1,24 +1,22 @@
 import React, { useRef, useState } from 'react';
 
 import { usePrice } from 'context/PriceContext';
-import { Loading, useCart } from 'context/CartContext';
+import { useCart } from 'context/CartContext';
 import { Product } from 'api/wishList';
 import { Loader } from 'utils/Loader';
 import { WishlistWithProductDetail } from 'WishList';
 import { ProductCard } from 'WishList/ProductCard';
+import { ApprovalStatus, Loading } from 'common/commonType';
 
 type CarouselDirection = 'next' | 'prev';
 
 export const PendingListCarousel = () => {
-  let [carouselTranslateXValue, setCarouselTranslateXValue] = useState(0);
+  const [carouselTranslateXValue, setCarouselTranslateXValue] = useState(0);
 
   const { totalPrice } = usePrice();
   const { wishlists } = useCart();
 
-  const wishlistEmptyCheck = (
-    wishListsToCheck: WishlistWithProductDetail[],
-    givenState: 'pending' | 'approved' | 'discarded'
-  ) => {
+  const wishlistEmptyCheck = (wishListsToCheck: WishlistWithProductDetail[], givenState: ApprovalStatus) => {
     const checkedWishlists = wishListsToCheck.map(({ products }: WishlistWithProductDetail) => {
       return products.filter(
         (product: Product | Loading) => product !== 'loading' && product.approvalStatus === givenState
@@ -33,24 +31,16 @@ export const PendingListCarousel = () => {
 
   const divRef = useRef<HTMLDivElement>(null);
   const slideCarousel = (direction: CarouselDirection) => {
-    const a = divRef.current?.scrollWidth || 0;
-    const b = divRef.current?.offsetWidth || 0;
-    const increase = b / 2;
+    const scrollWidth = divRef.current?.scrollWidth || 0;
+    const offsetWidth = divRef.current?.offsetWidth || 0;
+    const increase = offsetWidth / 2;
 
-    if (direction === 'next') {
-      carouselTranslateXValue = carouselTranslateXValue - increase;
-    }
-    if (direction === 'prev') {
-      carouselTranslateXValue = carouselTranslateXValue + increase;
-    }
-    if (carouselTranslateXValue < b - a) {
-      carouselTranslateXValue = b - a;
-    }
-    if (carouselTranslateXValue > 0) {
-      carouselTranslateXValue = 0;
-    }
+    let distance = carouselTranslateXValue;
+    direction === 'next' ? (distance -= increase) : (distance += increase);
+    distance < offsetWidth - scrollWidth && (distance = offsetWidth - scrollWidth);
+    distance > 0 && (distance = 0);
 
-    setCarouselTranslateXValue(carouselTranslateXValue);
+    setCarouselTranslateXValue(distance);
   };
   return (
     <>

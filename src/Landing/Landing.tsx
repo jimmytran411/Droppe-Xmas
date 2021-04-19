@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useCart } from 'context/CartContext';
 import { WishlistWithProductDetail } from 'WishList';
 import { UserCard, UserCardProps } from './UserCard';
-import './Landing.css';
 import { Loader } from 'utils/Loader';
+import './Landing.css';
 
 export const Landing = () => {
   const [userInfo, setUserInfo] = useState<UserCardProps[]>();

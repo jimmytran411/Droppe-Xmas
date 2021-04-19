@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { countTotalProductWithGivenStatus } from 'utils/wishlistAndProduct';
 
 export const Header = () => {
-  const [totalApprovedProduct, setTotalApprovedProduct] = React.useState<number>(0);
+  const [totalApprovedProduct, setTotalApprovedProduct] = useState<number>(0);
 
   const { wishlists } = useCart();
   const { totalPrice, totalDiscount } = usePrice();

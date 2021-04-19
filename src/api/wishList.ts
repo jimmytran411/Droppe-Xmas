@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { ApprovalStatus } from 'common/commonType';
 import { WishlistWithProductDetail } from 'WishList';
 
 export interface WishList {
@@ -20,7 +21,7 @@ export interface Product {
   category: string;
   description: string;
   image: string;
-  approvalStatus: 'pending' | 'approved' | 'discarded';
+  approvalStatus: ApprovalStatus;
 }
 
 export const getWishLists = async (): Promise<AxiosResponse<WishList[]>> => {

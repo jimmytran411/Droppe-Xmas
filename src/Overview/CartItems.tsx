@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 
 import { Product } from 'api/wishList';
-import { Loading, useCart } from 'context/CartContext';
+import { useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
 import { Loader } from 'utils/Loader';
 import { productListEmptyCheck } from 'utils/wishlistAndProduct';
 import { WishlistWithProductDetail } from 'WishList';
 import Modal from 'Modal';
+import { Loading } from 'common/commonType';
 
 export interface IOverviewProductReturn {
   wishlistToUpdate: WishlistWithProductDetail;
