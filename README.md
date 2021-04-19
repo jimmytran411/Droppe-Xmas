@@ -5,9 +5,6 @@
   <p align="center">
     Cart Approval
     <br />
-    <a href="https://github.com/jimmytran411/Droppe-xmas"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
     <a href="https://droppe-assignment-xmas.herokuapp.com/">View Demo</a>
     ·
     <a href="https://github.com/jimmytran411/Droppe-xmas/issues">Report Bug</a>
@@ -46,7 +43,7 @@
 
 
 The project is a cart approval process for parents. The theme is an imaginary christmas gift picking marketplace. The primary user persona of your interface will be a 50 year old parent with differing (usually low) levels of tech nativeness.
-This is the Frontend version. The backend can be access at (Droppe-xmas-backend)[https://github.com/jimmytran411/Droppe-xmas-backend]
+This is the Frontend version. The backend can be access at [Droppe-xmas-backend](https://github.com/jimmytran411/Droppe-xmas-backend)
 
 
 ### Built With
