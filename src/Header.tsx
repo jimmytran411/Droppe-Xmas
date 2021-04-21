@@ -11,8 +11,8 @@ export const Header = () => {
   const { totalPrice, totalDiscount } = usePrice();
 
   useEffect(() => {
-    const totalApprovedProduct = countTotalProductWithGivenStatus(wishlists, 'approved');
-    setTotalApprovedProduct(totalApprovedProduct);
+    const { count } = countTotalProductWithGivenStatus(wishlists, 'approved');
+    setTotalApprovedProduct(count);
   }, [wishlists]);
   return (
     <header className="App-header">

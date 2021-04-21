@@ -9,7 +9,7 @@ import { ProductWithQuantity, getProductWithQuantity } from 'utils/wishlistAndPr
 import { WishlistWithProductDetail } from 'WishList';
 import { CartItems } from './CartItems';
 import { PaymentResult } from './PaymentResult';
-import { PendingListCarousel } from './PendingListCarousel';
+import { ProductCarousel } from './ProductCarousel';
 import Modal from '../Modal';
 import './Overview.css';
 
@@ -57,8 +57,8 @@ export const Overview = () => {
   return (
     <div className="overview-container">
       <div className="main">
-        <CartItems />
-        <PendingListCarousel />
+        <CartItems givenStatus="approved" />
+        <ProductCarousel givenStatus="pending" />
       </div>
       <div className="side">
         <div className="side-wrapper">

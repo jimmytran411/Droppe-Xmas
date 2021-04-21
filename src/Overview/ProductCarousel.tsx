@@ -9,8 +9,11 @@ import { ProductCard } from 'WishList/ProductCard';
 import { ApprovalStatus, Loading } from 'common/commonType';
 
 type CarouselDirection = 'next' | 'prev';
+interface ProductCarouselProps {
+  givenStatus: ApprovalStatus;
+}
 
-export const PendingListCarousel = () => {
+export const ProductCarousel = ({ givenStatus }: ProductCarouselProps) => {
   const [carouselTranslateXValue, setCarouselTranslateXValue] = useState(0);
 
   const { totalPrice } = usePrice();
@@ -46,7 +49,7 @@ export const PendingListCarousel = () => {
     <>
       {totalPrice > 0 && (
         <>
-          {!wishlistEmptyCheck(wishlists, 'pending') && (
+          {!wishlistEmptyCheck(wishlists, givenStatus) && (
             <div className="overview-pending-list">
               <span className="section-title">These items are still in your wishlists:</span>
               <div className="carousel-section">
@@ -67,7 +70,7 @@ export const PendingListCarousel = () => {
                   >
                     {wishlists.map((wishlist: WishlistWithProductDetail, index: number) => {
                       const isNotEmptyPending = wishlist.products.some((product) => {
-                        return product !== 'loading' && product.approvalStatus === 'pending';
+                        return product !== 'loading' && product.approvalStatus === givenStatus;
                       });
                       return (
                         isNotEmptyPending && (
@@ -79,7 +82,7 @@ export const PendingListCarousel = () => {
                                   return (
                                     <React.Fragment key={index}>
                                       {product === 'loading' && <Loader />}
-                                      {product !== 'loading' && product.approvalStatus === 'pending' && (
+                                      {product !== 'loading' && product.approvalStatus === givenStatus && (
                                         <ProductCard product={product} wishlist={wishlist} />
                                       )}
                                     </React.Fragment>

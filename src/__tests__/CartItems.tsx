@@ -43,7 +43,7 @@ test('It should render CartItem with approved product', () => {
       <PriceContext.Provider value={mockPriceValue}>{children}</PriceContext.Provider>
     </CartContext.Provider>
   );
-  const { getByText, getAllByText } = render(<CartItems />, { wrapper });
+  const { getByText, getAllByText } = render(<CartItems givenStatus="approved" />, { wrapper });
 
   expect(getByText(/Your cart/i).textContent).toBe(`Your cart's items:`);
   expect(getByText(/child 1/i)).toBeInTheDocument();

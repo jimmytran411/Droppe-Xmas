@@ -7,13 +7,7 @@ export interface ProductWithQuantity extends Product {
 }
 
 export const getProductWithQuantity = (listToCheck: WishlistWithProductDetail[], givenStatus: ApprovalStatus) => {
-  const productWithCheckedStateList: Product[] = [];
-  listToCheck.forEach((wishlist: WishlistWithProductDetail) => {
-    return wishlist.products.forEach(
-      (product: Product | Loading) =>
-        product !== 'loading' && product.approvalStatus === givenStatus && productWithCheckedStateList.push(product)
-    );
-  });
+  const { productWithCheckedStateList } = countTotalProductWithGivenStatus(listToCheck, givenStatus);
   const mapOfApprovedProducts = productWithCheckedStateList
     .reduce((mapObj, product: Product) => {
       const id: string = JSON.stringify([product.id]);
@@ -31,14 +25,16 @@ export const countTotalProductWithGivenStatus = (
   givenStatus: ApprovalStatus
 ) => {
   let count = 0;
+  const productWithCheckedStateList: Product[] = [];
   listToCheck.forEach((wishlist) => {
     wishlist.products.forEach((product) => {
-      if (product !== 'loading') {
-        product.approvalStatus === givenStatus && count++;
+      if (product !== 'loading' && product.approvalStatus === givenStatus) {
+        count++;
+        productWithCheckedStateList.push(product);
       }
     });
   });
-  return count;
+  return { count, productWithCheckedStateList };
 };
 
 export const productListEmptyCheck = (productList: (Product | Loading)[], givenStatus: ApprovalStatus) => {
@@ -61,8 +57,8 @@ export const countTotalProductQuantity = (
       wishlistOfProduct &&
       wishlists.forEach(({ products, id }: WishlistWithProductDetail) => {
         products.forEach((product: Product | Loading) => {
-          if (product !== 'loading') {
-            product.id === productToCheck.id && wishlistOfProduct.id !== id && quantity++;
+          if (product !== 'loading' && product.id === productToCheck.id && wishlistOfProduct.id !== id) {
+            quantity++;
           }
         });
       });

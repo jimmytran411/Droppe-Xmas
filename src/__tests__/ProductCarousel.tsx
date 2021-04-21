@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import { PendingListCarousel } from 'Overview/PendingListCarousel';
+import { ProductCarousel } from 'Overview/ProductCarousel';
 import { Product } from 'api/wishList';
 import { WishlistWithProductDetail } from 'WishList';
 import { CartContext } from 'context/CartContext';
@@ -43,7 +43,7 @@ test('It should render Carousel with pending product', () => {
       <PriceContext.Provider value={mockPriceValue}>{children}</PriceContext.Provider>
     </CartContext.Provider>
   );
-  const { getByText, getAllByText } = render(<PendingListCarousel />, { wrapper });
+  const { getByText, getAllByText } = render(<ProductCarousel givenStatus="pending" />, { wrapper });
 
   expect(getByText(/these items/i).textContent).toBe(`These items are still in your wishlists:`);
   expect(getByText(/Username_1/i)).toBeInTheDocument();
