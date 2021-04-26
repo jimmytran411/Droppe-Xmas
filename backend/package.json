@@ -1,11 +1,10 @@
 {
- "name": "droppe-assignment-backend",
+ "name": "droppe-assignment",
  "version": "1.0.0",
  "main": "index.js",
  "scripts": {
   "test": "echo \"Error: no test specified\" && exit 1",
-  "start": "node server.js",
-  "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd frontend && npm install && npm run build",
+  "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd ../frontend && npm install && npm run build",
   "server": "nodemon server.js",
   "dev": "concurrently \"npm run server\" \"npm run frontend\"",
   "frontend": "npm start --prefix ../frontend"
