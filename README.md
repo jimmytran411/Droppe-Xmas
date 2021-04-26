@@ -27,7 +27,7 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#installation">Installation</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#testing">Testing</a></li>
       </ul>
     </li>
     <li><a href="#license">License</a></li>
@@ -80,10 +80,12 @@ npm install
 npm install -g nodemon
 ```
 
-If you don't want to install nodemon, in the /backend/package.json file, on line 10, change the 'sever' in 'npm run server' into 'npm run start', or replace the line 10 by this:
-"dev": "concurrently \"npm run server\" \"npm run frontend\""
+If you don't want to install nodemon, in the /backend/package.json file, replace the line 10 by this:
+```sh
+"dev": "concurrently \"npm run server\" \"npm run frontend\"",
+```
 
-After that, to run the app use the following command:
+After that, you can run the app using the following command:
 
 ```sh
 npm start
