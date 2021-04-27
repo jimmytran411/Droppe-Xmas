@@ -4,7 +4,7 @@ import { BrowserRouter, Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
 import { Product } from 'api/wishList';
-import { WishList, WishlistWithProductDetail } from 'WishList';
+import { WishList, WishlistWithProductDetail } from 'Views/WishList';
 import { CartContext } from 'context/CartContext';
 import userEvent from '@testing-library/user-event';
 

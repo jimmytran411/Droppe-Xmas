@@ -5,7 +5,7 @@ import { useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
 import { Loader } from 'utils/Loader';
 import { productListEmptyCheck } from 'utils/wishlistAndProduct';
-import { WishlistWithProductDetail } from 'WishList';
+import { WishlistWithProductDetail } from 'Views/WishList';
 import Modal from 'Modal';
 import { ApprovalStatus, Loading } from 'common/commonType';
 

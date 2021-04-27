@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import { ProductCarousel } from 'Overview/ProductCarousel';
+import { ProductCarousel } from 'Views/Landing/Overview/ProductCarousel';
 import { Product } from 'api/wishList';
-import { WishlistWithProductDetail } from 'WishList';
+import { WishlistWithProductDetail } from 'Views/WishList';
 import { CartContext } from 'context/CartContext';
 import { PriceContext } from 'context/PriceContext';
 

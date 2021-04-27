@@ -1,38 +1,33 @@
 import React, { useEffect, useState } from 'react';
 
 import { useCart } from 'context/CartContext';
-import { WishlistWithProductDetail } from 'WishList';
 import { UserCard, UserCardProps } from './UserCard';
 import { Loader } from 'utils/Loader';
 import './Landing.css';
+import { WishlistWithProductStatus } from 'common/commonInterface';
 
 export const Landing = () => {
   const [userInfo, setUserInfo] = useState<UserCardProps[]>();
   const [loading, setLoading] = useState(true);
   const { wishlists } = useCart();
 
-  const getUserCard = (wishlist: WishlistWithProductDetail) => {
+  const getUserCard = (wishlist: WishlistWithProductStatus) => {
     let approveCount: number = 0,
       discardCount: number = 0,
       pendingcount: number = 0;
-    wishlist.products.forEach((product) => {
-      if (product === 'loading') {
-        setLoading(true);
-      } else {
-        setLoading(false);
-        switch (product.approvalStatus) {
-          case 'approved':
-            approveCount++;
-            break;
-          case 'discarded':
-            discardCount++;
-            break;
-          case 'pending':
-            pendingcount++;
-            break;
-          default:
-            console.log('Something went wrong');
-        }
+    wishlist.productList.forEach((product) => {
+      switch (product.approvalStatus) {
+        case 'approved':
+          approveCount++;
+          break;
+        case 'discarded':
+          discardCount++;
+          break;
+        case 'pending':
+          pendingcount++;
+          break;
+        default:
+          console.log('Something went wrong');
       }
     });
 
@@ -40,8 +35,8 @@ export const Landing = () => {
       approvedProductCount: approveCount,
       discardedProductCount: discardCount,
       pendingProductCount: pendingcount,
-      userName: `username_${wishlist.id}`,
-      wishlistId: wishlist.id,
+      userName: `username_${wishlist.wishlistId}`,
+      wishlistId: wishlist.wishlistId,
     };
     return userCardProp;
   };

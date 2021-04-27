@@ -1,8 +1,8 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { Product } from 'api/wishList';
-import { ProductList, ProductListProps } from 'WishList/ProductList';
-import { WishlistWithProductDetail } from 'WishList';
+import { ProductList, ProductListProps } from 'Views/WishList/ProductList';
+import { WishlistWithProductDetail } from 'Views/WishList';
 
 test('Render pending wishlist with test input', () => {
   const testPendingList: Product[] = [

@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import { useCart } from 'context/CartContext';
 import { Header } from 'Header';
-import { Overview } from 'Overview';
-import { WishList } from 'WishList';
-import { Landing } from 'Landing/Landing';
+import { Overview } from 'Views/Landing/Overview';
+import { WishList } from 'Views/WishList';
+import { Landing } from 'Views/Landing/Landing';
 import { Footer } from 'Footer';
 
 function App() {

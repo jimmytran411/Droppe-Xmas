@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Product } from 'api/wishList';
 import { Loader } from 'utils/Loader';
-import { WishlistWithProductDetail } from 'WishList';
+import { WishlistWithProductDetail } from 'Views/WishList';
 import { Loading } from 'common/commonType';
 
 export interface PaymentResultProps {

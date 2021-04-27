@@ -6,11 +6,11 @@ import { Loading } from 'common/commonType';
 import { useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
 import { ProductWithQuantity, getProductWithQuantity } from 'utils/wishlistAndProduct';
-import { WishlistWithProductDetail } from 'WishList';
+import { WishlistWithProductDetail } from 'Views/WishList';
 import { CartItems } from './CartItems';
 import { PaymentResult } from './PaymentResult';
 import { ProductCarousel } from './ProductCarousel';
-import Modal from '../Modal';
+import Modal from '../../../Modal';
 import './Overview.css';
 
 export const Overview = () => {

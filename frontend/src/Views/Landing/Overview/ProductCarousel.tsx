@@ -4,8 +4,8 @@ import { usePrice } from 'context/PriceContext';
 import { useCart } from 'context/CartContext';
 import { Product } from 'api/wishList';
 import { Loader } from 'utils/Loader';
-import { WishlistWithProductDetail } from 'WishList';
-import { ProductCard } from 'WishList/ProductCard';
+import { WishlistWithProductDetail } from 'Views/WishList';
+import { ProductCard } from 'Views/WishList/ProductCard';
 import { ApprovalStatus, Loading } from 'common/commonType';
 
 type CarouselDirection = 'next' | 'prev';

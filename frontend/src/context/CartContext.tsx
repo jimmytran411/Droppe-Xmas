@@ -1,12 +1,16 @@
 import * as React from 'react';
 
-import { getProduct, Product, WishList, WishListProduct, getWishLists } from 'api/wishList';
-import { ApprovalStatus, Loading } from 'common/commonType';
-import { WishlistWithProductDetail } from 'WishList';
+import { getWishLists } from 'api/wishList';
+import { ApprovalStatus } from 'common/commonType';
+import { WishlistWithProductStatus, ProductWithStatus } from 'common/commonInterface';
 
 export interface Cart {
-  wishlists: WishlistWithProductDetail[];
-  handleProduct: (product: Product, updatedState: ApprovalStatus, wishListOfProduct: WishlistWithProductDetail) => void;
+  wishlists: WishlistWithProductStatus[];
+  handleProduct: (
+    product: ProductWithStatus,
+    updatedState: ApprovalStatus,
+    wishListOfProduct: WishlistWithProductStatus
+  ) => void;
   handlePayment: () => void;
 }
 
@@ -17,36 +21,52 @@ const initialCartValue: Cart = {
 };
 const CartContext = React.createContext<Cart>(initialCartValue);
 function CartProvider(props: any) {
-  const [wishlists, setWishlists] = React.useState<WishlistWithProductDetail[]>([]);
+  const [wishlists, setWishlists] = React.useState<WishlistWithProductStatus[]>([]);
 
   React.useEffect(() => {
     const fetchAllWishList = async () => {
       try {
         const { data } = await getWishLists();
 
-        const productIds: number[] = [];
-        data.forEach((wishlist) => {
-          wishlist.products.forEach((product) => {
-            productIds.indexOf(product.productId) === -1 && productIds.push(product.productId);
-          });
-        });
-
-        const detailProductList = await Promise.all(
-          productIds.map(async (id) => {
-            return await getProduct(id);
-          })
-        );
-
-        const wishlistsWithProductDetail: WishlistWithProductDetail[] = data.map((wishlist: WishList) => {
-          const details = wishlist.products.map(({ productId }: WishListProduct) => {
-            const detailProduct = detailProductList.find((product) => product.id === productId);
-            return detailProduct ? detailProduct : 'loading';
+        const wishlists: WishlistWithProductStatus[] = data.map((wishlist) => {
+          const productListWithProductStatus: ProductWithStatus[] = wishlist.products.map((product) => {
+            const productWithStatus: ProductWithStatus = {
+              productId: product.productId,
+              approvalStatus: 'pending',
+            };
+            return productWithStatus;
           });
 
-          return { id: wishlist.id, userid: wishlist.userId, products: details };
+          const wishlistWithProductStatus: WishlistWithProductStatus = {
+            wishlistId: wishlist.id,
+            productList: productListWithProductStatus,
+          };
+          return wishlistWithProductStatus;
         });
 
-        setWishlists(wishlistsWithProductDetail);
+        // const productIds: number[] = [];
+        // data.forEach((wishlist) => {
+        //   wishlist.products.forEach((product) => {
+        //     productIds.indexOf(product.productId) === -1 && productIds.push(product.productId);
+        //   });
+        // });
+
+        // const detailProductList = await Promise.all(
+        //   productIds.map(async (id) => {
+        //     return await getProduct(id);
+        //   })
+        // );
+
+        // const wishlistsWithProductDetail: WishlistWithProductDetail[] = data.map((wishlist: WishList) => {
+        //   const details = wishlist.products.map(({ productId }: WishListProduct) => {
+        //     const detailProduct = detailProductList.find((product) => product.id === productId);
+        //     return detailProduct ? detailProduct : 'loading';
+        //   });
+
+        //   return { id: wishlist.id, userid: wishlist.userId, products: details };
+        // });
+
+        setWishlists(wishlists);
       } catch (error) {
         console.log(error);
       }
@@ -55,35 +75,30 @@ function CartProvider(props: any) {
   }, []);
 
   const handleProduct = (
-    handledProduct: Product,
+    handledProduct: ProductWithStatus,
     updatedStatus: ApprovalStatus,
-    wishListOfProduct: WishlistWithProductDetail
+    wishListOfProduct: WishlistWithProductStatus
   ) => {
-    const updateProductList: (Product | Loading)[] = wishListOfProduct.products.map(
-      (prevProduct: Product | Loading) => {
-        const updatedProduct: Product | Loading =
-          prevProduct !== 'loading' ? { ...prevProduct, approvalStatus: updatedStatus } : 'loading';
-        if (prevProduct !== 'loading') {
-          return prevProduct.id === handledProduct.id ? updatedProduct : prevProduct;
-        } else {
-          return 'loading';
-        }
+    const updateProductList: ProductWithStatus[] = wishListOfProduct.productList.map(
+      (prevProduct: ProductWithStatus) => {
+        const updatedProduct: ProductWithStatus = { ...prevProduct, approvalStatus: updatedStatus };
+
+        return prevProduct.productId === handledProduct.productId ? updatedProduct : prevProduct;
       }
     );
-    const updatedWishlist: WishlistWithProductDetail = { ...wishListOfProduct, products: updateProductList };
-    const updatedAllWishlist: WishlistWithProductDetail[] = wishlists.map((wishlist: WishlistWithProductDetail) => {
-      return wishlist.id === updatedWishlist.id ? updatedWishlist : wishlist;
+    const updatedWishlist: WishlistWithProductStatus = { ...wishListOfProduct, productList: updateProductList };
+    const updatedAllWishlist: WishlistWithProductStatus[] = wishlists.map((wishlist: WishlistWithProductStatus) => {
+      return wishlist.wishlistId === updatedWishlist.wishlistId ? updatedWishlist : wishlist;
     });
     setWishlists(updatedAllWishlist);
   };
 
   const handlePayment = () => {
     // Set approvalstatus of all product to pending
-    setWishlists((prev: WishlistWithProductDetail[]) => {
-      const resetWishlists: WishlistWithProductDetail[] = prev.map((wishlist: WishlistWithProductDetail) => {
-        const productList = wishlist.products.map((product: Product | Loading) => {
-          const resetStateProduct: Product | Loading =
-            product !== 'loading' ? { ...product, approvalStatus: 'pending' } : 'loading';
+    setWishlists((prev: WishlistWithProductStatus[]) => {
+      const resetWishlists: WishlistWithProductStatus[] = prev.map((wishlist: WishlistWithProductStatus) => {
+        const productList = wishlist.productList.map((product: ProductWithStatus) => {
+          const resetStateProduct: ProductWithStatus = { ...product, approvalStatus: 'pending' };
           return resetStateProduct;
         });
         return { ...wishlist, products: productList };

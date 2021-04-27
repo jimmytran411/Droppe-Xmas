@@ -5,9 +5,9 @@ import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
 import { Product } from 'api/wishList';
-import { Overview } from 'Overview';
+import { Overview } from 'Views/Landing/Overview';
 import { CartContext } from 'context/CartContext';
-import { WishlistWithProductDetail } from 'WishList';
+import { WishlistWithProductDetail } from 'Views/WishList';
 import { PriceContext } from 'context/PriceContext';
 
 const testCurrentWL: Product[] = [

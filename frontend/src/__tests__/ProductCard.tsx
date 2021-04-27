@@ -1,8 +1,8 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { ProductCard } from '../WishList/ProductCard';
+import { ProductCard } from '../Views/WishList/ProductCard';
 import { Product } from 'api/wishList';
-import { WishlistWithProductDetail } from 'WishList';
+import { WishlistWithProductDetail } from 'Views/WishList';
 
 const testProduct: Product = {
   id: 1,

@@ -4,8 +4,8 @@ import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
 import { Product } from 'api/wishList';
-import { WishlistWithProductDetail } from 'WishList';
-import { Landing } from 'Landing/Landing';
+import { WishlistWithProductDetail } from 'Views/WishList';
+import { Landing } from 'Views/Landing/Landing';
 import { CartContext } from 'context/CartContext';
 
 test('Render discard list with test input', () => {

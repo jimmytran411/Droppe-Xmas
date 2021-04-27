@@ -1,6 +1,6 @@
 import { Product } from 'api/wishList';
 import { Loading } from 'common/commonType';
-import { WishlistWithProductDetail } from 'WishList';
+import { WishlistWithProductDetail } from 'Views/WishList';
 import { ProductWithQuantity, getProductWithQuantity } from './wishlistAndProduct';
 
 export interface DiscountCheck {

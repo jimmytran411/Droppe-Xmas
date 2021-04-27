@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { ApprovalStatus } from 'common/commonType';
-import { WishlistWithProductDetail } from 'WishList';
+import { WishlistWithProductDetail } from 'Views/WishList';
 
 export interface WishList {
   id: number;
@@ -14,17 +13,16 @@ export interface WishListProduct {
   quantity: number;
 }
 
-export interface Product {
+export interface ProductDetail {
   id: number;
   title: string;
   price: number;
   category: string;
   description: string;
   image: string;
-  approvalStatus: ApprovalStatus;
 }
 
-export const getWishLists = async (): Promise<AxiosResponse<WishList[]>> => {
+export const getWishLists = (): Promise<AxiosResponse<WishList[]>> => {
   return axios.get('/carts?limit=5');
 };
 
@@ -32,10 +30,8 @@ export const getWishList = async (id: number): Promise<AxiosResponse<WishList>> 
   return axios.get(`/carts/${id}`);
 };
 
-export const getProduct = async (id: number): Promise<Product> => {
-  const { data } = await axios.get<Product>(`/products/${id}`);
-  const productWithPendingState: Product = { ...data, approvalStatus: 'pending' };
-  return productWithPendingState;
+export const getProductDetail = (id: number): Promise<AxiosResponse<ProductDetail>> => {
+  return axios.get<ProductDetail>(`/products/${id}`);
 };
 
 export const patchWishlist = async (wishlist: WishlistWithProductDetail) => {

@@ -10,8 +10,8 @@ export const Navbar = () => {
       {wishlists.map((wishlist, index) => {
         return (
           <div key={index} className="navbar-list">
-            <NavLink activeClassName="navbar-active" to={`/wishlist/${wishlist.id}`}>
-              Username_{wishlist.id}
+            <NavLink activeClassName="navbar-active" to={`/wishlist/${wishlist.wishlistId}`}>
+              Username_{wishlist.wishlistId}
             </NavLink>
           </div>
         );
