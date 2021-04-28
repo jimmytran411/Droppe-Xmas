@@ -34,15 +34,15 @@ export const CartItems = ({ givenStatus }: CartItemsProps) => {
     <div className="overview-list">
       <span className="section-title">Your cart's items:</span>
       {totalPrice > 0
-        ? wishlists.map((wishlist: WishlistWithProductStatus) => {
+        ? wishlists.map(({ wishlistId, productList }: WishlistWithProductStatus) => {
             return (
-              <div className="child-approve-list" key={wishlist.wishlistId}>
-                <span className="cap-title">{`Child ${wishlist.wishlistId}:`}</span>
-                {wishlist.productList.some(({ approvalStatus }) => approvalStatus === 'approved') ? (
-                  `You haven't approved any gift for Child ${wishlist.wishlistId} yet`
+              <div className="child-approve-list" key={wishlistId}>
+                <span className="cap-title">{`Child ${wishlistId}:`}</span>
+                {!productList.some(({ approvalStatus }) => approvalStatus === 'approved') ? (
+                  `You haven't approved any gift for Child ${wishlistId} yet`
                 ) : (
                   <React.Fragment>
-                    {wishlist.productList.map((product: ProductWithStatus, index) => {
+                    {productList.map((product: ProductWithStatus, index) => {
                       const productDetail = getProductFromContext(product.productId);
                       return (
                         <React.Fragment key={index}>
@@ -59,7 +59,10 @@ export const CartItems = ({ givenStatus }: CartItemsProps) => {
                                 className="opc-remove-btn"
                                 onClick={() => {
                                   setReturnConfirmation(true);
-                                  setProductReturnParam({ wishlistToUpdate: wishlist, returnedProduct: product });
+                                  setProductReturnParam({
+                                    wishlistToUpdate: { productList, wishlistId },
+                                    returnedProduct: product,
+                                  });
                                 }}
                               >
                                 ❌

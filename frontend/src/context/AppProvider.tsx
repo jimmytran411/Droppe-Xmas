@@ -7,9 +7,9 @@ import { ProductProvider } from './ProductContext';
 export const AppProviders = ({ children }: any) => {
   return (
     <CartProvider>
-      <PriceProvider>
-        <ProductProvider>{children}</ProductProvider>
-      </PriceProvider>
+      <ProductProvider>
+        <PriceProvider>{children}</PriceProvider>
+      </ProductProvider>
     </CartProvider>
   );
 };

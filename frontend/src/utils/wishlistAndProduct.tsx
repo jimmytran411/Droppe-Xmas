@@ -1,7 +1,10 @@
-import { ProductWithQuantity, ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
+import { ProductListWithQuantity, ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
 import { ApprovalStatus } from 'common/commonType';
 
-export const getProductWithQuantity = (listToCheck: WishlistWithProductStatus[], givenStatus: ApprovalStatus) => {
+export const getProductListWithGivenStatus = (
+  listToCheck: WishlistWithProductStatus[],
+  givenStatus: ApprovalStatus
+) => {
   const { productWithCheckedStateList } = countTotalProductWithGivenStatus(listToCheck, givenStatus);
 
   const mapOfApprovedProducts = productWithCheckedStateList
@@ -15,7 +18,7 @@ export const getProductWithQuantity = (listToCheck: WishlistWithProductStatus[],
     }, new Map())
     .values();
 
-  const productWithQuantityList: ProductWithQuantity[] = [...mapOfApprovedProducts];
+  const productWithQuantityList: ProductListWithQuantity[] = [...mapOfApprovedProducts];
   return productWithQuantityList;
 };
 

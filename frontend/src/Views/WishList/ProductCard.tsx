@@ -45,6 +45,7 @@ export const ProductCard = ({ product, wishlist }: ProductCardProps) => {
     };
     fetchProductAndCalculateDiscount();
   }, [wishlists]);
+
   return (
     <>
       {productDetail === 'loading' && <Loader />}

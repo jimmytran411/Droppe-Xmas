@@ -70,19 +70,19 @@
 }
 
 .product-card .discount-label.discount--40::before {
-  content: '-40%';
-  font-size: 18px;
+  content: 'Save up to 40%';
+  font-size: 12px;
   font-weight: 700;
   color: white;
-  top: 14px;
+  top: 6px;
   position: relative;
 }
 
 .product-card .discount-label.discount--20::before {
-  content: '-20%';
-  font-size: 18px;
+  content: 'Save up to 20%';
+  font-size: 12px;
   font-weight: 700;
   color: white;
-  top: 14px;
+  top: 6px;
   position: relative;
 }

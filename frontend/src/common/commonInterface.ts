@@ -10,6 +10,6 @@ export interface WishlistWithProductStatus {
   productList: ProductWithStatus[];
 }
 
-export interface ProductWithQuantity extends ProductWithStatus {
+export interface ProductListWithQuantity extends ProductWithStatus {
   quantity: number;
 }

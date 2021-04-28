@@ -1,7 +1,7 @@
-import { WishlistWithProductStatus, ProductWithQuantity } from 'common/commonInterface';
+import { WishlistWithProductStatus, ProductListWithQuantity } from 'common/commonInterface';
 import * as React from 'react';
 
-import { getProductWithQuantity } from 'utils/wishlistAndProduct';
+import { getProductListWithGivenStatus } from 'utils/wishlistAndProduct';
 import { useCart } from './CartContext';
 import { useProduct } from './ProductContext';
 
@@ -22,35 +22,23 @@ function PriceProvider(props: any) {
   const { wishlists } = useCart();
   const { getProductFromContext } = useProduct();
 
-  const calculateTotalPrice = (wishlists: WishlistWithProductStatus[]) => {
-    const approvedProductList = getProductWithQuantity(wishlists, 'approved');
+  const calculateTotal = (wishlists: WishlistWithProductStatus[]) => {
     let totalPrice = 0;
-    approvedProductList.forEach(({ productId, quantity }: ProductWithQuantity) => {
-      const currentProductDetail = getProductFromContext(productId);
-      const price = currentProductDetail ? currentProductDetail.price : 0;
-
-      quantity > 1 ? (totalPrice += (price * quantity * (10 - quantity)) / 10) : (totalPrice += price);
-    });
-    return totalPrice;
-  };
-
-  const calculateTotalDiscount = (wishlists: WishlistWithProductStatus[]) => {
-    const approvedProductList = getProductWithQuantity(wishlists, 'approved');
     let totalDiscount = 0;
-    approvedProductList.forEach(({ productId, quantity }: ProductWithQuantity) => {
+
+    getProductListWithGivenStatus(wishlists, 'approved').forEach(({ productId, quantity }: ProductListWithQuantity) => {
       const currentProductDetail = getProductFromContext(productId);
       const price = currentProductDetail ? currentProductDetail.price : 0;
-
+      quantity > 1 ? (totalPrice += (price * quantity * (10 - quantity)) / 10) : (totalPrice += price);
       quantity > 1 && (totalDiscount += (price * quantity * quantity) / 10);
     });
-    return totalDiscount;
+    return { totalPrice, totalDiscount };
   };
 
   React.useEffect(() => {
-    const updatedTotalPrice = calculateTotalPrice(wishlists);
-    setTotalPrice(updatedTotalPrice);
-    const updatedTotalDiscount = calculateTotalDiscount(wishlists);
-    setTotalDiscount(updatedTotalDiscount);
+    const { totalPrice, totalDiscount } = calculateTotal(wishlists);
+    setTotalPrice(totalPrice);
+    setTotalDiscount(totalDiscount);
   }, [wishlists]);
 
   return (

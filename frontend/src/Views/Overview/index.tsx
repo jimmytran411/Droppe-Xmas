@@ -4,13 +4,13 @@ import { useHistory } from 'react-router-dom';
 import { patchWishlist } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
-import { getProductWithQuantity } from 'utils/wishlistAndProduct';
+import { getProductListWithGivenStatus } from 'utils/wishlistAndProduct';
 import { CartItems } from './CartItems';
 import { PaymentResult } from './PaymentResult';
 import { ProductCarousel } from './ProductCarousel';
 import Modal from '../../Modal';
 import './Overview.css';
-import { ProductWithQuantity, ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
+import { ProductListWithQuantity, ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
 import { useProduct } from 'context/ProductContext';
 
 export const Overview = () => {
@@ -18,7 +18,7 @@ export const Overview = () => {
   const { totalPrice, totalDiscount } = usePrice();
   const { getProductFromContext } = useProduct();
 
-  const [approvedProductList, setApprovedProductList] = useState<ProductWithQuantity[]>([]);
+  const [approvedProductList, setApprovedProductList] = useState<ProductListWithQuantity[]>([]);
   const [confirm, setConfirm] = useState(false);
   const [pay, setPay] = useState(false);
   const [patchData, setPatchData] = useState<WishlistWithProductStatus[]>([]);
@@ -51,7 +51,7 @@ export const Overview = () => {
   };
 
   useEffect(() => {
-    const approveList = getProductWithQuantity(wishlists, 'approved');
+    const approveList = getProductListWithGivenStatus(wishlists, 'approved');
     setApprovedProductList(approveList);
   }, [wishlists]);
 
@@ -61,6 +61,7 @@ export const Overview = () => {
         <CartItems givenStatus="approved" />
         <ProductCarousel givenStatus="pending" />
       </div>
+
       <div className="side">
         <div className="side-wrapper">
           <h2>Order's overall details</h2>
@@ -88,7 +89,7 @@ export const Overview = () => {
               {approvedProductList.length ? 'You have these gifts in your cart:' : `You haven't approved any gifts yet`}
             </h6>
             {approvedProductList &&
-              approvedProductList.map(({ productId, quantity }: ProductWithQuantity) => {
+              approvedProductList.map(({ productId, quantity }: ProductListWithQuantity) => {
                 const productDetail = getProductFromContext(productId);
                 return (
                   productDetail && (
@@ -126,6 +127,7 @@ export const Overview = () => {
           </div>
         </Modal>
       )}
+
       {pay && (
         <Modal>
           <div className="success-payment">
@@ -134,10 +136,10 @@ export const Overview = () => {
               <h5>You have successfully purchased these gifts:</h5>
               <PaymentResult {...{ patchData, productStatus: 'approved' }} />
             </div>
-            {getProductWithQuantity(patchData, 'discarded').length ? (
+            {getProductListWithGivenStatus(patchData, 'discarded').length ? (
               <div className="payment-result-discard-list">
                 <h5>You have discarded these:</h5>
-                {getProductWithQuantity(patchData, 'discarded').map(({ productId, quantity }) => {
+                {getProductListWithGivenStatus(patchData, 'discarded').map(({ productId, quantity }) => {
                   const productDetail = getProductFromContext(productId);
                   return (
                     productDetail && (
