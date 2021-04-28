@@ -1,37 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Product, patchWishlist } from 'api/wishList';
-import { Loading } from 'common/commonType';
+import { patchWishlist } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
-import { ProductWithQuantity, getProductWithQuantity } from 'utils/wishlistAndProduct';
-import { WishlistWithProductDetail } from 'Views/WishList';
+import { getProductWithQuantity } from 'utils/wishlistAndProduct';
 import { CartItems } from './CartItems';
 import { PaymentResult } from './PaymentResult';
 import { ProductCarousel } from './ProductCarousel';
-import Modal from '../../../Modal';
+import Modal from '../../Modal';
 import './Overview.css';
+import { ProductWithQuantity, ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
+import { useProduct } from 'context/ProductContext';
 
 export const Overview = () => {
   const { wishlists, handlePayment } = useCart();
   const { totalPrice, totalDiscount } = usePrice();
+  const { getProductFromContext } = useProduct();
 
   const [approvedProductList, setApprovedProductList] = useState<ProductWithQuantity[]>([]);
   const [confirm, setConfirm] = useState(false);
   const [pay, setPay] = useState(false);
-  const [patchData, setPatchData] = useState<WishlistWithProductDetail[]>([]);
+  const [patchData, setPatchData] = useState<WishlistWithProductStatus[]>([]);
 
   const history = useHistory();
 
   const toggleModal = () => setConfirm(!confirm);
   const handlePay = async () => {
-    wishlists.forEach(async (wishlist: WishlistWithProductDetail) => {
-      const notPedingProduct = wishlist.products.filter(
-        (product: Product | Loading) => product !== 'loading' && product.approvalStatus !== 'pending'
+    wishlists.forEach(async (wishlist: WishlistWithProductStatus) => {
+      const notPedingProduct = wishlist.productList.filter(
+        (product: ProductWithStatus) => product.approvalStatus !== 'pending'
       );
       if (notPedingProduct.length) {
-        const patchedWishlist: WishlistWithProductDetail = { ...wishlist, products: notPedingProduct };
+        const patchedWishlist: WishlistWithProductStatus = { ...wishlist, productList: notPedingProduct };
         const { data } = await patchWishlist(patchedWishlist);
         setPatchData((prev) => {
           return [...prev, { ...data }];
@@ -87,17 +88,29 @@ export const Overview = () => {
               {approvedProductList.length ? 'You have these gifts in your cart:' : `You haven't approved any gifts yet`}
             </h6>
             {approvedProductList &&
-              approvedProductList.map(({ id, image, title, quantity, price }: ProductWithQuantity) => {
+              approvedProductList.map(({ productId, quantity }: ProductWithQuantity) => {
+                const productDetail = getProductFromContext(productId);
                 return (
-                  <div key={id} className="confirmation-product-card">
-                    <h5>{title}</h5>
-                    <img style={{ width: '50px', height: '50px', borderRadius: '20px' }} src={image} alt={title} />
-                    <p>Quantity: {quantity}</p>
-                    <p>
-                      Total: €{quantity > 1 ? ((price * quantity * (10 - quantity)) / 10).toFixed(2) : price.toFixed(2)}
-                    </p>
-                    {quantity > 1 && <p>You save: €{((price * quantity * quantity) / 10).toFixed(2)}</p>}
-                  </div>
+                  productDetail && (
+                    <div key={productDetail.id} className="confirmation-product-card">
+                      <h5>{productDetail.title}</h5>
+                      <img
+                        style={{ width: '50px', height: '50px', borderRadius: '20px' }}
+                        src={productDetail.image}
+                        alt={productDetail.title}
+                      />
+                      <p>Quantity: {quantity}</p>
+                      <p>
+                        Total: €
+                        {quantity > 1
+                          ? ((productDetail.price * quantity * (10 - quantity)) / 10).toFixed(2)
+                          : productDetail.price.toFixed(2)}
+                      </p>
+                      {quantity > 1 && (
+                        <p>You save: €{((productDetail.price * quantity * quantity) / 10).toFixed(2)}</p>
+                      )}
+                    </div>
+                  )
                 );
               })}
             {approvedProductList.length && (
@@ -124,14 +137,21 @@ export const Overview = () => {
             {getProductWithQuantity(patchData, 'discarded').length ? (
               <div className="payment-result-discard-list">
                 <h5>You have discarded these:</h5>
-                {getProductWithQuantity(patchData, 'discarded').map(({ title, image, price, quantity, id }) => {
+                {getProductWithQuantity(patchData, 'discarded').map(({ productId, quantity }) => {
+                  const productDetail = getProductFromContext(productId);
                   return (
-                    <div key={id}>
-                      <h6>{title}</h6>
-                      <img style={{ width: '50px', height: '50px', borderRadius: '20px' }} src={image} alt={title} />
-                      <p>Price: €{price}</p>
-                      <p>Quantity: {quantity}</p>
-                    </div>
+                    productDetail && (
+                      <div key={productDetail.id}>
+                        <h6>{productDetail.title}</h6>
+                        <img
+                          style={{ width: '50px', height: '50px', borderRadius: '20px' }}
+                          src={productDetail.image}
+                          alt={productDetail.title}
+                        />
+                        <p>Price: €{productDetail.price}</p>
+                        <p>Quantity: {quantity}</p>
+                      </div>
+                    )
                   );
                 })}
               </div>

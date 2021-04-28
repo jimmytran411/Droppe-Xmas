@@ -1,18 +1,80 @@
 import React, { useEffect, useState } from 'react';
 
+import './Product.css';
 import { useCart } from 'context/CartContext';
 import { ProductList } from './ProductList';
-import { productListEmptyCheck } from 'utils/wishlistAndProduct';
-import { calculateWishlistPrice } from 'utils/priceCalculation';
 import { Navbar } from 'Views/WishList/Navbar';
-import './Product.css';
-import { WishlistWithProductStatus } from 'common/commonInterface';
+import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
+import { useProduct } from 'context/ProductContext';
+
+export interface DiscountCheck {
+  discountCheckedPrice: number;
+  quantity: number;
+}
+
+export interface CurrentWishlistPrice {
+  priceAfterDiscount: number;
+  totalDiscount: number;
+  totalPrice: number;
+}
 
 export const WishList = (wishlist: WishlistWithProductStatus) => {
-  const { wishlists } = useCart();
   const [currentWishlistPrice, setCurrentWishlistPrice] = useState<number>(0);
   const [currentDiscount, setCurrentDiscount] = useState<number>(0);
+  const { wishlists } = useCart();
+  const { getProductFromContext } = useProduct();
 
+  const discountCheck = (
+    wishlists: WishlistWithProductStatus[],
+    currentProduct: ProductWithStatus,
+    currentWishlistId: number
+  ) => {
+    let quantity: number = 1;
+
+    wishlists.forEach((wishlist: WishlistWithProductStatus) => {
+      wishlist.productList.forEach((product: ProductWithStatus) => {
+        if (
+          product.approvalStatus === 'approved' &&
+          product.productId === currentProduct.productId &&
+          wishlist.wishlistId !== currentWishlistId
+        ) {
+          quantity += 1;
+        }
+      });
+    });
+
+    const currentProductDetail = getProductFromContext(currentProduct.productId);
+    const currentProductPrice = currentProductDetail ? currentProductDetail.price : 0;
+    const discountedPrice = quantity > 1 ? (currentProductPrice * (10 - quantity)) / 10 : currentProductPrice;
+
+    const discountCheck: DiscountCheck = {
+      discountCheckedPrice: discountedPrice,
+      quantity,
+    };
+    return discountCheck;
+  };
+
+  const calculateWishlistPrice = (wishlist: WishlistWithProductStatus, wishlists: WishlistWithProductStatus[]) => {
+    let priceAfterDiscount = 0;
+    let totalPrice = 0;
+
+    if (wishlist.productList && wishlist.productList.length) {
+      wishlist.productList.forEach((product: ProductWithStatus) => {
+        let discount = 0;
+        if (product.approvalStatus === 'approved') {
+          const currentProductDetail = getProductFromContext(product.productId);
+          const currentProductPrice = currentProductDetail ? currentProductDetail.price : 0;
+
+          totalPrice += currentProductPrice;
+          discount = discountCheck(wishlists, product, wishlist.wishlistId).discountCheckedPrice;
+        }
+        priceAfterDiscount += discount;
+      });
+    }
+    let totalDiscount = totalPrice - priceAfterDiscount;
+    const currentWishlistPrice: CurrentWishlistPrice = { priceAfterDiscount, totalDiscount, totalPrice };
+    return currentWishlistPrice;
+  };
   useEffect(() => {
     const { totalDiscount, priceAfterDiscount } = calculateWishlistPrice(wishlist, wishlists);
     setCurrentWishlistPrice(priceAfterDiscount);
@@ -32,7 +94,7 @@ export const WishList = (wishlist: WishlistWithProductStatus) => {
         </span>
         <div className="pending-list">
           <span className="section-title">Wishlist</span>
-          {!productListEmptyCheck(wishlist.productList, 'pending') ? (
+          {wishlist.productList.some(({ approvalStatus }: ProductWithStatus) => approvalStatus === 'pending') ? (
             <ProductList wishlist={wishlist} givenStatus="pending" />
           ) : (
             'No more gift to show'
@@ -40,7 +102,7 @@ export const WishList = (wishlist: WishlistWithProductStatus) => {
         </div>
         <div className="approved-list">
           <span className="section-title">Approve List</span>
-          {!productListEmptyCheck(wishlist.productList, 'approved') ? (
+          {wishlist.productList.some(({ approvalStatus }: ProductWithStatus) => approvalStatus === 'approved') ? (
             <ProductList wishlist={wishlist} givenStatus="approved" />
           ) : (
             `You haven't approved anything yet`
@@ -48,7 +110,7 @@ export const WishList = (wishlist: WishlistWithProductStatus) => {
         </div>
         <div className="discarded-list">
           <span className="section-title">Discarded List</span>
-          {!productListEmptyCheck(wishlist.productList, 'discarded') ? (
+          {wishlist.productList.some(({ approvalStatus }: ProductWithStatus) => approvalStatus === 'discarded') ? (
             <ProductList wishlist={wishlist} givenStatus="discarded" />
           ) : (
             `You haven't discarded anything yet`

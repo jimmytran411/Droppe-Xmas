@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
 import './ProductCard.css';
-import { ProductDetail } from 'api/wishList';
+import { getProductDetail, ProductDetail } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import { Loader } from 'utils/Loader';
-import { countTotalProductQuantity } from 'utils/wishlistAndProduct';
 import { Loading } from 'common/commonType';
 import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
 import { useProduct } from 'context/ProductContext';
@@ -19,14 +18,32 @@ export const ProductCard = ({ product, wishlist }: ProductCardProps) => {
   const [productDetail, setProductDetail] = useState<ProductDetail | Loading>('loading');
 
   const { handleProduct, wishlists } = useCart();
-  const { getProduct } = useProduct();
+  const { getProductFromContext, updateProductDetailList } = useProduct();
 
   useEffect(() => {
-    const quantity = countTotalProductQuantity(product, wishlist, wishlists);
-    const discountPercent = quantity > 1 && quantity * 10;
-    discountPercent && setDiscount(discountPercent);
-    const productFromStore = getProduct(product.productId);
-    setProductDetail(productFromStore);
+    const fetchProductAndCalculateDiscount = async () => {
+      // Get product detail from store, if not fetch from server and update store with fetched data
+      const productFromStore = getProductFromContext(product.productId);
+      if (productFromStore) {
+        setProductDetail(productFromStore);
+      } else {
+        try {
+          const { data } = await getProductDetail(product.productId);
+          updateProductDetailList(data);
+          setProductDetail(data);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      // Calculate Possible discount
+      let count = 0;
+      wishlists &&
+        wishlists.forEach((wishlist) => {
+          wishlist.productList.forEach(({ productId }) => productId === product.productId && count++);
+        });
+      setDiscount(count > 1 ? count * 10 : 0);
+    };
+    fetchProductAndCalculateDiscount();
   }, [wishlists]);
   return (
     <>

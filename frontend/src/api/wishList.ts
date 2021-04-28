@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { WishlistWithProductDetail } from 'Views/WishList';
+import { WishlistWithProductStatus } from 'common/commonInterface';
 
 export interface WishList {
   id: number;
@@ -34,7 +34,7 @@ export const getProductDetail = (id: number): Promise<AxiosResponse<ProductDetai
   return axios.get<ProductDetail>(`/products/${id}`);
 };
 
-export const patchWishlist = async (wishlist: WishlistWithProductDetail) => {
+export const patchWishlist = async (wishlist: WishlistWithProductStatus) => {
   // const updateData = { ...wishlist, date: new Date().toJSON().slice(0, 10).split('-').reverse().join('/') };
-  return await axios.patch(`/carts/${wishlist.id}`, wishlist);
+  return await axios.patch(`/carts/${wishlist.wishlistId}`, wishlist);
 };

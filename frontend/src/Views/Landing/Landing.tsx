@@ -8,7 +8,6 @@ import { WishlistWithProductStatus } from 'common/commonInterface';
 
 export const Landing = () => {
   const [userInfo, setUserInfo] = useState<UserCardProps[]>();
-  const [loading, setLoading] = useState(true);
   const { wishlists } = useCart();
 
   const getUserCard = (wishlist: WishlistWithProductStatus) => {
@@ -51,25 +50,20 @@ export const Landing = () => {
   return (
     <div className="landing-container">
       <div className="main">
-        {loading && <Loader />}
-        {!loading && (
-          <>
-            <div className="landing-row row-header">
-              <span>User's wishlist</span>
-              <span>Approved</span>
-              <span>Discarded</span>
-              <span>Pending</span>
-            </div>
-            {userInfo &&
-              userInfo.map((userCard, index) => {
-                return (
-                  <div key={index} className={`user-card-container`}>
-                    <UserCard {...userCard} />
-                  </div>
-                );
-              })}
-          </>
-        )}
+        <div className="landing-row row-header">
+          <span>User's wishlist</span>
+          <span>Approved</span>
+          <span>Discarded</span>
+          <span>Pending</span>
+        </div>
+        {userInfo &&
+          userInfo.map((userCard, index) => {
+            return (
+              <div key={index} className={`user-card-container`}>
+                <UserCard {...userCard} />
+              </div>
+            );
+          })}
       </div>
       <div className="side"></div>
     </div>

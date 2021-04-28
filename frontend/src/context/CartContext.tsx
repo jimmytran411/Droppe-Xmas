@@ -43,29 +43,6 @@ function CartProvider(props: any) {
           };
           return wishlistWithProductStatus;
         });
-
-        // const productIds: number[] = [];
-        // data.forEach((wishlist) => {
-        //   wishlist.products.forEach((product) => {
-        //     productIds.indexOf(product.productId) === -1 && productIds.push(product.productId);
-        //   });
-        // });
-
-        // const detailProductList = await Promise.all(
-        //   productIds.map(async (id) => {
-        //     return await getProduct(id);
-        //   })
-        // );
-
-        // const wishlistsWithProductDetail: WishlistWithProductDetail[] = data.map((wishlist: WishList) => {
-        //   const details = wishlist.products.map(({ productId }: WishListProduct) => {
-        //     const detailProduct = detailProductList.find((product) => product.id === productId);
-        //     return detailProduct ? detailProduct : 'loading';
-        //   });
-
-        //   return { id: wishlist.id, userid: wishlist.userId, products: details };
-        // });
-
         setWishlists(wishlists);
       } catch (error) {
         console.log(error);

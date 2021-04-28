@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import { CartItems } from 'Views/Landing/Overview/CartItems';
+import { CartItems } from 'Views/Overview/CartItems';
 import { Product } from 'api/wishList';
 import { WishlistWithProductDetail } from 'Views/WishList';
 import { CartContext } from 'context/CartContext';

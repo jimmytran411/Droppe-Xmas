@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { Product } from 'api/wishList';
 import { WishlistWithProductDetail } from 'Views/WishList';
-import { PaymentResult } from 'Views/Landing/Overview/PaymentResult';
+import { PaymentResult } from 'Views/Overview/PaymentResult';
 
 const testProductList: Product[] = [
   {

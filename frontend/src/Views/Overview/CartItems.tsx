@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 
-import { Product } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
-import { Loader } from 'utils/Loader';
-import { productListEmptyCheck } from 'utils/wishlistAndProduct';
-import { WishlistWithProductDetail } from 'Views/WishList';
 import Modal from 'Modal';
-import { ApprovalStatus, Loading } from 'common/commonType';
+import { ApprovalStatus } from 'common/commonType';
+import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
+import { useProduct } from 'context/ProductContext';
 
 export interface OverviewProductReturn {
-  wishlistToUpdate: WishlistWithProductDetail;
-  returnedProduct: Product;
+  wishlistToUpdate: WishlistWithProductStatus;
+  returnedProduct: ProductWithStatus;
 }
 
 interface CartItemsProps {
@@ -24,6 +22,7 @@ export const CartItems = ({ givenStatus }: CartItemsProps) => {
 
   const { totalPrice } = usePrice();
   const { wishlists, handleProduct } = useCart();
+  const { getProductFromContext } = useProduct();
 
   const handleConfirmReturn = () => {
     setReturnConfirmation(false);
@@ -35,26 +34,26 @@ export const CartItems = ({ givenStatus }: CartItemsProps) => {
     <div className="overview-list">
       <span className="section-title">Your cart's items:</span>
       {totalPrice > 0
-        ? wishlists.map((wishlist: WishlistWithProductDetail) => {
+        ? wishlists.map((wishlist: WishlistWithProductStatus) => {
             return (
-              <div className="child-approve-list" key={wishlist.id}>
-                <span className="cap-title">{`Child ${wishlist.id}:`}</span>
-                {productListEmptyCheck(wishlist.products, givenStatus) ? (
-                  `You haven't approved any gift for Child ${wishlist.id} yet`
+              <div className="child-approve-list" key={wishlist.wishlistId}>
+                <span className="cap-title">{`Child ${wishlist.wishlistId}:`}</span>
+                {wishlist.productList.some(({ approvalStatus }) => approvalStatus === 'approved') ? (
+                  `You haven't approved any gift for Child ${wishlist.wishlistId} yet`
                 ) : (
                   <React.Fragment>
-                    {wishlist.products.map((product: Product | Loading, index) => {
+                    {wishlist.productList.map((product: ProductWithStatus, index) => {
+                      const productDetail = getProductFromContext(product.productId);
                       return (
                         <React.Fragment key={index}>
-                          {product === 'loading' && <Loader />}
-                          {product !== 'loading' && product.approvalStatus === givenStatus && (
-                            <div className="overview-product-card" key={product.id}>
+                          {productDetail && product.approvalStatus === givenStatus && (
+                            <div className="overview-product-card" key={productDetail.id}>
                               <div className="opc-image">
-                                <div style={{ backgroundImage: `url(${product.image})` }}></div>
+                                <div style={{ backgroundImage: `url(${productDetail.image})` }}></div>
                               </div>
                               <div className="opc-product-info">
-                                <span className="opc-title">{product.title}</span>
-                                <span className="opc-price">€{product.price}</span>
+                                <span className="opc-title">{productDetail.title}</span>
+                                <span className="opc-price">€{productDetail.price}</span>
                               </div>
                               <span
                                 className="opc-remove-btn"

@@ -1,20 +1,20 @@
-import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
+import { ProductWithQuantity, ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
 import { ApprovalStatus } from 'common/commonType';
-
-export interface ProductWithQuantity extends ProductWithStatus {
-  quantity: number;
-}
 
 export const getProductWithQuantity = (listToCheck: WishlistWithProductStatus[], givenStatus: ApprovalStatus) => {
   const { productWithCheckedStateList } = countTotalProductWithGivenStatus(listToCheck, givenStatus);
+
   const mapOfApprovedProducts = productWithCheckedStateList
     .reduce((mapObj, product: ProductWithStatus) => {
       const id: string = JSON.stringify([product.productId]);
-      if (!mapObj.has(id)) mapObj.set(id, { ...product, quantity: 0 });
+
+      !mapObj.has(id) && mapObj.set(id, { ...product, quantity: 0 });
       mapObj.get(id).quantity++;
+
       return mapObj;
     }, new Map())
     .values();
+
   const productWithQuantityList: ProductWithQuantity[] = [...mapOfApprovedProducts];
   return productWithQuantityList;
 };
@@ -24,6 +24,7 @@ export const countTotalProductWithGivenStatus = (
   givenStatus: ApprovalStatus
 ) => {
   let count = 0;
+
   const productWithCheckedStateList: ProductWithStatus[] = [];
   listToCheck.forEach((wishlist) => {
     wishlist.productList.forEach((product) => {
@@ -36,27 +37,13 @@ export const countTotalProductWithGivenStatus = (
   return { count, productWithCheckedStateList };
 };
 
-export const productListEmptyCheck = (productList: ProductWithStatus[], givenStatus: ApprovalStatus) => {
-  if (productList && productList.length) {
-    const productListcheck = productList.filter((product: ProductWithStatus) => product.approvalStatus === givenStatus);
-    return productListcheck.length ? false : true;
-  }
-};
-
-export const countTotalProductQuantity = (
-  productToCheck: ProductWithStatus,
-  wishlistOfProduct: WishlistWithProductStatus,
-  wishlists: WishlistWithProductStatus[]
-): number => {
-  let quantity = 1;
+export const countTotalProductQuantity = (productId: number, wishlists: WishlistWithProductStatus[]): number => {
+  let quantity = 0;
   wishlists &&
-    wishlistOfProduct &&
-    wishlists.forEach(({ productList, wishlistId }: WishlistWithProductStatus) => {
+    wishlists.forEach(({ productList }: WishlistWithProductStatus) => {
       productList.forEach((product: ProductWithStatus) => {
-        if (product.productId === productToCheck.productId && wishlistOfProduct.wishlistId !== wishlistId) {
-          quantity++;
-        }
+        product.productId === productId && quantity++;
       });
     });
-  return quantity === 1 ? 1 : quantity;
+  return quantity;
 };

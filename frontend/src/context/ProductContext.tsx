@@ -1,18 +1,19 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 
-import { getProductDetail, ProductDetail } from 'api/wishList';
-import { Loading } from 'common/commonType';
+import { ProductDetail } from 'api/wishList';
 
-export type ProductDetailList = (ProductDetail | Loading)[];
+export type ProductDetailList = ProductDetail[];
 export interface ProductContextProps {
   productDetailList: ProductDetailList;
-  getProduct: (id: number) => ProductDetail | Loading;
+  updateProductDetailList: (productDetail: ProductDetail) => void;
+  getProductFromContext: (productId: number) => ProductDetail | undefined;
 }
 
 const initialProductContextValue: ProductContextProps = {
   productDetailList: [],
-  getProduct: () => 'loading',
+  updateProductDetailList: () => {},
+  getProductFromContext: () => undefined,
 };
 
 const ProductContext = React.createContext<ProductContextProps>(initialProductContextValue);
@@ -20,21 +21,17 @@ const ProductContext = React.createContext<ProductContextProps>(initialProductCo
 function ProductProvider(props: any) {
   const [productDetailList, setProductDetailList] = React.useState<ProductDetailList>([]);
 
-  const getProduct = async (id: number) => {
-    const productDetail = _.find(productDetailList, (product) => product !== 'loading' && product.id === id);
-    if (!productDetail) {
-      try {
-        const { data } = await getProductDetail(id);
-        setProductDetailList((prev) => [...prev, data ? data : 'loading']);
-        getProduct(id);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    return productDetail;
+  const updateProductDetailList = (productDetail: ProductDetail) => {
+    setProductDetailList((prev) => [...prev, productDetail]);
   };
 
-  return <ProductContext.Provider value={{ productDetailList, getProduct: getProduct }} {...props} />;
+  const getProductFromContext = (productId: number) => {
+    return _.find(productDetailList, (product) => product.id === productId);
+  };
+
+  return (
+    <ProductContext.Provider value={{ productDetailList, getProductFromContext, updateProductDetailList }} {...props} />
+  );
 }
 const useProduct = () => React.useContext(ProductContext);
 
