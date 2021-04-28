@@ -1,4 +1,4 @@
-import { WishlistWithProductStatus, ProductListWithQuantity } from 'common/commonInterface';
+import { WishlistWithProductStatus, ProductWithQuantityList } from 'common/commonInterface';
 import * as React from 'react';
 
 import { getProductListWithGivenStatus } from 'utils/wishlistAndProduct';
@@ -26,7 +26,7 @@ function PriceProvider(props: any) {
     let totalPrice = 0;
     let totalDiscount = 0;
 
-    getProductListWithGivenStatus(wishlists, 'approved').forEach(({ productId, quantity }: ProductListWithQuantity) => {
+    getProductListWithGivenStatus(wishlists, 'approved').forEach(({ productId, quantity }: ProductWithQuantityList) => {
       const currentProductDetail = getProductFromContext(productId);
       const price = currentProductDetail ? currentProductDetail.price : 0;
       quantity > 1 ? (totalPrice += (price * quantity * (10 - quantity)) / 10) : (totalPrice += price);

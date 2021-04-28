@@ -10,7 +10,7 @@ import { PaymentResult } from './PaymentResult';
 import { ProductCarousel } from './ProductCarousel';
 import Modal from '../../Modal';
 import './Overview.css';
-import { ProductListWithQuantity, ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
+import { ProductWithQuantityList, ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
 import { useProduct } from 'context/ProductContext';
 
 export const Overview = () => {
@@ -18,7 +18,7 @@ export const Overview = () => {
   const { totalPrice, totalDiscount } = usePrice();
   const { getProductFromContext } = useProduct();
 
-  const [approvedProductList, setApprovedProductList] = useState<ProductListWithQuantity[]>([]);
+  const [approvedProductList, setApprovedProductList] = useState<ProductWithQuantityList[]>([]);
   const [confirm, setConfirm] = useState(false);
   const [pay, setPay] = useState(false);
   const [patchData, setPatchData] = useState<WishlistWithProductStatus[]>([]);
@@ -89,7 +89,7 @@ export const Overview = () => {
               {approvedProductList.length ? 'You have these gifts in your cart:' : `You haven't approved any gifts yet`}
             </h6>
             {approvedProductList &&
-              approvedProductList.map(({ productId, quantity }: ProductListWithQuantity) => {
+              approvedProductList.map(({ productId, quantity }: ProductWithQuantityList) => {
                 const productDetail = getProductFromContext(productId);
                 return (
                   productDetail && (

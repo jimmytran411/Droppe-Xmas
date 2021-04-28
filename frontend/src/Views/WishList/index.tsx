@@ -57,7 +57,7 @@ export const WishList = (wishlist: WishlistWithProductStatus) => {
       <div className="main">
         <span className="current-price">
           <p>
-            {currentWishlistPrice >= 0 && `Current Cart: €${currentWishlistPrice.toFixed(2)}`}{' '}
+            {currentWishlistPrice >= 0 && `Current Wishlist: €${currentWishlistPrice.toFixed(2)}`}{' '}
             {currentDiscount > 0 && `You save: €${currentDiscount.toFixed(2)}`}
           </p>
         </span>

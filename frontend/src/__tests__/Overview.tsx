@@ -1,61 +1,86 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
-import { Product } from 'api/wishList';
 import { Overview } from 'Views/Overview';
 import { CartContext } from 'context/CartContext';
-import { WishlistWithProductDetail } from 'Views/WishList';
 import { PriceContext } from 'context/PriceContext';
+import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
+import { ProductDetail } from 'api/wishList';
+import _ from 'lodash';
+import { ProductContext } from 'context/ProductContext';
 
-const testCurrentWL: Product[] = [
-  {
+test('Test Overview show value from provider', () => {
+  const history = createMemoryHistory({ initialEntries: ['/overview'] });
+
+  const testCurrentWL: ProductWithStatus[] = [
+    {
+      productId: 1,
+      approvalStatus: 'pending',
+    },
+    {
+      productId: 2,
+      approvalStatus: 'approved',
+    },
+    {
+      productId: 3,
+      approvalStatus: 'discarded',
+    },
+  ];
+
+  const testCurrentWLProp: WishlistWithProductStatus = { wishlistId: 1, productList: testCurrentWL };
+
+  const testDetail1: ProductDetail = {
     id: 1,
     title: 'test title 1',
     price: 111,
     description: 'test description 1',
     image: 'test img link 1',
     category: 'test category 1',
-    approvalStatus: 'pending',
-  },
-  {
+  };
+  const testDetail2: ProductDetail = {
     id: 2,
     title: 'test title 2',
     price: 222,
     description: 'test description 2',
     image: 'test img link 2',
     category: 'test category 2',
-    approvalStatus: 'approved',
-  },
-  {
+  };
+  const testDetail3: ProductDetail = {
     id: 3,
     title: 'test title 3',
     price: 333,
     description: 'test description 3',
     image: 'test img link 3',
     category: 'test category 3',
-    approvalStatus: 'discarded',
-  },
-];
-const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testCurrentWL };
-const mockCartValue = {
-  wishlists: [{ ...testCurrentWLProp }],
-  handleProduct: jest.fn(),
-  handlePayment: jest.fn(),
-};
-const mockPriceValue = {
-  totalPrice: 420,
-  totalDiscount: 240,
-};
+  };
 
-test('Test Overview show value from provider', () => {
-  const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testCurrentWL };
-  const history = createMemoryHistory({ initialEntries: ['/overview'] });
+  const mockGetProductFromContext = (id: number) => {
+    return _.find(mockProductValue.productDetailList, (product) => product.id === id);
+  };
+
+  const mockProductValue = {
+    productDetailList: [testDetail1, testDetail2, testDetail3],
+    updateProductDetailList: jest.fn(),
+    getProductFromContext: mockGetProductFromContext,
+  };
+
+  const mockCartValue = {
+    wishlists: [{ ...testCurrentWLProp }],
+    handleProduct: jest.fn(),
+    handlePayment: jest.fn(),
+  };
+  const mockPriceValue = {
+    totalPrice: 420,
+    totalDiscount: 240,
+  };
+
   const wrapper = ({ children }: any) => (
     <CartContext.Provider value={mockCartValue}>
-      <PriceContext.Provider value={mockPriceValue}>{children}</PriceContext.Provider>
+      <ProductContext.Provider value={mockProductValue}>
+        <PriceContext.Provider value={mockPriceValue}>{children}</PriceContext.Provider>
+      </ProductContext.Provider>
     </CartContext.Provider>
   );
   const { getByText, getByRole } = render(
@@ -70,6 +95,8 @@ test('Test Overview show value from provider', () => {
   expect(getByText(/total:/i).textContent).toBe('Total: €420.00');
   expect(getByText(/you save:/i).textContent).toBe('You save: €240.00');
   expect(getByText(/These items are still in your wishlists:/i)).toBeInTheDocument();
+  expect(getByText(/test title 1/i)).toBeInTheDocument();
+  expect(getByText(/€111/i)).toBeInTheDocument();
   expect(getByRole('button', { name: /checkout/i })).toBeInTheDocument;
   expect(getByText('❌')).toBeInTheDocument();
 });
