@@ -43,6 +43,7 @@ function CartProvider(props: any) {
           };
           return wishlistWithProductStatus;
         });
+
         setWishlists(wishlists);
       } catch (error) {
         console.log(error);
@@ -78,7 +79,7 @@ function CartProvider(props: any) {
           const resetStateProduct: ProductWithStatus = { ...product, approvalStatus: 'pending' };
           return resetStateProduct;
         });
-        return { ...wishlist, products: productList };
+        return { ...wishlist, productList: productList };
       });
       return resetWishlists;
     });
