@@ -1,25 +1,22 @@
 import React from 'react';
 
-import { Product } from 'api/wishList';
 import { ApprovalStatus, Loading } from 'common/commonType';
-import { WishlistWithProductDetail } from 'WishList';
 import { ProductCard } from './ProductCard';
+import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
 
 export interface ProductListProps {
   givenStatus: ApprovalStatus;
-  wishlist: WishlistWithProductDetail;
+  wishlist: WishlistWithProductStatus;
 }
 
 export const ProductList = ({ wishlist, givenStatus }: ProductListProps) => {
   return (
     <div className="product-list">
-      {wishlist.products &&
-        wishlist.products.map((product: Product | Loading, index: number) => {
+      {wishlist.productList &&
+        wishlist.productList.map((product: ProductWithStatus, index: number) => {
           return (
             <React.Fragment key={index}>
-              {product !== 'loading' && product.approvalStatus === givenStatus && (
-                <ProductCard product={product} wishlist={wishlist} />
-              )}
+              {product.approvalStatus === givenStatus && <ProductCard {...{ wishlist, product }} />}
             </React.Fragment>
           );
         })}

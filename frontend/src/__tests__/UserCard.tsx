@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import { UserCard, UserCardProps } from 'Landing/UserCard';
+import { UserCard, UserCardProps } from 'Views/Landing/UserCard';
 import { BrowserRouter } from 'react-router-dom';
 
 const testUserCard: UserCardProps = {

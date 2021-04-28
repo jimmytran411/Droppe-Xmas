@@ -2,11 +2,9 @@ import React, { useRef, useState } from 'react';
 
 import { usePrice } from 'context/PriceContext';
 import { useCart } from 'context/CartContext';
-import { Product } from 'api/wishList';
-import { Loader } from 'utils/Loader';
-import { WishlistWithProductDetail } from 'WishList';
-import { ProductCard } from 'WishList/ProductCard';
+import { ProductCard } from 'Views/WishList/ProductCard';
 import { ApprovalStatus, Loading } from 'common/commonType';
+import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
 
 type CarouselDirection = 'next' | 'prev';
 interface ProductCarouselProps {
@@ -19,11 +17,9 @@ export const ProductCarousel = ({ givenStatus }: ProductCarouselProps) => {
   const { totalPrice } = usePrice();
   const { wishlists } = useCart();
 
-  const wishlistEmptyCheck = (wishListsToCheck: WishlistWithProductDetail[], givenState: ApprovalStatus) => {
-    const checkedWishlists = wishListsToCheck.map(({ products }: WishlistWithProductDetail) => {
-      return products.filter(
-        (product: Product | Loading) => product !== 'loading' && product.approvalStatus === givenState
-      );
+  const wishlistEmptyCheck = (wishListsToCheck: WishlistWithProductStatus[], givenState: ApprovalStatus) => {
+    const checkedWishlists = wishListsToCheck.map(({ productList }: WishlistWithProductStatus) => {
+      return productList.filter((product: ProductWithStatus) => product.approvalStatus === givenState);
     });
     return checkedWishlists.some((a) => {
       return a.length;
@@ -68,21 +64,20 @@ export const ProductCarousel = ({ givenStatus }: ProductCarouselProps) => {
                     style={{ transform: `translateX(${carouselTranslateXValue}px)` }}
                     ref={divRef}
                   >
-                    {wishlists.map((wishlist: WishlistWithProductDetail, index: number) => {
-                      const isNotEmptyPending = wishlist.products.some((product) => {
-                        return product !== 'loading' && product.approvalStatus === givenStatus;
+                    {wishlists.map((wishlist: WishlistWithProductStatus, index: number) => {
+                      const isNotEmptyPending = wishlist.productList.some((product) => {
+                        return product.approvalStatus === givenStatus;
                       });
                       return (
                         isNotEmptyPending && (
                           <div key={index} className="opl-wrapper">
                             <div className="opl-child">
-                              <span className="opl-title">Username_{wishlist.id}</span>
+                              <span className="opl-title">Username_{wishlist.wishlistId}</span>
                               <div className="child-pending-list">
-                                {wishlist.products.map((product: Product | Loading, index) => {
+                                {wishlist.productList.map((product: ProductWithStatus, index) => {
                                   return (
                                     <React.Fragment key={index}>
-                                      {product === 'loading' && <Loader />}
-                                      {product !== 'loading' && product.approvalStatus === givenStatus && (
+                                      {product.approvalStatus === givenStatus && (
                                         <ProductCard product={product} wishlist={wishlist} />
                                       )}
                                     </React.Fragment>

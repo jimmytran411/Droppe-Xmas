@@ -2,58 +2,81 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { BrowserRouter, Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-
-import { Product } from 'api/wishList';
-import { WishList, WishlistWithProductDetail } from 'WishList';
-import { CartContext } from 'context/CartContext';
+import _ from 'lodash';
 import userEvent from '@testing-library/user-event';
 
+import { CartContext } from 'context/CartContext';
+import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
+import { WishList } from 'Views/WishList';
+import { ProductDetail } from 'api/wishList';
+import { ProductContext } from 'context/ProductContext';
+
 test('Render discard list with test input', () => {
-  const testCurrentWL: Product[] = [
+  const testCurrentWL: ProductWithStatus[] = [
     {
-      id: 1,
-      title: 'test title 1',
-      price: 111,
-      description: 'test description 1',
-      image: 'test img link 1',
-      category: 'test category 1',
+      productId: 1,
       approvalStatus: 'pending',
     },
     {
-      id: 2,
-      title: 'test title 2',
-      price: 222,
-      description: 'test description 2',
-      image: 'test img link 2',
-      category: 'test category 2',
+      productId: 2,
       approvalStatus: 'approved',
     },
     {
-      id: 3,
-      title: 'test title 3',
-      price: 333,
-      description: 'test description 3',
-      image: 'test img link 3',
-      category: 'test category 3',
+      productId: 3,
       approvalStatus: 'discarded',
     },
   ];
-  const testCurrentWLProp: WishlistWithProductDetail = { id: 1, userid: 1, products: testCurrentWL };
+  const testDetail1: ProductDetail = {
+    id: 1,
+    title: 'test title 1',
+    price: 111,
+    description: 'test description 1',
+    image: 'test img link 1',
+    category: 'test category 1',
+  };
+  const testDetail2: ProductDetail = {
+    id: 2,
+    title: 'test title 2',
+    price: 222,
+    description: 'test description 2',
+    image: 'test img link 2',
+    category: 'test category 2',
+  };
+  const testDetail3: ProductDetail = {
+    id: 3,
+    title: 'test title 3',
+    price: 333,
+    description: 'test description 3',
+    image: 'test img link 3',
+    category: 'test category 3',
+  };
+
+  const mockGetProductFromContext = (id: number) => {
+    return _.find(mockProductValue.productDetailList, (product) => product.id === id);
+  };
+  const testCurrentWLProp: WishlistWithProductStatus = { wishlistId: 1, productList: testCurrentWL };
   const mockCartValue = {
     wishlists: [{ ...testCurrentWLProp }],
     handleProduct: jest.fn(),
     handlePayment: jest.fn(),
   };
+  const mockProductValue = {
+    productDetailList: [testDetail1, testDetail2, testDetail3],
+    updateProductDetailList: jest.fn(),
+    getProductFromContext: mockGetProductFromContext,
+  };
 
   const history = createMemoryHistory({ initialEntries: ['/wishlist/1'] });
   const { getByText, getByLabelText } = render(
-    <CartContext.Provider value={mockCartValue}>
-      <Router history={history}>
-        <WishList {...testCurrentWLProp} />
-      </Router>
-    </CartContext.Provider>
+    <ProductContext.Provider value={mockProductValue}>
+      <CartContext.Provider value={mockCartValue}>
+        <Router history={history}>
+          <WishList {...testCurrentWLProp} />
+        </Router>
+      </CartContext.Provider>
+    </ProductContext.Provider>
   );
-  expect(getByText(/Current Cart: €222.00/i)).toBeInTheDocument();
+  expect(getByText(/Current Wishlist: €222.00/i)).toBeInTheDocument();
   expect(getByText(/test title 1/i)).toBeInTheDocument();
   expect(getByText(/€111/i)).toBeInTheDocument();
   userEvent.click(getByLabelText(/approve-btn-1/i));

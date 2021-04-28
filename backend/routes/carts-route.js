@@ -36,8 +36,7 @@ const getProduct = (productId) => {
   .get(`${productUrl}/${productId}`)
   .then((response) => response.data)
   .catch((error) => {
-   const errorMessage = error.message;
-   console.log(errorMessage);
+   console.log(error.message);
   });
 };
 
@@ -46,18 +45,24 @@ const getCart = (cartId) => {
   .get(`${cartUrl}/${cartId}`)
   .then((response) => response.data)
   .catch((error) => {
-   const errorMessage = error.message;
-   console.log(errorMessage);
+   console.log(error.message);
   });
 };
+
 const getFiveCart = (limit) => {
  return axios
   .get(`${cartUrl}?limit=${limit}`)
   .then((response) => response.data)
   .catch((error) => {
-   const errorMessage = error.message;
-   console.log(errorMessage);
+   console.log(error.message);
   });
+};
+
+const patchCart = (cartId, patchData) => {
+ return axios
+  .patch(`${cartUrl}/${cartId}`, { data: patchData })
+  .then((res) => res.data)
+  .catch((error) => console.log(error.message));
 };
 
 router.get("/products/:productId", cache(CACHE_TIME), async (req, res) => {
@@ -87,6 +92,17 @@ router.get("/carts/:cartId", cache(CACHE_TIME), async (req, res) => {
   res.status(404).send();
  } else {
   res.send(cart);
+ }
+});
+
+router.patch(`/carts/:cartId`, async (req, res) => {
+ const cartId = req.params.cartId;
+ const patchData = req.body;
+ const patchedData = await patchCart(cartId, patchData);
+ if (!patchedData) {
+  res.status(404).send();
+ } else {
+  res.send(patchData);
  }
 });
 
