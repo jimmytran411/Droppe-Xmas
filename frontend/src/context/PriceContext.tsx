@@ -20,7 +20,7 @@ function PriceProvider(props: any) {
   const [totalDiscount, setTotalDiscount] = React.useState<number>(0);
 
   const { wishlists } = useCart();
-  const { getProductFromContext } = useProduct();
+  const { getProductFromContext, productDetailList } = useProduct();
 
   const calculateTotal = (wishlists: WishlistWithProductStatus[], callback: (...args: any) => number) => {
     let total = 0;
@@ -48,7 +48,7 @@ function PriceProvider(props: any) {
       (total, quantity, price) => (total = quantity > 1 ? (price * quantity * quantity) / 10 : 0)
     );
     setTotalDiscount(discount);
-  }, [wishlists]);
+  }, [wishlists, productDetailList]);
 
   return (
     <PriceContext.Provider

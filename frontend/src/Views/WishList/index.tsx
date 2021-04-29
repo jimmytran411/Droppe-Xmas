@@ -6,6 +6,8 @@ import { ProductList } from './ProductList';
 import { Navbar } from 'Views/WishList/Navbar';
 import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
 import { useProduct } from 'context/ProductContext';
+import { getUniqueProductWithGivenStatusAndQuantity } from 'utils/wishlistAndProduct';
+import _ from 'lodash';
 
 export interface WishlistPriceAndDiscount {
   wishlistPriceAfterDiscount: number;
@@ -18,33 +20,29 @@ export const WishList = (wishlist: WishlistWithProductStatus) => {
   const [wishlistDiscount, setWishlistDiscount] = useState<number>(0);
 
   const { wishlists } = useCart();
-  const { getProductFromContext } = useProduct();
+  const { getProductFromContext, productDetailList } = useProduct();
 
   const calculateWishlistPrice = (productList: ProductWithStatus[]) => {
     let wishlistPriceAfterDiscount = 0;
     let wishlistPrice = 0;
 
+    const approvedListWithQuantity = getUniqueProductWithGivenStatusAndQuantity(wishlists, 'approved');
+
     productList.forEach((product: ProductWithStatus) => {
-      let discount = 0;
+      let discountedPrice = 0;
       if (product.approvalStatus === 'approved') {
-        const currentProductDetail = getProductFromContext(product.productId);
-        const currentProductPrice = currentProductDetail ? currentProductDetail.price : 0;
-        wishlistPrice += currentProductPrice;
+        const productDetail = getProductFromContext(product.productId);
+        const productPrice = productDetail ? productDetail.price : 0;
+        wishlistPrice += productPrice;
 
-        let approvedProductCount = 0;
-        wishlists.forEach((wishlist) =>
-          wishlist.productList.forEach(
-            ({ approvalStatus, productId }) =>
-              approvalStatus === 'approved' && productId === product.productId && approvedProductCount++
-          )
-        );
+        const approvedProduct = _.find(approvedListWithQuantity, ({ productId }) => productId === product.productId);
+        const quantityOfApprovedProduct = approvedProduct ? approvedProduct.quantity : 0;
 
-        discount =
-          approvedProductCount > 1 ? (currentProductPrice * (10 - approvedProductCount)) / 10 : currentProductPrice;
+        discountedPrice =
+          quantityOfApprovedProduct > 1 ? (productPrice * (10 - quantityOfApprovedProduct)) / 10 : productPrice;
       }
-      wishlistPriceAfterDiscount += discount;
+      wishlistPriceAfterDiscount += discountedPrice;
     });
-
     const wishlistDiscount = wishlistPrice - wishlistPriceAfterDiscount;
     const wishlistPriceAndDiscount: WishlistPriceAndDiscount = {
       wishlistPriceAfterDiscount,
@@ -58,7 +56,7 @@ export const WishList = (wishlist: WishlistWithProductStatus) => {
     const { wishlistDiscount, wishlistPriceAfterDiscount } = calculateWishlistPrice(wishlist.productList);
     setWishlistPrice(wishlistPriceAfterDiscount);
     setWishlistDiscount(wishlistDiscount);
-  }, [wishlist]);
+  }, [wishlist, productDetailList]);
   return (
     <div className="wishlist-container">
       <div className="side">

@@ -34,8 +34,8 @@ test('Render pending wishlist with test input', () => {
     image: 'test img link 2',
     category: 'test category 2',
   };
-  const testCurrentWLProp: WishlistWithProductStatus = { wishlistId: 1, productList: testPendingList };
-  const testPendingListProp: ProductListProps = { wishlist: testCurrentWLProp, givenStatus: 'pending' };
+  const testWishlist: WishlistWithProductStatus = { wishlistId: 1, productList: testPendingList };
+  const testPendingListProp: ProductListProps = { wishlist: testWishlist, givenStatus: 'pending' };
 
   const mockGetProductFromContext = (id: number) => {
     return _.find(mockProductValue.productDetailList, (product) => product.id === id);
@@ -90,8 +90,8 @@ test('Render approve list with test input', () => {
     image: 'test img link 2',
     category: 'test category 2',
   };
-  const testCurrentWLProp: WishlistWithProductStatus = { wishlistId: 1, productList: testApprovedList };
-  const testApprovedListProps: ProductListProps = { wishlist: testCurrentWLProp, givenStatus: 'approved' };
+  const testWishlist: WishlistWithProductStatus = { wishlistId: 1, productList: testApprovedList };
+  const testApprovedListProps: ProductListProps = { wishlist: testWishlist, givenStatus: 'approved' };
 
   const mockGetProductFromContext = (id: number) => {
     return _.find(mockProductValue.productDetailList, (product) => product.id === id);
@@ -146,8 +146,8 @@ test('Render discard list with test input', () => {
     image: 'test img link 2',
     category: 'test category 2',
   };
-  const testCurrentWLProp: WishlistWithProductStatus = { wishlistId: 1, productList: testDiscardedList };
-  const testDiscardedListProps: ProductListProps = { wishlist: testCurrentWLProp, givenStatus: 'discarded' };
+  const testWishlist: WishlistWithProductStatus = { wishlistId: 1, productList: testDiscardedList };
+  const testDiscardedListProps: ProductListProps = { wishlist: testWishlist, givenStatus: 'discarded' };
 
   const mockGetProductFromContext = (id: number) => {
     return _.find(mockProductValue.productDetailList, (product) => product.id === id);

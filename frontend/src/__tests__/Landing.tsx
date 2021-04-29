@@ -8,7 +8,7 @@ import { CartContext } from 'context/CartContext';
 import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
 
 test('Render discard list with test input', () => {
-  const testCurrentWL: ProductWithStatus[] = [
+  const testWishlist: ProductWithStatus[] = [
     {
       productId: 1,
       approvalStatus: 'pending',
@@ -34,9 +34,9 @@ test('Render discard list with test input', () => {
       approvalStatus: 'discarded',
     },
   ];
-  const testCurrentWLProp: WishlistWithProductStatus = { wishlistId: 1, productList: testCurrentWL };
+  const testWishlistProp: WishlistWithProductStatus = { wishlistId: 1, productList: testWishlist };
   const mockCartValue = {
-    wishlists: [{ ...testCurrentWLProp }],
+    wishlists: [{ ...testWishlistProp }],
     handleProduct: jest.fn(),
     handlePayment: jest.fn(),
   };

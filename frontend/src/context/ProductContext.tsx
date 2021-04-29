@@ -1,18 +1,16 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 
-import { ProductDetail } from 'api/wishList';
+import { getProductDetail, ProductDetail } from 'api/wishList';
 
 export type ProductDetailList = ProductDetail[];
 export interface ProductContextProps {
   productDetailList: ProductDetailList;
-  updateProductDetailList: (productDetail: ProductDetail) => void;
   getProductFromContext: (productId: number) => ProductDetail | undefined;
 }
 
 const initialProductContextValue: ProductContextProps = {
   productDetailList: [],
-  updateProductDetailList: () => {},
   getProductFromContext: () => undefined,
 };
 
@@ -21,17 +19,20 @@ const ProductContext = React.createContext<ProductContextProps>(initialProductCo
 function ProductProvider(props: any) {
   const [productDetailList, setProductDetailList] = React.useState<ProductDetailList>([]);
 
-  const updateProductDetailList = (productDetail: ProductDetail) => {
-    setProductDetailList((prev) => [...prev, productDetail]);
+  const getProductFromContext = (productId: number): any => {
+    const detail = _.find(productDetailList, (product) => product.id === productId);
+    if (!detail) {
+      fetchProductDetailAndUpdate(productId);
+    }
+    return detail;
   };
 
-  const getProductFromContext = (productId: number) => {
-    return _.find(productDetailList, (product) => product.id === productId);
+  const fetchProductDetailAndUpdate = async (id: number) => {
+    const { data } = await getProductDetail(id);
+    setProductDetailList((prev) => [...prev, data]);
   };
 
-  return (
-    <ProductContext.Provider value={{ productDetailList, getProductFromContext, updateProductDetailList }} {...props} />
-  );
+  return <ProductContext.Provider value={{ productDetailList, getProductFromContext }} {...props} />;
 }
 const useProduct = () => React.useContext(ProductContext);
 

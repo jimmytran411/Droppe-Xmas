@@ -14,7 +14,7 @@ import { ProductContext } from 'context/ProductContext';
 test('Test Overview show value from provider', () => {
   const history = createMemoryHistory({ initialEntries: ['/overview'] });
 
-  const testCurrentWL: ProductWithStatus[] = [
+  const testWishlist: ProductWithStatus[] = [
     {
       productId: 1,
       approvalStatus: 'pending',
@@ -29,7 +29,7 @@ test('Test Overview show value from provider', () => {
     },
   ];
 
-  const testCurrentWLProp: WishlistWithProductStatus = { wishlistId: 1, productList: testCurrentWL };
+  const testWishlistProp: WishlistWithProductStatus = { wishlistId: 1, productList: testWishlist };
 
   const testDetail1: ProductDetail = {
     id: 1,
@@ -67,7 +67,7 @@ test('Test Overview show value from provider', () => {
   };
 
   const mockCartValue = {
-    wishlists: [{ ...testCurrentWLProp }],
+    wishlists: [{ ...testWishlistProp }],
     handleProduct: jest.fn(),
     handlePayment: jest.fn(),
   };

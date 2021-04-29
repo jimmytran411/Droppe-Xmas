@@ -41,10 +41,10 @@ test('It should render Carousel with pending product', () => {
     return _.find(mockProductValue.productDetailList, (product) => product.id === id);
   };
 
-  const testCurrentWLProp: WishlistWithProductStatus = { wishlistId: 1, productList: testApproveList };
+  const testWishlistProps: WishlistWithProductStatus = { wishlistId: 1, productList: testApproveList };
 
   const mockCartValue = {
-    wishlists: [{ ...testCurrentWLProp }],
+    wishlists: [{ ...testWishlistProps }],
     handleProduct: jest.fn(),
     handlePayment: jest.fn(),
   };
