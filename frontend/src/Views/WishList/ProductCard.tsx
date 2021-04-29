@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import './ProductCard.css';
-import { getProductDetail, ProductDetail } from 'api/wishList';
+import { ProductDetail } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import { Loader } from 'utils/Loader';
 import { Loading } from 'common/commonType';
@@ -18,23 +18,13 @@ export const ProductCard = ({ product, wishlist }: ProductCardProps) => {
   const [productDetail, setProductDetail] = useState<ProductDetail | Loading>('loading');
 
   const { handleProduct, wishlists } = useCart();
-  const { getProductFromContext, updateProductDetailList } = useProduct();
+  const { getProductFromContext, productDetailList } = useProduct();
 
   useEffect(() => {
     const fetchProductAndCalculateDiscount = async () => {
-      // Get product detail from store, if not fetch from server and update store with fetched data
       const productFromStore = getProductFromContext(product.productId);
-      if (productFromStore) {
-        setProductDetail(productFromStore);
-      } else {
-        try {
-          const { data } = await getProductDetail(product.productId);
-          updateProductDetailList(data);
-          setProductDetail(data);
-        } catch (error) {
-          console.log(error);
-        }
-      }
+      setProductDetail(productFromStore ? productFromStore : 'loading');
+
       // Calculate Possible discount
       let count = 0;
       wishlists &&
@@ -44,7 +34,7 @@ export const ProductCard = ({ product, wishlist }: ProductCardProps) => {
       setDiscount(count > 1 ? count * 10 : 0);
     };
     fetchProductAndCalculateDiscount();
-  }, [wishlists]);
+  }, [wishlists, productDetailList]);
 
   return (
     <>

@@ -12,7 +12,7 @@ import { ProductDetail } from 'api/wishList';
 import { ProductContext } from 'context/ProductContext';
 
 test('Render discard list with test input', () => {
-  const testCurrentWL: ProductWithStatus[] = [
+  const testWishlist: ProductWithStatus[] = [
     {
       productId: 1,
       approvalStatus: 'pending',
@@ -54,9 +54,9 @@ test('Render discard list with test input', () => {
   const mockGetProductFromContext = (id: number) => {
     return _.find(mockProductValue.productDetailList, (product) => product.id === id);
   };
-  const testCurrentWLProp: WishlistWithProductStatus = { wishlistId: 1, productList: testCurrentWL };
+  const testWishlistProp: WishlistWithProductStatus = { wishlistId: 1, productList: testWishlist };
   const mockCartValue = {
-    wishlists: [{ ...testCurrentWLProp }],
+    wishlists: [{ ...testWishlistProp }],
     handleProduct: jest.fn(),
     handlePayment: jest.fn(),
   };
@@ -71,7 +71,7 @@ test('Render discard list with test input', () => {
     <ProductContext.Provider value={mockProductValue}>
       <CartContext.Provider value={mockCartValue}>
         <Router history={history}>
-          <WishList {...testCurrentWLProp} />
+          <WishList {...testWishlistProp} />
         </Router>
       </CartContext.Provider>
     </ProductContext.Provider>

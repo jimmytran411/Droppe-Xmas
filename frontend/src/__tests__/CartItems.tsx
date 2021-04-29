@@ -42,10 +42,10 @@ test('It should render CartItem with approved product', () => {
     return _.find(mockProductValue.productDetailList, (product) => product.id === id);
   };
 
-  const testCurrentWLProp: WishlistWithProductStatus = { wishlistId: 1, productList: testApproveList };
+  const testWishlistProp: WishlistWithProductStatus = { wishlistId: 1, productList: testApproveList };
 
   const mockCartValue = {
-    wishlists: [{ ...testCurrentWLProp }],
+    wishlists: [{ ...testWishlistProp }],
     handleProduct: jest.fn(),
     handlePayment: jest.fn(),
   };
