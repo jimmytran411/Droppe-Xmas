@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { patchWishlist } from 'api/wishList';
 import { useCart } from 'context/CartContext';
 import { usePrice } from 'context/PriceContext';
-import { getProductListWithGivenStatus } from 'utils/wishlistAndProduct';
+import { getUniqueProductWithGivenStatusAndQuantity } from 'utils/wishlistAndProduct';
 import { CartItems } from './CartItems';
 import { PaymentResult } from './PaymentResult';
 import { ProductCarousel } from './ProductCarousel';
@@ -51,7 +51,7 @@ export const Overview = () => {
   };
 
   useEffect(() => {
-    const approveList = getProductListWithGivenStatus(wishlists, 'approved');
+    const approveList = getUniqueProductWithGivenStatusAndQuantity(wishlists, 'approved');
     setApprovedProductList(approveList);
   }, [wishlists]);
 
@@ -136,10 +136,10 @@ export const Overview = () => {
               <h5>You have successfully purchased these gifts:</h5>
               <PaymentResult {...{ patchData, productStatus: 'approved' }} />
             </div>
-            {getProductListWithGivenStatus(patchData, 'discarded').length ? (
+            {getUniqueProductWithGivenStatusAndQuantity(patchData, 'discarded').length ? (
               <div className="payment-result-discard-list">
                 <h5>You have discarded these:</h5>
-                {getProductListWithGivenStatus(patchData, 'discarded').map(({ productId, quantity }) => {
+                {getUniqueProductWithGivenStatusAndQuantity(patchData, 'discarded').map(({ productId, quantity }) => {
                   const productDetail = getProductFromContext(productId);
                   return (
                     productDetail && (
