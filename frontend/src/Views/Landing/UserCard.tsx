@@ -9,7 +9,7 @@ export interface UserCardProps {
   wishlistId: number;
 }
 
-export const UserCard = ({
+export const UserCard: React.FC<UserCardProps> = ({
   userName,
   approvedProductCount,
   discardedProductCount,

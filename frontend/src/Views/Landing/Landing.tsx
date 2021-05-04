@@ -2,18 +2,17 @@ import React, { useEffect, useState } from 'react';
 
 import { useCart } from 'context/CartContext';
 import { UserCard, UserCardProps } from './UserCard';
-import { Loader } from 'utils/Loader';
 import './Landing.css';
 import { WishlistWithProductStatus } from 'common/commonInterface';
 
-export const Landing = () => {
+export const Landing: React.FC = () => {
   const [userInfo, setUserInfo] = useState<UserCardProps[]>();
   const { wishlists } = useCart();
 
   const getUserCard = (wishlist: WishlistWithProductStatus) => {
-    let approveCount: number = 0,
-      discardCount: number = 0,
-      pendingcount: number = 0;
+    let approveCount = 0,
+      discardCount = 0,
+      pendingcount = 0;
     wishlist.productList.forEach((product) => {
       switch (product.approvalStatus) {
         case 'approved':

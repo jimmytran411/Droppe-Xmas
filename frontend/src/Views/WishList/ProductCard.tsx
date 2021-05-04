@@ -13,7 +13,7 @@ export interface ProductCardProps {
   wishlist: WishlistWithProductStatus;
 }
 
-export const ProductCard = ({ product, wishlist }: ProductCardProps) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product, wishlist }: ProductCardProps) => {
   const [discount, setDiscount] = useState(0);
   const [productDetail, setProductDetail] = useState<ProductDetail | Loading>('loading');
 
@@ -34,7 +34,7 @@ export const ProductCard = ({ product, wishlist }: ProductCardProps) => {
       setDiscount(count > 1 ? count * 10 : 0);
     };
     fetchProductAndCalculateDiscount();
-  }, [wishlists, productDetailList]);
+  }, [wishlists, productDetailList, getProductFromContext, product.productId]);
 
   return (
     <>

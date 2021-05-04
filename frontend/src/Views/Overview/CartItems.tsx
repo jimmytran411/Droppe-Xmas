@@ -16,7 +16,7 @@ interface CartItemsProps {
   givenStatus: ApprovalStatus;
 }
 
-export const CartItems = ({ givenStatus }: CartItemsProps) => {
+export const CartItems: React.FC<CartItemsProps> = ({ givenStatus }: CartItemsProps) => {
   const [returnConfirmation, setReturnConfirmation] = useState(false);
   const [productReturnParam, setProductReturnParam] = useState<OverviewProductReturn>();
 

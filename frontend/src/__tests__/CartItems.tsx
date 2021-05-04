@@ -48,6 +48,7 @@ test('It should render CartItem with approved product', () => {
     wishlists: [{ ...testWishlistProp }],
     handleProduct: jest.fn(),
     handlePayment: jest.fn(),
+    handleSorting: jest.fn(),
   };
   const mockPriceValue = {
     totalPrice: 420,
@@ -68,7 +69,7 @@ test('It should render CartItem with approved product', () => {
   );
   const { getByText } = render(<CartItems givenStatus="approved" />, { wrapper });
 
-  expect(getByText(/Your cart/i).textContent).toBe(`Your cart's items:`);
+  expect(getByText(/Your cart/i)).toHaveTextContent(`Your cart's items:`);
   expect(getByText(/child 1/i)).toBeInTheDocument();
 
   expect(getByText(/test title 1/i)).toBeInTheDocument();

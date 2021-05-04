@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
-const Modal = ({ children }: any) => {
+const Modal: React.FC<any> = ({ children }: any) => {
   const elRef = useRef<HTMLDivElement | null>(null);
   if (!elRef.current) {
     const div = document.createElement('div');

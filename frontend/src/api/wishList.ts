@@ -34,7 +34,7 @@ export const getProductDetail = (id: number): Promise<AxiosResponse<ProductDetai
   return axios.get<ProductDetail>(`/products/${id}`);
 };
 
-export const patchWishlist = async (wishlist: WishlistWithProductStatus) => {
+export const patchWishlist = async (wishlist: WishlistWithProductStatus): Promise<AxiosResponse<any>> => {
   // const updateData = { ...wishlist, date: new Date().toJSON().slice(0, 10).split('-').reverse().join('/') };
-  return await axios.patch(`/carts/${wishlist.wishlistId}`, wishlist);
+  return await axios.patch<any>(`/carts/${wishlist.wishlistId}`, wishlist);
 };

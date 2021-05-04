@@ -70,6 +70,7 @@ test('Test Overview show value from provider', () => {
     wishlists: [{ ...testWishlistProp }],
     handleProduct: jest.fn(),
     handlePayment: jest.fn(),
+    handleSorting: jest.fn(),
   };
   const mockPriceValue = {
     totalPrice: 420,
@@ -92,8 +93,8 @@ test('Test Overview show value from provider', () => {
     }
   );
 
-  expect(getByText(/total:/i).textContent).toBe('Total: €420.00');
-  expect(getByText(/you save:/i).textContent).toBe('You save: €240.00');
+  expect(getByText(/total:/i)).toHaveTextContent('Total: €420.00');
+  expect(getByText(/you save:/i)).toHaveTextContent('You save: €240.00');
   expect(getByText(/These items are still in your wishlists:/i)).toBeInTheDocument();
   expect(getByText(/test title 1/i)).toBeInTheDocument();
   expect(getByText(/€111/i)).toBeInTheDocument();

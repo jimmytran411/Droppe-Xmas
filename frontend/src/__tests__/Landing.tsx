@@ -39,6 +39,7 @@ test('Render discard list with test input', () => {
     wishlists: [{ ...testWishlistProp }],
     handleProduct: jest.fn(),
     handlePayment: jest.fn(),
+    handleSorting: jest.fn(),
   };
 
   const history = createMemoryHistory({ initialEntries: ['/'] });

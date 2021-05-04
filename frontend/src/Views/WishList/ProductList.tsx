@@ -9,7 +9,7 @@ export interface ProductListProps {
   wishlist: WishlistWithProductStatus;
 }
 
-export const ProductList = ({ wishlist, givenStatus }: ProductListProps) => {
+export const ProductList: React.FC<ProductListProps> = ({ wishlist, givenStatus }: ProductListProps) => {
   return (
     <div className="product-list">
       {wishlist.productList &&
