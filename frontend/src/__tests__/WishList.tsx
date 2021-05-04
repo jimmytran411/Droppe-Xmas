@@ -59,6 +59,7 @@ test('Render discard list with test input', () => {
     wishlists: [{ ...testWishlistProp }],
     handleProduct: jest.fn(),
     handlePayment: jest.fn(),
+    handleSorting: jest.fn(),
   };
   const mockProductValue = {
     productDetailList: [testDetail1, testDetail2, testDetail3],
@@ -96,4 +97,5 @@ test('Render discard list with test input', () => {
   expect(mockCartValue.handleProduct).toHaveBeenCalledTimes(5);
   userEvent.click(getByLabelText(/approve-btn-3/i));
   expect(mockCartValue.handleProduct).toHaveBeenCalledTimes(6);
+  expect(mockCartValue.handleSorting).toHaveBeenCalledTimes(1);
 });

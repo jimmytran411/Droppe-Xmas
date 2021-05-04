@@ -14,3 +14,8 @@ export interface ProductWithQuantityList {
   quantity: number;
   productId: number;
 }
+
+export interface ReducerProps {
+  type: string;
+  payload: any;
+}

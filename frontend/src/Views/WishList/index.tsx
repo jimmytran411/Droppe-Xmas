@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import _ from 'lodash';
 
 import './Product.css';
 import { useCart } from 'context/CartContext';
@@ -7,7 +8,8 @@ import { Navbar } from 'Views/WishList/Navbar';
 import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
 import { useProduct } from 'context/ProductContext';
 import { getUniqueProductWithGivenStatusAndQuantity } from 'utils/wishlistAndProduct';
-import _ from 'lodash';
+import { ProductDetail } from 'api/wishList';
+import { SortButton } from './SortButton';
 
 export interface WishlistPriceAndDiscount {
   wishlistPriceAfterDiscount: number;
@@ -15,9 +17,10 @@ export interface WishlistPriceAndDiscount {
   wishlistPrice: number;
 }
 
-export const WishList = (wishlist: WishlistWithProductStatus) => {
+export const WishList: React.FC<WishlistWithProductStatus> = (wishlist: WishlistWithProductStatus) => {
   const [wishlistPrice, setWishlistPrice] = useState<number>(0);
   const [wishlistDiscount, setWishlistDiscount] = useState<number>(0);
+  const [detailList, setDetailList] = useState<ProductDetail[]>([]);
 
   const { wishlists } = useCart();
   const { getProductFromContext, productDetailList } = useProduct();
@@ -56,19 +59,30 @@ export const WishList = (wishlist: WishlistWithProductStatus) => {
     const { wishlistDiscount, wishlistPriceAfterDiscount } = calculateWishlistPrice(wishlist.productList);
     setWishlistPrice(wishlistPriceAfterDiscount);
     setWishlistDiscount(wishlistDiscount);
+
+    // get detail of each product
+    wishlist.productList.forEach((product) => {
+      const detailProduct = getProductFromContext(product.productId);
+      detailProduct && setDetailList((prev) => (!_.find(detailList, detailProduct) ? [...prev, detailProduct] : prev));
+    });
   }, [wishlist, productDetailList]);
+
   return (
     <div className="wishlist-container">
       <div className="side">
         <Navbar />
       </div>
+
       <div className="main">
         <span className="current-price">
-          <p>
-            {wishlistPrice >= 0 && `Current Wishlist: €${wishlistPrice.toFixed(2)}`}{' '}
-            {wishlistDiscount > 0 && `You save: €${wishlistDiscount.toFixed(2)}`}
-          </p>
+          {wishlistPrice >= 0 && `Current Wishlist: €${wishlistPrice.toFixed(2)}`}{' '}
+          {wishlistDiscount > 0 && `You save: €${wishlistDiscount.toFixed(2)}`}
         </span>
+
+        {detailList.length === wishlist.productList.length && (
+          <SortButton {...{ detailList, wishlistId: wishlist.wishlistId }} />
+        )}
+
         <div className="pending-list">
           <span className="section-title">Wishlist</span>
           {wishlist.productList.some(({ approvalStatus }: ProductWithStatus) => approvalStatus === 'pending') ? (
