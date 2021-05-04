@@ -1,6 +1,7 @@
 import * as React from 'react';
+import _ from 'lodash';
 
-import { getWishLists } from 'api/wishList';
+import { getWishLists, ProductDetail } from 'api/wishList';
 import { ApprovalStatus } from 'common/commonType';
 import { WishlistWithProductStatus, ProductWithStatus } from 'common/commonInterface';
 
@@ -12,19 +13,79 @@ export interface Cart {
     wishListOfProduct: WishlistWithProductStatus
   ) => void;
   handlePayment: () => void;
+  handleSorting: (...args: any) => void;
 }
 
 const initialCartValue: Cart = {
   wishlists: [],
   handleProduct: () => {},
   handlePayment: () => {},
+  handleSorting: () => {},
 };
+
 const CartContext = React.createContext<Cart>(initialCartValue);
+
+const sortProductListByGivenOrder = (productList: ProductWithStatus[], order: ProductDetail[]) => {
+  const result: ProductWithStatus[] = [];
+  order.forEach((product) => {
+    const filterProduct = productList.filter(({ productId }) => productId === product.id);
+    result.push(...filterProduct);
+  });
+  return result;
+};
+
+const wishlistsReducer = (state: WishlistWithProductStatus[], action: any) => {
+  switch (action.type) {
+    case 'FETCH_WISHLISTS': {
+      return action.payload;
+    }
+
+    case 'UPDATE_WISHLISTS': {
+      return state.map((wishlist: WishlistWithProductStatus) => {
+        return wishlist.wishlistId === action.payload.wishlistId ? action.payload : wishlist;
+      });
+    }
+
+    case 'RESET_WISHLISTS': {
+      return state.map((wishlist: WishlistWithProductStatus) => {
+        const productList = wishlist.productList.map((product: ProductWithStatus) => {
+          const resetStateProduct: ProductWithStatus = { ...product, approvalStatus: 'pending' };
+          return resetStateProduct;
+        });
+        return { ...wishlist, productList: productList };
+      });
+    }
+
+    case 'SORT_BY_CHEAPEST': {
+      const sortedDetailList = _.orderBy(action.payload, (product) => product.price);
+      const sortedWishlists: WishlistWithProductStatus[] = state.map((wishlist) => {
+        const sortedList = sortProductListByGivenOrder(wishlist.productList, sortedDetailList);
+        console.log(sortedList);
+        return { ...wishlist, productList: sortedList };
+      });
+      return state;
+    }
+
+    case 'SORT_BY_MOST_EXPENSIVE': {
+      const sortedDetailList = _.orderBy(action.payload, (product) => product.price, ['desc']);
+      const sortedWishlists: WishlistWithProductStatus[] = state.map((wishlist) => {
+        const sortedList = sortProductListByGivenOrder(wishlist.productList, sortedDetailList);
+        return { ...wishlist, productList: sortedList };
+      });
+
+      return sortedWishlists;
+    }
+
+    default:
+      throw new Error('Action not found');
+  }
+};
+
 function CartProvider(props: any) {
-  const [wishlists, setWishlists] = React.useState<WishlistWithProductStatus[]>([]);
+  const [state, dispatch] = React.useReducer(wishlistsReducer, []);
 
   React.useEffect(() => {
-    const fetchAllWishList = async () => {
+    const fetchWishlists = async () => {
       try {
         const { data } = await getWishLists();
 
@@ -44,12 +105,12 @@ function CartProvider(props: any) {
           return wishlistWithProductStatus;
         });
 
-        setWishlists(wishlists);
+        dispatch({ type: 'FETCH_WISHLISTS', payload: wishlists });
       } catch (error) {
         console.log(error);
       }
     };
-    fetchAllWishList();
+    fetchWishlists();
   }, []);
 
   const handleProduct = (
@@ -64,33 +125,27 @@ function CartProvider(props: any) {
         return prevProduct.productId === handledProduct.productId ? updatedProduct : prevProduct;
       }
     );
+
     const updatedWishlist: WishlistWithProductStatus = { ...wishListOfProduct, productList: updateProductList };
-    const updatedAllWishlist: WishlistWithProductStatus[] = wishlists.map((wishlist: WishlistWithProductStatus) => {
-      return wishlist.wishlistId === updatedWishlist.wishlistId ? updatedWishlist : wishlist;
-    });
-    setWishlists(updatedAllWishlist);
+
+    dispatch({ type: 'UPDATE_WISHLISTS', payload: updatedWishlist });
   };
 
   const handlePayment = () => {
-    // Set approvalstatus of all product to pending
-    setWishlists((prev: WishlistWithProductStatus[]) => {
-      const resetWishlists: WishlistWithProductStatus[] = prev.map((wishlist: WishlistWithProductStatus) => {
-        const productList = wishlist.productList.map((product: ProductWithStatus) => {
-          const resetStateProduct: ProductWithStatus = { ...product, approvalStatus: 'pending' };
-          return resetStateProduct;
-        });
-        return { ...wishlist, productList: productList };
-      });
-      return resetWishlists;
-    });
+    dispatch({ type: 'RESET_WISHLISTS' });
+  };
+
+  const handleSorting = ({ type, payload }: any) => {
+    dispatch({ type, payload });
   };
 
   return (
     <CartContext.Provider
       value={{
-        wishlists,
+        wishlists: state,
         handleProduct,
         handlePayment,
+        handleSorting,
       }}
       {...props}
     />
