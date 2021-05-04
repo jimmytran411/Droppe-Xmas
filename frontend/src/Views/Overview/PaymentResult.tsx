@@ -8,7 +8,7 @@ export interface PaymentResultProps {
   patchData: WishlistWithProductStatus[];
   productStatus: 'approved' | 'discarded';
 }
-export const PaymentResult = ({ patchData, productStatus }: PaymentResultProps) => {
+export const PaymentResult: React.FC<PaymentResultProps> = ({ patchData, productStatus }: PaymentResultProps) => {
   const { getProductFromContext } = useProduct();
   return (
     <>

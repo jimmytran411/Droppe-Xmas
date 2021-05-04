@@ -2,7 +2,7 @@ import { useCart } from 'context/CartContext';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-export const Navbar = () => {
+export const Navbar: React.FC = () => {
   const { wishlists } = useCart();
 
   return (

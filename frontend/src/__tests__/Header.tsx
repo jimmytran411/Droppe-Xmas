@@ -26,6 +26,7 @@ const mockCartValue = {
   wishlists: [{ ...testWishlistProp }, { ...testWishlistProp, wishlistId: 2 }, { ...testWishlistProp, wishlistId: 3 }],
   handleProduct: jest.fn(),
   handlePayment: jest.fn(),
+  handleSorting: jest.fn(),
 };
 const mockPriceValue = {
   totalPrice: 420,
@@ -50,6 +51,6 @@ test('Test Header show value from provider', () => {
   expect(getByText(/€240/i)).toBeInTheDocument();
   expect(getByText(/€420/i)).toBeInTheDocument();
 
-  expect(getByText(/🛒/i).textContent).toBe('🛒');
+  expect(getByText(/🛒/i)).toHaveTextContent('🛒');
   expect(getByRole('button', { name: /View Cart/i })).toBeInTheDocument();
 });

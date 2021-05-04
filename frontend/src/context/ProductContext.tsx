@@ -16,7 +16,7 @@ const initialProductContextValue: ProductContextProps = {
 
 const ProductContext = React.createContext<ProductContextProps>(initialProductContextValue);
 
-function ProductProvider(props: any) {
+const ProductProvider: React.FC = (props: any) => {
   const [productDetailList, setProductDetailList] = React.useState<ProductDetailList>([]);
 
   const getProductFromContext = (productId: number): any => {
@@ -33,7 +33,7 @@ function ProductProvider(props: any) {
   };
 
   return <ProductContext.Provider value={{ productDetailList, getProductFromContext }} {...props} />;
-}
-const useProduct = () => React.useContext(ProductContext);
+};
+const useProduct = (): ProductContextProps => React.useContext(ProductContext);
 
 export { ProductProvider, useProduct, ProductContext };

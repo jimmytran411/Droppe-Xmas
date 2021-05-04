@@ -5,7 +5,7 @@ import { PriceProvider } from './PriceContext';
 import { ProductProvider } from './ProductContext';
 import { SortProvider } from './SortContext';
 
-export const AppProviders = ({ children }: any) => {
+export const AppProviders: React.FC = ({ children }: any) => {
   return (
     <CartProvider>
       <ProductProvider>

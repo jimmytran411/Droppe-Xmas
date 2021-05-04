@@ -5,38 +5,37 @@ import { getUniqueProductWithGivenStatusAndQuantity } from 'utils/wishlistAndPro
 import { useCart } from './CartContext';
 import { useProduct } from './ProductContext';
 
-export interface PriceAndDiscount {
+export interface PriceContextProps {
   totalPrice: number;
   totalDiscount: number;
 }
 
-const initialPriceValue: PriceAndDiscount = {
+const initialPriceValue: PriceContextProps = {
   totalPrice: 0,
   totalDiscount: 0,
 };
-const PriceContext = React.createContext<PriceAndDiscount>(initialPriceValue);
-function PriceProvider(props: any) {
+const PriceContext = React.createContext<PriceContextProps>(initialPriceValue);
+const PriceProvider: React.FC = (props: any) => {
   const [totalPrice, setTotalPrice] = React.useState<number>(0);
   const [totalDiscount, setTotalDiscount] = React.useState<number>(0);
 
   const { wishlists } = useCart();
   const { getProductFromContext, productDetailList } = useProduct();
 
-  const calculateTotal = (wishlists: WishlistWithProductStatus[], callback: (...args: any) => number) => {
-    let total = 0;
-
-    getUniqueProductWithGivenStatusAndQuantity(wishlists, 'approved').forEach(
-      ({ productId, quantity }: ProductWithQuantityList) => {
-        const currentProductDetail = getProductFromContext(productId);
-        const price = currentProductDetail ? currentProductDetail.price : 0;
-        total += callback(total, quantity, price);
-      }
-    );
-
-    return total;
-  };
-
   React.useEffect(() => {
+    const calculateTotal = (wishlists: WishlistWithProductStatus[], callback: (...args: any) => number) => {
+      let total = 0;
+
+      getUniqueProductWithGivenStatusAndQuantity(wishlists, 'approved').forEach(
+        ({ productId, quantity }: ProductWithQuantityList) => {
+          const currentProductDetail = getProductFromContext(productId);
+          const price = currentProductDetail ? currentProductDetail.price : 0;
+          total += callback(total, quantity, price);
+        }
+      );
+
+      return total;
+    };
     const price = calculateTotal(
       wishlists,
       (total, quantity, price) => (total = quantity > 1 ? (price * quantity * (10 - quantity)) / 10 : price)
@@ -48,7 +47,7 @@ function PriceProvider(props: any) {
       (total, quantity, price) => (total = quantity > 1 ? (price * quantity * quantity) / 10 : 0)
     );
     setTotalDiscount(discount);
-  }, [wishlists, productDetailList]);
+  }, [wishlists, productDetailList, getProductFromContext]);
 
   return (
     <PriceContext.Provider
@@ -59,7 +58,7 @@ function PriceProvider(props: any) {
       {...props}
     />
   );
-}
-const usePrice = () => React.useContext(PriceContext);
+};
+const usePrice = (): PriceContextProps => React.useContext(PriceContext);
 
 export { PriceProvider, usePrice, PriceContext };

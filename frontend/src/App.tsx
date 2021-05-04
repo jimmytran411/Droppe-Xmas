@@ -7,8 +7,9 @@ import { Overview } from 'Views/Overview';
 import { WishList } from 'Views/WishList';
 import { Landing } from 'Views/Landing/Landing';
 import { Footer } from 'Footer';
+import { WishlistWithProductStatus } from 'common/commonInterface';
 
-function App() {
+const App: React.FC = () => {
   const { wishlists } = useCart();
   return (
     <div className="App">
@@ -20,7 +21,7 @@ function App() {
               <Landing />
             </Route>
             {wishlists &&
-              wishlists.map((wishlist, index) => {
+              wishlists.map((wishlist: WishlistWithProductStatus, index: number) => {
                 return (
                   <Route key={index} path={`/wishlist/${wishlist.wishlistId}`}>
                     <WishList {...wishlist} />
@@ -36,6 +37,6 @@ function App() {
       </Router>
     </div>
   );
-}
+};
 
 export default App;

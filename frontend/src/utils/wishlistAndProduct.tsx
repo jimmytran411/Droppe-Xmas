@@ -4,7 +4,7 @@ import { ApprovalStatus } from 'common/commonType';
 export const getUniqueProductWithGivenStatusAndQuantity = (
   listToCheck: WishlistWithProductStatus[],
   givenStatus: ApprovalStatus
-) => {
+): ProductWithQuantityList[] => {
   const productWithCheckedStateList: ProductWithStatus[] = [];
   listToCheck.forEach((wishlist) => {
     wishlist.productList.forEach((product) => {

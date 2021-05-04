@@ -47,6 +47,7 @@ test('It should render Carousel with pending product', () => {
     wishlists: [{ ...testWishlistProps }],
     handleProduct: jest.fn(),
     handlePayment: jest.fn(),
+    handleSorting: jest.fn(),
   };
 
   const mockPriceValue = {
@@ -69,7 +70,7 @@ test('It should render Carousel with pending product', () => {
   );
   const { getByText } = render(<ProductCarousel givenStatus="pending" />, { wrapper });
 
-  expect(getByText(/these items/i).textContent).toBe(`These items are still in your wishlists:`);
+  expect(getByText(/these items/i)).toHaveTextContent(`These items are still in your wishlists:`);
   expect(getByText(/Username_1/i)).toBeInTheDocument();
 
   expect(getByText(/test title 1/i)).toBeInTheDocument();

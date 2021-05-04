@@ -1,5 +1,5 @@
 {
-  "plugins": ["testing-library", "jest-dom"],
+  "plugins": ["testing-library", "jest-dom", "@typescript-eslint", "react-hooks"],
   "rules": {
     "testing-library/await-async-query": "error",
     "testing-library/no-await-sync-query": "error",
@@ -7,7 +7,21 @@
     "jest-dom/prefer-checked": "error",
     "jest-dom/prefer-enabled-disabled": "error",
     "jest-dom/prefer-required": "error",
-    "jest-dom/prefer-to-have-attribute": "error"
+    "jest-dom/prefer-to-have-attribute": "error",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "@typescript-eslint/no-explicit-any": "off"
   },
-  "extends": ["plugin:testing-library/recommended", "plugin:testing-library/react", "plugin:jest-dom/recommended"]
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "jsx": true,
+    "useJSXTextNode": true
+  },
+  "extends": [
+    "plugin:testing-library/recommended",
+    "plugin:testing-library/react",
+    "plugin:jest-dom/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ]
 }

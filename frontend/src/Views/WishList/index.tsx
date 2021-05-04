@@ -25,13 +25,13 @@ export const WishList: React.FC<WishlistWithProductStatus> = (wishlist: Wishlist
   const { wishlists } = useCart();
   const { getProductFromContext, productDetailList } = useProduct();
 
-  const calculateWishlistPrice = (productList: ProductWithStatus[]) => {
+  useEffect(() => {
     let wishlistPriceAfterDiscount = 0;
     let wishlistPrice = 0;
 
     const approvedListWithQuantity = getUniqueProductWithGivenStatusAndQuantity(wishlists, 'approved');
 
-    productList.forEach((product: ProductWithStatus) => {
+    wishlist.productList.forEach((product: ProductWithStatus) => {
       let discountedPrice = 0;
       if (product.approvalStatus === 'approved') {
         const productDetail = getProductFromContext(product.productId);
@@ -47,16 +47,6 @@ export const WishList: React.FC<WishlistWithProductStatus> = (wishlist: Wishlist
       wishlistPriceAfterDiscount += discountedPrice;
     });
     const wishlistDiscount = wishlistPrice - wishlistPriceAfterDiscount;
-    const wishlistPriceAndDiscount: WishlistPriceAndDiscount = {
-      wishlistPriceAfterDiscount,
-      wishlistDiscount,
-      wishlistPrice,
-    };
-    return wishlistPriceAndDiscount;
-  };
-
-  useEffect(() => {
-    const { wishlistDiscount, wishlistPriceAfterDiscount } = calculateWishlistPrice(wishlist.productList);
     setWishlistPrice(wishlistPriceAfterDiscount);
     setWishlistDiscount(wishlistDiscount);
 
@@ -65,7 +55,7 @@ export const WishList: React.FC<WishlistWithProductStatus> = (wishlist: Wishlist
       const detailProduct = getProductFromContext(product.productId);
       detailProduct && setDetailList((prev) => (!_.find(detailList, detailProduct) ? [...prev, detailProduct] : prev));
     });
-  }, [wishlist, productDetailList]);
+  }, [wishlist, productDetailList, wishlists, getProductFromContext, detailList]);
 
   return (
     <div className="wishlist-container">

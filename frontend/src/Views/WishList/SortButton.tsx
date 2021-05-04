@@ -31,7 +31,7 @@ export const SortButton: React.FC<SortButtonProps> = ({ detailList, wishlistId }
         throw new Error(`${sortState} not found`);
     }
     detailList.length && handleSorting({ type: sortState, payload: { detailList, wishlistId } });
-  }, [sortState, detailList]);
+  }, [sortState, detailList, handleSorting, wishlistId]);
 
   return (
     <span className="wishlist-sorting">

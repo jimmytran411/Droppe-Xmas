@@ -5,7 +5,7 @@ import { getWishLists, ProductDetail } from 'api/wishList';
 import { ApprovalStatus } from 'common/commonType';
 import { WishlistWithProductStatus, ProductWithStatus, ReducerProps } from 'common/commonInterface';
 
-export interface Cart {
+export interface CartContextProps {
   wishlists: WishlistWithProductStatus[];
   handleProduct: (
     product: ProductWithStatus,
@@ -16,14 +16,14 @@ export interface Cart {
   handleSorting: (reducer: ReducerProps) => void;
 }
 
-const initialCartValue: Cart = {
+const initialCartValue: CartContextProps = {
   wishlists: [],
   handleProduct: () => null,
   handlePayment: () => null,
   handleSorting: () => null,
 };
 
-const CartContext = React.createContext<Cart>(initialCartValue);
+const CartContext = React.createContext<CartContextProps>(initialCartValue);
 
 const sortProductListByGivenOrder = (productList: ProductWithStatus[], order: ProductDetail[]) => {
   const result: ProductWithStatus[] = [];
@@ -89,7 +89,7 @@ const wishlistsReducer = (state: WishlistWithProductStatus[], action: ReducerPro
   }
 };
 
-function CartProvider(props: any) {
+const CartProvider: React.FC = (props: any) => {
   const [state, dispatch] = React.useReducer(wishlistsReducer, []);
 
   React.useEffect(() => {
@@ -158,7 +158,7 @@ function CartProvider(props: any) {
       {...props}
     />
   );
-}
-const useCart = () => React.useContext(CartContext);
+};
+const useCart = (): CartContextProps => React.useContext(CartContext);
 
 export { CartProvider, useCart, CartContext };

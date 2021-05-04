@@ -13,7 +13,7 @@ import './Overview.css';
 import { ProductWithQuantityList, ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
 import { useProduct } from 'context/ProductContext';
 
-export const Overview = () => {
+export const Overview: React.FC = () => {
   const { wishlists, handlePayment } = useCart();
   const { totalPrice, totalDiscount } = usePrice();
   const { getProductFromContext } = useProduct();

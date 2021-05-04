@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { usePrice } from 'context/PriceContext';
 import { useCart } from 'context/CartContext';
 import { ProductCard } from 'Views/WishList/ProductCard';
-import { ApprovalStatus, Loading } from 'common/commonType';
+import { ApprovalStatus } from 'common/commonType';
 import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
 
 type CarouselDirection = 'next' | 'prev';
@@ -11,7 +11,7 @@ interface ProductCarouselProps {
   givenStatus: ApprovalStatus;
 }
 
-export const ProductCarousel = ({ givenStatus }: ProductCarouselProps) => {
+export const ProductCarousel: React.FC<ProductCarouselProps> = ({ givenStatus }: ProductCarouselProps) => {
   const [carouselTranslateXValue, setCarouselTranslateXValue] = useState(0);
 
   const { totalPrice } = usePrice();
