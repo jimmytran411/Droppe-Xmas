@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ApprovalStatus, Loading } from 'common/commonType';
+import { ApprovalStatus } from 'common/commonType';
 import { ProductCard } from './ProductCard';
 import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
 
