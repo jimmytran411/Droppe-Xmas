@@ -31,7 +31,8 @@ export const SortButton: React.FC<SortButtonProps> = ({ detailList, wishlistId }
         throw new Error(`${sortState} not found`);
     }
     detailList.length && handleSorting({ type: sortState, payload: { detailList, wishlistId } });
-  }, [sortState, detailList, handleSorting, wishlistId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortState, detailList, wishlistId]);
 
   return (
     <span className="wishlist-sorting">

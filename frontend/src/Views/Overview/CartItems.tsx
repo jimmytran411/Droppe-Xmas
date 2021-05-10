@@ -20,7 +20,7 @@ export const CartItems: React.FC<CartItemsProps> = ({ givenStatus }: CartItemsPr
   const [returnConfirmation, setReturnConfirmation] = useState(false);
   const [productReturnParam, setProductReturnParam] = useState<OverviewProductReturn>();
 
-  const { totalPrice } = usePrice();
+  const { totalPrice, getProductPrice } = usePrice();
   const { wishlists, handleProduct } = useCart();
   const { getProductFromContext } = useProduct();
 
@@ -44,6 +44,7 @@ export const CartItems: React.FC<CartItemsProps> = ({ givenStatus }: CartItemsPr
                   <React.Fragment>
                     {productList.map((product: ProductWithStatus, index) => {
                       const productDetail = getProductFromContext(product.productId);
+                      const price = getProductPrice(product.productId);
                       return (
                         <React.Fragment key={index}>
                           {productDetail && product.approvalStatus === givenStatus && (
@@ -53,7 +54,13 @@ export const CartItems: React.FC<CartItemsProps> = ({ givenStatus }: CartItemsPr
                               </div>
                               <div className="opc-product-info">
                                 <span className="opc-title">{productDetail.title}</span>
-                                <span className="opc-price">€{productDetail.price}</span>
+                                <span
+                                  className="opc-price"
+                                  style={price < productDetail.price ? { textDecoration: 'line-through' } : undefined}
+                                >
+                                  €{productDetail.price}
+                                </span>
+                                {price < productDetail.price && <span className="opc-price">{price.toFixed(2)}</span>}
                               </div>
                               <span
                                 className="opc-remove-btn"

@@ -85,30 +85,30 @@ export const Overview: React.FC = () => {
       {confirm && (
         <Modal>
           <div className="payment-overview">
-            <h6>
+            <span>
               {approvedProductList.length ? 'You have these gifts in your cart:' : `You haven't approved any gifts yet`}
-            </h6>
+            </span>
             {approvedProductList &&
               approvedProductList.map(({ productId, quantity }: ProductWithQuantityList) => {
                 const productDetail = getProductFromContext(productId);
                 return (
                   productDetail && (
                     <div key={productDetail.id} className="confirmation-product-card">
-                      <h5>{productDetail.title}</h5>
+                      <p>{productDetail.title}</p>
                       <img
                         style={{ width: '50px', height: '50px', borderRadius: '20px' }}
                         src={productDetail.image}
                         alt={productDetail.title}
                       />
-                      <p>Quantity: {quantity}</p>
-                      <p>
-                        Total: €
+                      <span>Quantity: {quantity}</span>
+                      <span>
+                        Price: €
                         {quantity > 1
                           ? ((productDetail.price * quantity * (10 - quantity)) / 10).toFixed(2)
                           : productDetail.price.toFixed(2)}
-                      </p>
+                      </span>
                       {quantity > 1 && (
-                        <p>You save: €{((productDetail.price * quantity * quantity) / 10).toFixed(2)}</p>
+                        <span>You save: €{((productDetail.price * quantity * quantity) / 10).toFixed(2)}</span>
                       )}
                     </div>
                   )
@@ -116,12 +116,18 @@ export const Overview: React.FC = () => {
               })}
             {approvedProductList.length && (
               <>
-                <div className="total-cost">
-                  Total: €<b>{totalPrice >= 0 ? totalPrice.toFixed(2) : '0.00'}</b>
+                <div className="total">
+                  <p className="total-cost">
+                    Total: €<b>{totalPrice >= 0 ? totalPrice.toFixed(2) : '0.00'}</b>
+                  </p>
+                  <p className="total-saving">You save: €{totalDiscount.toFixed(2)}</p>
                 </div>
-                <div className="total-saving">You save: €{totalDiscount.toFixed(2)}</div>
-                <button onClick={handlePay}>Pay</button>
-                <button onClick={toggleModal}>Cancel</button>
+                <div className="pay-btn-group">
+                  <button className="pay" onClick={handlePay}>
+                    Pay
+                  </button>
+                  <button onClick={toggleModal}>Cancel</button>
+                </div>
               </>
             )}
           </div>
@@ -134,7 +140,7 @@ export const Overview: React.FC = () => {
             <div className="payment-result-approved-list">
               <h4>Thank you for your purchase 🙂</h4>
               <h5>You have successfully purchased these gifts:</h5>
-              <PaymentResult {...{ patchData, productStatus: 'approved' }} />
+              <PaymentResult {...{ patchData, givenStatus: 'approved' }} />
             </div>
             {getUniqueProductWithGivenStatusAndQuantity(patchData, 'discarded').length ? (
               <div className="payment-result-discard-list">

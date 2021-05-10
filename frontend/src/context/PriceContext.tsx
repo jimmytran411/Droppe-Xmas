@@ -8,11 +8,13 @@ import { useProduct } from './ProductContext';
 export interface PriceContextProps {
   totalPrice: number;
   totalDiscount: number;
+  getProductPrice: (productId: number) => number;
 }
 
 const initialPriceValue: PriceContextProps = {
   totalPrice: 0,
   totalDiscount: 0,
+  getProductPrice: () => 0,
 };
 const PriceContext = React.createContext<PriceContextProps>(initialPriceValue);
 const PriceProvider: React.FC = (props: any) => {
@@ -49,11 +51,24 @@ const PriceProvider: React.FC = (props: any) => {
     setTotalDiscount(discount);
   }, [wishlists, productDetailList, getProductFromContext]);
 
+  const getProductPrice = (productId: number) => {
+    let count = 0;
+    wishlists.forEach((wishlist) =>
+      wishlist.productList.forEach(
+        (product) => product.productId === productId && product.approvalStatus === 'approved' && count++
+      )
+    );
+    const price = getProductFromContext(productId)?.price;
+
+    return price && count > 1 ? (price * (10 - count)) / 10 : price;
+  };
+
   return (
     <PriceContext.Provider
       value={{
         totalPrice,
         totalDiscount,
+        getProductPrice,
       }}
       {...props}
     />

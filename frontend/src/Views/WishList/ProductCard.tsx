@@ -29,12 +29,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, wishlist }: P
       let count = 0;
       wishlists &&
         wishlists.forEach((wishlist) => {
-          wishlist.productList.forEach(({ productId }) => productId === product.productId && count++);
+          wishlist.productList.forEach(
+            ({ productId, approvalStatus }) =>
+              productId === product.productId && approvalStatus === 'approved' && count++
+          );
         });
       setDiscount(count > 1 ? count * 10 : 0);
     };
     fetchProductAndCalculateDiscount();
-  }, [wishlists, productDetailList, getProductFromContext, product.productId]);
+  }, [wishlists, productDetailList, getProductFromContext, product]);
 
   return (
     <>
@@ -48,7 +51,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, wishlist }: P
 
           <div className="product-card-content">
             <span className="product-card-title">{productDetail.title}</span>
-            <p className="price">€{productDetail.price}</p>
+            <span className="product-card-price" style={discount > 0 ? { textDecoration: 'line-through' } : undefined}>
+              €{productDetail.price}
+            </span>
+            {discount > 0 && (
+              <span className="product-cart-price">€{((productDetail.price * (100 - discount)) / 100).toFixed(2)}</span>
+            )}
             <div className="product-card-btn">
               <a
                 className={product.approvalStatus === 'pending' ? 'primary' : 'secondary'}
