@@ -76,7 +76,8 @@
   border-bottom: 1px solid #e0dbdb;
 }
 
-.overview-container .side .side-wrapper .checkout-btn {
+.overview-container .side .side-wrapper .checkout-btn,
+.payment-overview .pay-btn-group .pay {
   text-transform: uppercase;
   background-color: #36a636;
   border-radius: 4px;
@@ -169,4 +170,33 @@
 .overview-container .product-card {
   border: none;
   box-shadow: none;
+}
+
+.payment-overview {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+}
+
+.payment-overview .confirmation-product-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+.payment-overview .total {
+  border: 1px solid black;
+  width: fit-content;
+  padding: 0 8px;
+  margin-bottom: 8px;
+}
+
+.payment-overview .pay-btn-group button {
+  padding: 10px;
+  margin: 10px;
+  border: none;
 }

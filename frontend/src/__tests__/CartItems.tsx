@@ -53,6 +53,7 @@ test('It should render CartItem with approved product', () => {
   const mockPriceValue = {
     totalPrice: 420,
     totalDiscount: 240,
+    getProductPrice: jest.fn(),
   };
   const mockProductValue = {
     productDetailList: [testDetail1, testDetail2],

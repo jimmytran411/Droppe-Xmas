@@ -53,12 +53,12 @@ const wrapper = ({ children }: any) => (
 );
 
 test('Test render Payment result with given patchData', () => {
-  const { getByText } = render(<PaymentResult {...{ patchData: testPatchData, productStatus: 'approved' }} />, {
+  const { getByText } = render(<PaymentResult {...{ patchData: testPatchData, givenStatus: 'approved' }} />, {
     wrapper,
   });
   expect(getByText(/test title 1/i)).toBeInTheDocument();
-  expect(getByText(/111/i)).toHaveTextContent('Price: €111');
+  expect(getByText(/111/i)).toHaveTextContent('€111');
 
   expect(getByText(/test title 2/i)).toBeInTheDocument();
-  expect(getByText(/222/i)).toHaveTextContent('Price: €222');
+  expect(getByText(/222/i)).toHaveTextContent('€222');
 });

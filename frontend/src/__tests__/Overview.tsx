@@ -75,6 +75,7 @@ test('Test Overview show value from provider', () => {
   const mockPriceValue = {
     totalPrice: 420,
     totalDiscount: 240,
+    getProductPrice: jest.fn(),
   };
 
   const wrapper = ({ children }: any) => (

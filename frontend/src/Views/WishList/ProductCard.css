@@ -59,6 +59,14 @@
   display: block;
 }
 
+.product-card-content .product-card-price {
+  display: block;
+  margin-block-start: 0.6em;
+  margin-block-end: 0.6em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
 .product-card .discount-label {
   border-radius: 50%;
   right: 0;
@@ -70,19 +78,28 @@
 }
 
 .product-card .discount-label.discount--40::before {
-  content: 'Save up to 40%';
-  font-size: 12px;
+  content: '40%';
+  font-size: 18px;
   font-weight: 700;
   color: white;
-  top: 6px;
+  top: 14px;
+  position: relative;
+}
+
+.product-card .discount-label.discount--30::before {
+  content: '30%';
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  top: 14px;
   position: relative;
 }
 
 .product-card .discount-label.discount--20::before {
-  content: 'Save up to 20%';
-  font-size: 12px;
+  content: '20%';
+  font-size: 18px;
   font-weight: 700;
   color: white;
-  top: 6px;
+  top: 14px;
   position: relative;
 }
