@@ -40,7 +40,7 @@
 ## About The Project
 
 The project is a cart approval process for parents. The theme is an imaginary christmas gift picking marketplace. The primary user persona of your interface will be a 50 year old parent with differing (usually low) levels of tech nativeness.
-This is the Frontend version. The backend can be access at [Droppe-xmas-backend](https://github.com/jimmytran411/Droppe-xmas-backend)
+
 
 ### Built With
 
