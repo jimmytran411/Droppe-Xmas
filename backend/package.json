@@ -1,24 +1,24 @@
 {
- "name": "droppe-assignment",
- "version": "1.0.0",
- "main": "index.js",
- "scripts": {
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd ../frontend && npm install && npm run build",
-  "server": "nodemon server.js",
-  "dev": "concurrently \"npm run server\" \"npm run frontend\"",
-  "frontend": "npm start --prefix ../frontend"
- },
- "author": "",
- "license": "ISC",
- "description": "",
- "dependencies": {
-  "axios": "^0.21.1",
-  "concurrently": "^6.0.2",
-  "cors": "^2.8.5",
-  "express": "^4.17.1",
-  "http": "0.0.1-security",
-  "memory-cache": "^0.2.0",
-  "path": "^0.12.7"
- }
+  "name": "droppe-assignment",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd ../frontend && npm install && npm run build",
+    "server": "nodemon server.js",
+    "dev": "concurrently \"npm run server\" \"npm run frontend\"",
+    "frontend": "npm start --prefix ../frontend"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^0.26.0",
+    "concurrently": "^6.0.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "memory-cache": "^0.2.0",
+    "path": "^0.12.7"
+  }
 }
