@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import _ from 'lodash';
 
 import { ProductCarousel } from 'Views/Overview/ProductCarousel';
@@ -53,6 +53,7 @@ test('It should render Carousel with pending product', () => {
   const mockPriceValue = {
     totalPrice: 420,
     totalDiscount: 240,
+    getProductPrice: jest.fn(),
   };
 
   const mockProductValue = {
@@ -68,14 +69,14 @@ test('It should render Carousel with pending product', () => {
       </ProductContext.Provider>
     </CartContext.Provider>
   );
-  const { getByText } = render(<ProductCarousel givenStatus="pending" />, { wrapper });
+  render(<ProductCarousel givenStatus="pending" />, { wrapper });
 
-  expect(getByText(/these items/i)).toHaveTextContent(`These items are still in your wishlists:`);
-  expect(getByText(/Username_1/i)).toBeInTheDocument();
+  expect(screen.getByText(/these items/i)).toHaveTextContent(`These items are still in your wishlists:`);
+  expect(screen.getByText(/Username_1/i)).toBeInTheDocument();
 
-  expect(getByText(/test title 1/i)).toBeInTheDocument();
-  expect(getByText(/€111/i)).toBeInTheDocument();
+  expect(screen.getByText(/test title 1/i)).toBeInTheDocument();
+  expect(screen.getByText(/€111/i)).toBeInTheDocument();
 
-  expect(getByText(/test title 2/i)).toBeInTheDocument();
-  expect(getByText(/€222/i)).toBeInTheDocument();
+  expect(screen.getByText(/test title 2/i)).toBeInTheDocument();
+  expect(screen.getByText(/€222/i)).toBeInTheDocument();
 });

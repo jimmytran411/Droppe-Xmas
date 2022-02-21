@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { PaymentResult } from 'Views/Overview/PaymentResult';
 import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
@@ -53,12 +53,12 @@ const wrapper = ({ children }: any) => (
 );
 
 test('Test render Payment result with given patchData', () => {
-  const { getByText } = render(<PaymentResult {...{ patchData: testPatchData, givenStatus: 'approved' }} />, {
+  render(<PaymentResult {...{ patchData: testPatchData, givenStatus: 'approved' }} />, {
     wrapper,
   });
-  expect(getByText(/test title 1/i)).toBeInTheDocument();
-  expect(getByText(/111/i)).toHaveTextContent('€111');
+  expect(screen.getByText(/test title 1/i)).toBeInTheDocument();
+  expect(screen.getByText(/111/i)).toHaveTextContent('€111');
 
-  expect(getByText(/test title 2/i)).toBeInTheDocument();
-  expect(getByText(/222/i)).toHaveTextContent('€222');
+  expect(screen.getByText(/test title 2/i)).toBeInTheDocument();
+  expect(screen.getByText(/222/i)).toHaveTextContent('€222');
 });

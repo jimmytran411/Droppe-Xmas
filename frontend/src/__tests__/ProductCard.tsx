@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { ProductCard } from '../Views/WishList/ProductCard';
 import { ProductDetail } from 'api/wishList';
 import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
@@ -30,11 +30,11 @@ const wrapper = ({ children }: any) => (
 );
 
 test('Render Product component with given product', () => {
-  const { getByText, getByLabelText } = render(<ProductCard product={testProduct} wishlist={testWishlist} />, {
+  render(<ProductCard product={testProduct} wishlist={testWishlist} />, {
     wrapper,
   });
-  expect(getByText(/test title/i)).toBeInTheDocument();
-  expect(getByText(/€111/i)).toBeInTheDocument();
-  expect(getByLabelText(/approve-btn-1/i)).toBeInTheDocument();
-  expect(getByLabelText(/discard-btn-1/i)).toBeInTheDocument();
+  expect(screen.getByText(/test title/i)).toBeInTheDocument();
+  expect(screen.getByText(/€111/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/approve-btn-1/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/discard-btn-1/i)).toBeInTheDocument();
 });

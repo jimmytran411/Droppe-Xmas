@@ -1,6 +1,6 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import { BrowserRouter, Router } from 'react-router-dom';
+import { render, screen } from '@testing-library/react';
+import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import _ from 'lodash';
 import userEvent from '@testing-library/user-event';
@@ -68,7 +68,7 @@ test('Render discard list with test input', () => {
   };
 
   const history = createMemoryHistory({ initialEntries: ['/wishlist/1'] });
-  const { getByText, getByLabelText } = render(
+  render(
     <ProductContext.Provider value={mockProductValue}>
       <CartContext.Provider value={mockCartValue}>
         <Router history={history}>
@@ -77,25 +77,25 @@ test('Render discard list with test input', () => {
       </CartContext.Provider>
     </ProductContext.Provider>
   );
-  expect(getByText(/Current Wishlist: €222.00/i)).toBeInTheDocument();
-  expect(getByText(/test title 1/i)).toBeInTheDocument();
-  expect(getByText(/€111/i)).toBeInTheDocument();
-  userEvent.click(getByLabelText(/approve-btn-1/i));
+  expect(screen.getByText(/Current Wishlist: €222.00/i)).toBeInTheDocument();
+  expect(screen.getByText(/test title 1/i)).toBeInTheDocument();
+  expect(screen.getByText(/€111/i)).toBeInTheDocument();
+  userEvent.click(screen.getByLabelText(/approve-btn-1/i));
   expect(mockCartValue.handleProduct).toHaveBeenCalledTimes(1);
-  userEvent.click(getByLabelText(/discard-btn-2/i));
+  userEvent.click(screen.getByLabelText(/discard-btn-2/i));
   expect(mockCartValue.handleProduct).toHaveBeenCalledTimes(2);
 
-  expect(getByText(/test title 2/i)).toBeInTheDocument();
-  userEvent.click(getByLabelText(/return-btn-2/i));
+  expect(screen.getByText(/test title 2/i)).toBeInTheDocument();
+  userEvent.click(screen.getByLabelText(/return-btn-2/i));
   expect(mockCartValue.handleProduct).toHaveBeenCalledTimes(3);
-  userEvent.click(getByLabelText(/discard-btn-2/i));
+  userEvent.click(screen.getByLabelText(/discard-btn-2/i));
   expect(mockCartValue.handleProduct).toHaveBeenCalledTimes(4);
 
-  expect(getByText(/test title 3/i)).toBeInTheDocument();
-  expect(getByText(/€333/i)).toBeInTheDocument();
-  userEvent.click(getByLabelText(/return-btn-3/i));
+  expect(screen.getByText(/test title 3/i)).toBeInTheDocument();
+  expect(screen.getByText(/€333/i)).toBeInTheDocument();
+  userEvent.click(screen.getByLabelText(/return-btn-3/i));
   expect(mockCartValue.handleProduct).toHaveBeenCalledTimes(5);
-  userEvent.click(getByLabelText(/approve-btn-3/i));
+  userEvent.click(screen.getByLabelText(/approve-btn-3/i));
   expect(mockCartValue.handleProduct).toHaveBeenCalledTimes(6);
   expect(mockCartValue.handleSorting).toHaveBeenCalledTimes(1);
 });

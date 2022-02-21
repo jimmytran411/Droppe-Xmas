@@ -1,6 +1,6 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import * as _ from 'lodash';
+import { render, screen } from '@testing-library/react';
+import _ from 'lodash';
 
 import { ProductList, ProductListProps } from 'Views/WishList/ProductList';
 import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
@@ -51,16 +51,16 @@ test('Render pending wishlist with test input', () => {
     <ProductContext.Provider value={mockProductValue}>{children}</ProductContext.Provider>
   );
 
-  const { getByText, getByLabelText } = render(<ProductList {...testPendingListProp} />, { wrapper });
-  expect(getByText(/test title 1/i)).toBeInTheDocument();
-  expect(getByText(/111/i)).toBeInTheDocument();
-  expect(getByLabelText(/approve-btn-1/i)).toBeInTheDocument();
-  expect(getByLabelText(/discard-btn-1/i)).toBeInTheDocument();
+  render(<ProductList {...testPendingListProp} />, { wrapper });
+  expect(screen.getByText(/test title 1/i)).toBeInTheDocument();
+  expect(screen.getByText(/111/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/approve-btn-1/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/discard-btn-1/i)).toBeInTheDocument();
 
-  expect(getByText(/test title 2/i)).toBeInTheDocument();
-  expect(getByText(/222/i)).toBeInTheDocument();
-  expect(getByLabelText(/approve-btn-2/i)).toBeInTheDocument();
-  expect(getByLabelText(/discard-btn-2/i)).toBeInTheDocument();
+  expect(screen.getByText(/test title 2/i)).toBeInTheDocument();
+  expect(screen.getByText(/222/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/approve-btn-2/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/discard-btn-2/i)).toBeInTheDocument();
 });
 
 test('Render approve list with test input', () => {
@@ -107,16 +107,16 @@ test('Render approve list with test input', () => {
     <ProductContext.Provider value={mockProductValue}>{children}</ProductContext.Provider>
   );
 
-  const { getByText, getByLabelText } = render(<ProductList {...testApprovedListProps} />, { wrapper });
-  expect(getByText(/test title 1/i)).toBeInTheDocument();
-  expect(getByText(/111/i)).toBeInTheDocument();
-  expect(getByLabelText(/return-btn-1/i)).toBeInTheDocument();
-  expect(getByLabelText(/discard-btn-1/i)).toBeInTheDocument();
+  render(<ProductList {...testApprovedListProps} />, { wrapper });
+  expect(screen.getByText(/test title 1/i)).toBeInTheDocument();
+  expect(screen.getByText(/111/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/return-btn-1/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/discard-btn-1/i)).toBeInTheDocument();
 
-  expect(getByText(/test title 2/i)).toBeInTheDocument();
-  expect(getByText(/222/i)).toBeInTheDocument();
-  expect(getByLabelText(/return-btn-2/i)).toBeInTheDocument();
-  expect(getByLabelText(/discard-btn-2/i)).toBeInTheDocument();
+  expect(screen.getByText(/test title 2/i)).toBeInTheDocument();
+  expect(screen.getByText(/222/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/return-btn-2/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/discard-btn-2/i)).toBeInTheDocument();
 });
 
 test('Render discard list with test input', () => {
@@ -163,14 +163,14 @@ test('Render discard list with test input', () => {
     <ProductContext.Provider value={mockProductValue}>{children}</ProductContext.Provider>
   );
 
-  const { getByText, getByLabelText } = render(<ProductList {...testDiscardedListProps} />, { wrapper });
-  expect(getByText(/test title 1/i)).toBeInTheDocument();
-  expect(getByText(/111/i)).toBeInTheDocument();
-  expect(getByLabelText(/return-btn-1/i)).toBeInTheDocument();
-  expect(getByLabelText(/approve-btn-1/i)).toBeInTheDocument();
+  render(<ProductList {...testDiscardedListProps} />, { wrapper });
+  expect(screen.getByText(/test title 1/i)).toBeInTheDocument();
+  expect(screen.getByText(/111/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/return-btn-1/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/approve-btn-1/i)).toBeInTheDocument();
 
-  expect(getByText(/test title 2/i)).toBeInTheDocument();
-  expect(getByText(/222/i)).toBeInTheDocument();
-  expect(getByLabelText(/return-btn-2/i)).toBeInTheDocument();
-  expect(getByLabelText(/approve-btn-2/i)).toBeInTheDocument();
+  expect(screen.getByText(/test title 2/i)).toBeInTheDocument();
+  expect(screen.getByText(/222/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/return-btn-2/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/approve-btn-2/i)).toBeInTheDocument();
 });

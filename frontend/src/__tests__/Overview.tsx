@@ -1,14 +1,14 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
+import _ from 'lodash';
 
 import { Overview } from 'Views/Overview';
 import { CartContext } from 'context/CartContext';
 import { PriceContext } from 'context/PriceContext';
 import { ProductWithStatus, WishlistWithProductStatus } from 'common/commonInterface';
 import { ProductDetail } from 'api/wishList';
-import _ from 'lodash';
 import { ProductContext } from 'context/ProductContext';
 
 test('Test Overview show value from provider', () => {
@@ -85,7 +85,7 @@ test('Test Overview show value from provider', () => {
       </ProductContext.Provider>
     </CartContext.Provider>
   );
-  const { getByText, getByRole } = render(
+  render(
     <Router history={history}>
       <Overview />
     </Router>,
@@ -94,11 +94,11 @@ test('Test Overview show value from provider', () => {
     }
   );
 
-  expect(getByText(/total:/i)).toHaveTextContent('Total: €420.00');
-  expect(getByText(/you save:/i)).toHaveTextContent('You save: €240.00');
-  expect(getByText(/These items are still in your wishlists:/i)).toBeInTheDocument();
-  expect(getByText(/test title 1/i)).toBeInTheDocument();
-  expect(getByText(/€111/i)).toBeInTheDocument();
-  expect(getByRole('button', { name: /checkout/i })).toBeInTheDocument;
-  expect(getByText('❌')).toBeInTheDocument();
+  expect(screen.getByText(/total:/i)).toHaveTextContent('Total: €420.00');
+  expect(screen.getByText(/you save:/i)).toHaveTextContent('You save: €240.00');
+  expect(screen.getByText(/These items are still in your wishlists:/i)).toBeInTheDocument();
+  expect(screen.getByText(/test title 1/i)).toBeInTheDocument();
+  expect(screen.getByText(/€111/i)).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /checkout/i })).toBeInTheDocument;
+  expect(screen.getByText('❌')).toBeInTheDocument();
 });

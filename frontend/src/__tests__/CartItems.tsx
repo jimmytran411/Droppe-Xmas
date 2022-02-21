@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { CartItems } from 'Views/Overview/CartItems';
 import { CartContext } from 'context/CartContext';
@@ -68,14 +68,14 @@ test('It should render CartItem with approved product', () => {
       </ProductContext.Provider>
     </CartContext.Provider>
   );
-  const { getByText } = render(<CartItems givenStatus="approved" />, { wrapper });
+  render(<CartItems givenStatus="approved" />, { wrapper });
 
-  expect(getByText(/Your cart/i)).toHaveTextContent(`Your cart's items:`);
-  expect(getByText(/child 1/i)).toBeInTheDocument();
+  expect(screen.getByText(/Your cart/i)).toHaveTextContent(`Your cart's items:`);
+  expect(screen.getByText(/child 1/i)).toBeInTheDocument();
 
-  expect(getByText(/test title 1/i)).toBeInTheDocument();
-  expect(getByText(/€111/i)).toBeInTheDocument();
+  expect(screen.getByText(/test title 1/i)).toBeInTheDocument();
+  expect(screen.getByText(/€111/i)).toBeInTheDocument();
 
-  expect(getByText(/test title 2/i)).toBeInTheDocument();
-  expect(getByText(/€222/i)).toBeInTheDocument();
+  expect(screen.getByText(/test title 2/i)).toBeInTheDocument();
+  expect(screen.getByText(/€222/i)).toBeInTheDocument();
 });

@@ -1,5 +1,4 @@
-import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
@@ -45,19 +44,19 @@ test('Render discard list with test input', () => {
   const history = createMemoryHistory({ initialEntries: ['/'] });
   const wrapper = ({ children }: any) => <CartContext.Provider value={mockCartValue}>{children}</CartContext.Provider>;
 
-  const { getByText } = render(
+  render(
     <Router history={history}>
       <Landing />
     </Router>,
     { wrapper }
   );
-  expect(getByText(/user's wishlist/i)).toBeInTheDocument();
-  expect(getByText(/username_1/i)).toBeInTheDocument();
-  expect(getByText(/approved/i)).toBeInTheDocument();
+  expect(screen.getByText(/user's wishlist/i)).toBeInTheDocument();
+  expect(screen.getByText(/username_1/i)).toBeInTheDocument();
+  expect(screen.getByText(/approved/i)).toBeInTheDocument();
 
-  expect(getByText(/discarded/i)).toBeInTheDocument();
-  expect(getByText(/3/i)).toBeInTheDocument();
+  expect(screen.getByText(/discarded/i)).toBeInTheDocument();
+  expect(screen.getByText(/3/i)).toBeInTheDocument();
 
-  expect(getByText(/pending/i)).toBeInTheDocument();
-  expect(getByText(/2/i)).toBeInTheDocument();
+  expect(screen.getByText(/pending/i)).toBeInTheDocument();
+  expect(screen.getByText(/2/i)).toBeInTheDocument();
 });

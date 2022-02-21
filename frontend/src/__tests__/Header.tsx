@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Header } from 'Header';
@@ -31,6 +31,7 @@ const mockCartValue = {
 const mockPriceValue = {
   totalPrice: 420,
   totalDiscount: 240,
+  getProductPrice: jest.fn(),
 };
 test('Test Header show value from provider', () => {
   const wrapper = ({ children }: any) => (
@@ -38,7 +39,7 @@ test('Test Header show value from provider', () => {
       <PriceContext.Provider value={mockPriceValue}>{children}</PriceContext.Provider>
     </CartContext.Provider>
   );
-  const { getByText, getByRole } = render(
+  render(
     <BrowserRouter>
       <Header />
     </BrowserRouter>,
@@ -47,10 +48,10 @@ test('Test Header show value from provider', () => {
     }
   );
 
-  expect(getByText(/total saving/i)).toBeInTheDocument();
-  expect(getByText(/€240/i)).toBeInTheDocument();
-  expect(getByText(/€420/i)).toBeInTheDocument();
+  expect(screen.getByText(/total saving/i)).toBeInTheDocument();
+  expect(screen.getByText(/€240/i)).toBeInTheDocument();
+  expect(screen.getByText(/€420/i)).toBeInTheDocument();
 
-  expect(getByText(/🛒/i)).toHaveTextContent('🛒');
-  expect(getByRole('button', { name: /View Cart/i })).toBeInTheDocument();
+  expect(screen.getByText(/🛒/i)).toHaveTextContent('🛒');
+  expect(screen.getByRole('button', { name: /View Cart/i })).toBeInTheDocument();
 });
